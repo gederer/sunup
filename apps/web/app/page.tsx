@@ -47,10 +47,11 @@ function SignInForm() {
 
 function Content() {
   const user = useQuery(api.users.current);
+  const displayName = user ? `${user.firstName} ${user.lastName}` : "Anonymous";
 
   return (
     <div className="flex flex-col gap-8 max-w-lg mx-auto">
-      <p>Welcome {user?.name ?? "Anonymous"}!</p>
+      <p>Welcome {displayName}!</p>
     </div>
   );
 }

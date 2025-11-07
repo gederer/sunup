@@ -13,13 +13,21 @@ export const upsertFromClerk = internalMutation({
   args: {data: v.any() as Validator<UserJSON>}, // no runtime validation, trust Clerk
   async handler(ctx, {data}) {
     const userAttributes = {
-      name: `${data.first_name} ${data.last_name}`,
-      externalId: data.id
+      firstName: data.first_name ?? "",
+      lastName: data.last_name ?? "",
+      email: data.email_addresses[0]?.email_address ?? "",
+      clerkId: data.id,
+      isActive: true
     };
 
-    const user = await userByExternalId(ctx, data.id);
+    const user = await userByClerkId(ctx, data.id);
     if (user === null) {
-      await ctx.db.insert("users", userAttributes);
+      // For new users, we need a tenantId - for now, create a default tenant
+      // TODO: Implement proper tenant assignment in Story 1.4
+      await ctx.db.insert("users", {
+        ...userAttributes,
+        tenantId: "default" as any // Temporary hack until Story 1.4
+      });
     } else {
       await ctx.db.patch(user._id, userAttributes);
     }
@@ -29,7 +37,7 @@ export const upsertFromClerk = internalMutation({
 export const deleteFromClerk = internalMutation({
   args: {clerkUserId: v.string()},
   async handler(ctx, {clerkUserId}) {
-    const user = await userByExternalId(ctx, clerkUserId);
+    const user = await userByClerkId(ctx, clerkUserId);
 
     if (user !== null) {
       await ctx.db.delete(user._id);
@@ -52,12 +60,12 @@ export async function getCurrentUser(ctx: QueryCtx) {
   if (identity === null) {
     return null;
   }
-  return await userByExternalId(ctx, identity.subject);
+  return await userByClerkId(ctx, identity.subject);
 }
 
-async function userByExternalId(ctx: QueryCtx, externalId: string) {
+async function userByClerkId(ctx: QueryCtx, clerkId: string) {
   return await ctx.db
     .query("users")
-    .withIndex("byExternalId", (q) => q.eq("externalId", externalId))
+    .withIndex("by_clerk_id", (q) => q.eq("clerkId", clerkId))
     .unique();
 }
