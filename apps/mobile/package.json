@@ -14,6 +14,8 @@
   },
   "dependencies": {
     "@sunup/convex": "workspace:*",
+    "@sunup/types": "workspace:*",
+    "@sunup/ui": "workspace:*",
     "convex": "^1.28.0",
     "expo": "~52.0.0",
     "expo-router": "~4.0.0",
@@ -23,6 +25,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.25.0",
+    "@sunup/config": "workspace:*",
     "@types/react": "~19.0.0",
     "typescript": "^5"
   }
