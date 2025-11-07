@@ -1,0 +1,141 @@
+# generated: 2025-11-06
+# project: Sunup
+# project_key: Sunup
+# tracking_system: file-system
+# story_location: {project-root}/docs/stories
+
+# STATUS DEFINITIONS:
+# ==================
+# Epic Status:
+#   - backlog: Epic exists in epic file but not contexted
+#   - contexted: Epic tech context created (required before drafting stories)
+#
+# Story Status:
+#   - backlog: Story only exists in epic file
+#   - drafted: Story file created in stories folder
+#   - ready-for-dev: Draft approved and story context created
+#   - in-progress: Developer actively working on implementation
+#   - review: Under SM review (via code-review workflow)
+#   - done: Story completed
+#
+# Retrospective Status:
+#   - optional: Can be completed but not required
+#   - completed: Retrospective has been done
+#
+# WORKFLOW NOTES:
+# ===============
+# - Epics should be 'contexted' before stories can be 'drafted'
+# - Stories can be worked in parallel if team capacity allows
+# - SM typically drafts next story after previous one is 'done' to incorporate learnings
+# - Dev moves story to 'review', SM reviews, then Dev moves to 'done'
+
+generated: 2025-11-06
+project: Sunup
+project_key: Sunup
+tracking_system: file-system
+story_location: "{project-root}/docs/stories"
+
+development_status:
+  epic-1: backlog
+  1-1-refactor-to-turborepo-monorepo-structure: backlog
+  1-2-setup-tailwind-css-4-and-shadcn-ui-component-library: backlog
+  1-3-initialize-convex-backend-and-database: backlog
+  1-4-implement-multi-tenant-row-level-security-rls-foundation: backlog
+  1-5-integrate-clerk-authentication: backlog
+  1-6-implement-role-based-access-control-rbac-for-12-roles: backlog
+  1-7-create-pipeline-data-model-and-schema: backlog
+  1-8-implement-event-system-for-pipeline-status-changes: backlog
+  1-9-create-person-and-organization-base-schema: backlog
+  1-10-setup-git-hub-actions-ci-cd-pipeline: backlog
+  1-11-setup-testing-infrastructure-with-playwright-and-vitest: backlog
+  1-12-deploy-initial-application-to-vercel-production: backlog
+  epic-1-retrospective: optional
+
+  epic-2: backlog
+  2-1-build-person-list-view-with-search-and-filtering: backlog
+  2-2-build-person-detail-page-with-complete-profile: backlog
+  2-3-implement-notes-and-activity-timeline: backlog
+  2-4-build-person-create-edit-forms: backlog
+  2-5-build-organization-list-and-detail-views: backlog
+  2-6-implement-pipeline-stage-transition-with-validation: backlog
+  2-7-integrate-mapbox-for-satellite-property-imagery: backlog
+  2-8-implement-bidirectional-visibility-for-setters: backlog
+  2-9-implement-bidirectional-visibility-for-consultants: backlog
+  2-10-build-sales-manager-dashboard-with-pipeline-overview: backlog
+  2-11-implement-search-across-person-organization-records: backlog
+  2-12-add-pipeline-stage-filtering-to-dashboard-views: backlog
+  2-13-implement-real-time-notifications-for-pipeline-changes: backlog
+  epic-2-retrospective: optional
+
+  epic-3: backlog
+  3-1-create-campaign-data-model-and-schema: backlog
+  3-2-implement-tenant-phone-number-management: backlog
+  3-3-integrate-signal-wire-programmable-voice-api: backlog
+  3-4-build-campaign-management-interface-for-setter-managers: backlog
+  3-5-implement-person-assignment-to-campaigns: backlog
+  3-6-implement-predictive-dialing-engine: backlog
+  3-7-implement-call-routing-and-handoff-logic: backlog
+  3-8-build-setter-join-campaign-and-availability-interface: backlog
+  3-9-build-dialer-view-with-live-call-interface: backlog
+  3-10-implement-script-overlay-with-real-time-progress-tracking: backlog
+  3-11-implement-qualification-enforcement: backlog
+  3-12-implement-call-disposition-and-appointment-booking: backlog
+  3-13-implement-incoming-call-handling-with-caller-id-lookup: backlog
+  3-14-implement-hours-active-tracking: backlog
+  3-15-implement-setter-availability-status-management: backlog
+  3-16-enhance-setter-dashboard-with-live-dialer-stats: backlog
+  3-17-build-setter-manager-real-time-campaign-monitoring-dashboard: backlog
+  3-18-implement-call-metadata-and-performance-analytics: backlog
+  3-19-implement-campaign-scheduling-and-auto-activation: backlog
+  3-20-implement-answer-detection-configuration-research-required: backlog
+  3-21-implement-manual-outbound-calling-for-setters: backlog
+  epic-3-retrospective: optional
+
+  epic-4: backlog
+  4-1-setup-mediasoup-sfu-infrastructure: backlog
+  4-2-implement-web-rtc-client-library-and-connection-management: backlog
+  4-3-build-meeting-scheduling-and-appointment-management: backlog
+  4-4-implement-pre-meeting-alerts-and-availability-checking: backlog
+  4-5-build-unified-meeting-view-interface: backlog
+  4-6-implement-1-to-1-video-calling-in-meeting-view: backlog
+  4-7-implement-script-overlay-for-consultants: backlog
+  4-8-implement-slideshow-viewer-with-screen-sharing: backlog
+  4-9-implement-financing-integration-with-automated-form-delivery: backlog
+  4-10-implement-roi-calculator-tool: backlog
+  4-11-implement-knowledge-base-integration: backlog
+  4-12-implement-meeting-handoff-system-with-round-robin-routing: backlog
+  4-13-implement-sales-manager-escalation-for-no-coverage: backlog
+  4-14-implement-meeting-disposition-and-pipeline-updates: backlog
+  4-15-enhance-consultant-dashboard-with-meeting-metrics: backlog
+  4-16-implement-meeting-recording-metadata-no-audio-video-storage: backlog
+  4-17-implement-consultant-availability-toggle-and-status-management: backlog
+  4-18-implement-mobile-app-support-for-consultants: backlog
+  epic-4-retrospective: optional
+
+  epic-5: backlog
+  5-1-design-commission-rules-data-model: backlog
+  5-2-implement-commission-calculation-engine: backlog
+  5-3-implement-pipeline-event-triggered-commission-creation: backlog
+  5-4-build-contractor-commission-dashboard: backlog
+  5-5-build-finance-commission-review-dashboard: backlog
+  5-6-implement-sales-manager-commission-approval-workflow: backlog
+  5-7-implement-commission-dispute-system: backlog
+  5-8-implement-commission-audit-trail: backlog
+  5-9-implement-commission-payment-tracking: backlog
+  5-10-build-commission-rules-configuration-ui: backlog
+  5-11-add-commission-export-and-reporting: backlog
+  5-12-implement-mobile-commission-visibility: backlog
+  epic-5-retrospective: optional
+
+  epic-6: backlog
+  6-1-design-leaderboard-metrics-data-model: backlog
+  6-2-build-real-time-leaderboard-ui-for-setters: backlog
+  6-3-build-real-time-leaderboard-ui-for-consultants: backlog
+  6-4-implement-achievement-badge-system: backlog
+  6-5-display-badges-in-user-profiles-and-dashboards: backlog
+  6-6-build-call-recording-library-for-top-performers: backlog
+  6-7-build-contractor-facing-call-recording-library: backlog
+  6-8-implement-announcement-system-for-setter-managers: backlog
+  6-9-display-announcements-in-contractor-dashboards: backlog
+  6-10-build-searchable-knowledge-base-with-training-materials: backlog
+  epic-6-retrospective: optional
