@@ -1,0 +1,25 @@
+{
+  "name": "@sunup/convex",
+  "version": "0.1.0",
+  "private": true,
+  "exports": {
+    ".": "./convex.config.ts",
+    "./schema": "./schema.ts",
+    "./auth.config": "./auth.config.ts",
+    "./users": "./users.ts",
+    "./http": "./http.ts",
+    "./_generated/api": "./_generated/api.ts",
+    "./_generated/dataModel": "./_generated/dataModel.ts"
+  },
+  "scripts": {
+    "dev": "convex dev",
+    "deploy": "convex deploy"
+  },
+  "dependencies": {
+    "convex": "^1.28.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "typescript": "^5"
+  }
+}
