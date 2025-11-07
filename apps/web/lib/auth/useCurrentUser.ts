@@ -1,5 +1,5 @@
 import {useConvexAuth, useQuery} from "convex/react";
-import {api} from "@/convex/_generated/api";
+import {api} from "@sunup/convex/_generated/api";
 
 export function useCurrentUser() {
   const {isLoading, isAuthenticated} = useConvexAuth();

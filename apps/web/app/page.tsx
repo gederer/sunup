@@ -1,7 +1,7 @@
 "use client";
 
 import {Authenticated, Unauthenticated, useQuery} from "convex/react";
-import {api} from "@/convex/_generated/api";
+import {api} from "@sunup/convex/_generated/api";
 import {SignInButton, SignUpButton, UserButton} from "@clerk/nextjs";
 
 export default function Home() {
