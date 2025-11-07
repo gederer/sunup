@@ -1,0 +1,260 @@
+<story-context id="bmad/bmm/workflows/4-implementation/story-context/template" v="1.0">
+  <metadata>
+    <epicId>1</epicId>
+    <storyId>1</storyId>
+    <title>Refactor to Turborepo Monorepo Structure</title>
+    <status>drafted</status>
+    <generatedAt>2025-11-07</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/stories/1-1-refactor-to-turborepo-monorepo-structure.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>Developer</asA>
+    <iWant>to refactor the existing Next.js project to a Turborepo monorepo structure</iWant>
+    <soThat>web and mobile apps can share code via packages (convex, ui, types, config) and we can build both platforms from a unified codebase</soThat>
+    <tasks>
+      - Install and configure Turborepo
+      - Create monorepo directory structure (apps/, packages/)
+      - Move existing Convex code to packages/convex
+      - Move existing web app to apps/web
+      - Create mobile app scaffold in apps/mobile
+      - Create shared UI package in packages/ui
+      - Create shared types package in packages/types
+      - Create shared config package in packages/config
+      - Configure Turborepo build pipeline
+      - Configure workspace dependencies
+      - Update documentation
+      - Final verification and testing
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+    <criterion id="AC1">Turborepo configured with workspace structure (see reference repo)</criterion>
+    <criterion id="AC2">Existing convex code moved to `packages/convex` with proper exports</criterion>
+    <criterion id="AC3">Existing web app moved to `apps/web` with updated import paths</criterion>
+    <criterion id="AC4">Mobile app scaffold created in `apps/mobile` using Expo Router</criterion>
+    <criterion id="AC5">Shared UI components package created in `packages/ui` (shadcn/ui components)</criterion>
+    <criterion id="AC6">Shared types package created in `packages/types` (Convex types, domain types)</criterion>
+    <criterion id="AC7">Shared config package created in `packages/config` (ESLint, TypeScript, Tailwind configs)</criterion>
+    <criterion id="AC8">All builds working via turbo commands (`turbo build`, `turbo dev`)</criterion>
+    <criterion id="AC9">Package dependencies properly configured (internal workspace dependencies)</criterion>
+    <criterion id="AC10">Documentation updated (README.md explains monorepo structure)</criterion>
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>Architecture Document</title>
+        <section>Project Initialization</section>
+        <snippet>Monorepo Refactor Required (Story 1.1): This must be the first implementation story to establish proper code sharing between web and mobile apps. Project already initialized with Next.js 16.0.0, React 19.2.0, TypeScript 5.x, Convex 1.28.0, Clerk 6.34.0, shadcn/ui components.</snippet>
+      </doc>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>Architecture Document</title>
+        <section>Project Structure</section>
+        <snippet>Post-Monorepo Refactor Structure shows complete target directory layout with apps/ (web, mobile, mediasoup-server) and packages/ (convex, ui, types, config) directories. Reference repository: https://github.com/get-convex/turbo-expo-nextjs-clerk-convex-monorepo</snippet>
+      </doc>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>Architecture Document</title>
+        <section>Decision Summary</section>
+        <snippet>Technology stack decisions: Turborepo for monorepo management, Expo (React Native) for mobile, pnpm as package manager. All packages share TypeScript 5.x, TailwindCSS 4.x, and access to Convex 1.28.0 backend.</snippet>
+      </doc>
+      <doc>
+        <path>docs/PRD.md</path>
+        <title>Product Requirements Document</title>
+        <section>Epic List</section>
+        <snippet>Epic 1: Foundation & Infrastructure includes Story 1.1 as the critical first story establishing monorepo structure to enable code sharing between web and mobile platforms for all subsequent epics.</snippet>
+      </doc>
+      <doc>
+        <path>docs/epics.md</path>
+        <title>Epic Breakdown</title>
+        <section>Story 1.1</section>
+        <snippet>This is a brownfield refactor moving existing Next.js 16+, TypeScript 5.8+, Convex, Clerk, and shadcn/ui code into monorepo structure. Prerequisites: None (first story). CRITICAL: Must be completed before all other stories as they assume monorepo structure exists.</snippet>
+      </doc>
+      <doc>
+        <path>docs/git-workflow.md</path>
+        <title>Git Workflow</title>
+        <section>Branching Strategy</section>
+        <snippet>Story implementation requires creating story/1-1-monorepo-refactor branch, frequent WIP commits during refactoring, and merge back to feat/sundialer when complete. Use git mv to preserve file history during refactoring.</snippet>
+      </doc>
+    </docs>
+    <code>
+      <artifact>
+        <path>convex/schema.ts</path>
+        <kind>schema</kind>
+        <symbol>defineSchema</symbol>
+        <lines>1-448</lines>
+        <reason>Existing Convex schema with multi-tenant tables (users, persons, organizations, campaigns, calls, appointments, commissions, leaderboards). Must be moved to packages/convex/ and properly exported.</reason>
+      </artifact>
+      <artifact>
+        <path>convex/users.ts</path>
+        <kind>mutations</kind>
+        <symbol>createUser</symbol>
+        <lines>1-60</lines>
+        <reason>Convex mutations for user management. Must be moved to packages/convex/mutations/ with proper exports.</reason>
+      </artifact>
+      <artifact>
+        <path>convex/http.ts</path>
+        <kind>http-actions</kind>
+        <symbol>http</symbol>
+        <lines>1-52</lines>
+        <reason>Convex HTTP actions for webhooks (Clerk). Must be moved to packages/convex/http.ts with proper routing.</reason>
+      </artifact>
+      <artifact>
+        <path>convex/auth.config.ts</path>
+        <kind>config</kind>
+        <symbol>auth</symbol>
+        <lines>1-15</lines>
+        <reason>Clerk authentication configuration for Convex. Must be moved to packages/convex/ and remain accessible.</reason>
+      </artifact>
+      <artifact>
+        <path>app/layout.tsx</path>
+        <kind>component</kind>
+        <symbol>RootLayout</symbol>
+        <lines>1-30</lines>
+        <reason>Next.js root layout with ClerkProvider and ConvexClientProvider. Must be moved to apps/web/app/layout.tsx with updated imports.</reason>
+      </artifact>
+      <artifact>
+        <path>app/page.tsx</path>
+        <kind>component</kind>
+        <symbol>Home</symbol>
+        <lines>1-50</lines>
+        <reason>Next.js home page component. Must be moved to apps/web/app/page.tsx.</reason>
+      </artifact>
+      <artifact>
+        <path>app/globals.css</path>
+        <kind>stylesheet</kind>
+        <symbol>globals</symbol>
+        <lines>1-280</lines>
+        <reason>TailwindCSS globals with shadcn/ui theme variables. Must be moved to apps/web/app/globals.css or shared in packages/ui/.</reason>
+      </artifact>
+      <artifact>
+        <path>app/convex-client-provider.tsx</path>
+        <kind>component</kind>
+        <symbol>ConvexClientProvider</symbol>
+        <lines>1-16</lines>
+        <reason>Convex React provider component. Should move to packages/ui/ or stay in apps/web/app/ for web-specific setup.</reason>
+      </artifact>
+      <artifact>
+        <path>components/ConvexClientProvider.tsx</path>
+        <kind>component</kind>
+        <symbol>ConvexClientProvider</symbol>
+        <lines>1-20</lines>
+        <reason>Duplicate ConvexClientProvider in components/. Consolidate with app/convex-client-provider.tsx during refactor.</reason>
+      </artifact>
+      <artifact>
+        <path>lib/utils.ts</path>
+        <kind>utils</kind>
+        <symbol>cn</symbol>
+        <lines>1-7</lines>
+        <reason>Utility functions (cn for classname merging). Should move to packages/ui/src/lib/utils.ts for shared use.</reason>
+      </artifact>
+      <artifact>
+        <path>lib/auth/</path>
+        <kind>directory</kind>
+        <symbol>auth</symbol>
+        <lines>-</lines>
+        <reason>Auth utilities directory. Must be moved to apps/web/lib/auth/ or packages/types/ if shared types.</reason>
+      </artifact>
+    </code>
+    <dependencies>
+      <ecosystem name="node">
+        <package name="next" version="16.0.0"/>
+        <package name="react" version="19.2.0"/>
+        <package name="react-dom" version="19.2.0"/>
+        <package name="convex" version="^1.28.0"/>
+        <package name="@clerk/nextjs" version="^6.34.0"/>
+        <package name="typescript" version="^5"/>
+        <package name="tailwindcss" version="^4"/>
+        <package name="eslint" version="^9"/>
+        <package name="lucide-react" version="^0.548.0"/>
+        <package name="shadcn" version="^3.5.0"/>
+        <package name="class-variance-authority" version="^0.7.1"/>
+        <package name="clsx" version="^2.1.1"/>
+        <package name="tailwind-merge" version="^3.3.1"/>
+        <package name="svix" version="^1.81.0" note="Webhook verification"/>
+        <newDependency name="turborepo" reason="Monorepo build orchestration" install="dev"/>
+        <newDependency name="expo" reason="React Native mobile app framework" install="mobile"/>
+        <newDependency name="expo-router" reason="File-based navigation for mobile" install="mobile"/>
+        <newDependency name="@types/react-native" reason="TypeScript types for mobile" install="mobile-dev"/>
+      </ecosystem>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    <constraint>CRITICAL: This is Story 1.1 - THE FIRST story. All subsequent stories depend on this monorepo structure existing. Cannot proceed to any other story until this is complete.</constraint>
+    <constraint>Brownfield refactor: Project already has working Next.js app with Convex, Clerk, shadcn/ui configured. Do NOT recreate from scratch - move existing code into monorepo structure.</constraint>
+    <constraint>Preserve git history: Use `git mv` commands to move files/directories, not copy-delete, to maintain commit history.</constraint>
+    <constraint>Import path updates required: All imports from "convex/..." must update to workspace package references like "@sunup/convex/..." or relative paths.</constraint>
+    <constraint>Convex configuration: convex.json must point to correct functions directory after moving to packages/convex/. Update "functions" field accordingly.</constraint>
+    <constraint>Workspace protocol: Use "workspace:*" for internal package dependencies in package.json files (e.g., "@sunup/convex": "workspace:*").</constraint>
+    <constraint>Tailwind content paths: When UI moves to packages/ui/, Tailwind configs in apps must scan that package directory: `content: ['../../packages/ui/src/**/*.{ts,tsx}']`</constraint>
+    <constraint>Package naming convention: Use "@sunup/" scope for all internal packages (@sunup/convex, @sunup/ui, @sunup/types, @sunup/config).</constraint>
+    <constraint>No automated tests required: Story 1.11 creates testing infrastructure. Validate Story 1.1 manually via build/dev commands.</constraint>
+    <constraint>Reference implementation: Follow patterns from https://github.com/get-convex/turbo-expo-nextjs-clerk-convex-monorepo for Convex + Expo + Turborepo integration.</constraint>
+    <constraint>Package manager recommendation: Consider using pnpm instead of npm for better monorepo workspace support, faster installs, and strict dependency resolution.</constraint>
+  </constraints>
+
+  <interfaces>
+    <interface>
+      <name>Turborepo Configuration</name>
+      <kind>config-file</kind>
+      <signature>turbo.json - defines build, dev, lint, test pipelines with dependency caching</signature>
+      <path>turbo.json (root)</path>
+    </interface>
+    <interface>
+      <name>Root Workspace Configuration</name>
+      <kind>config-file</kind>
+      <signature>package.json - defines workspaces: ["apps/*", "packages/*"] with shared devDependencies</signature>
+      <path>package.json (root)</path>
+    </interface>
+    <interface>
+      <name>Convex Package Exports</name>
+      <kind>module-exports</kind>
+      <signature>packages/convex/package.json - exports: { ".": "./convex.config.ts", "./schema": "./schema.ts", "./queries/*": "./queries/*.ts", "./mutations/*": "./mutations/*.ts" }</signature>
+      <path>packages/convex/package.json</path>
+    </interface>
+    <interface>
+      <name>UI Package Exports</name>
+      <kind>module-exports</kind>
+      <signature>packages/ui/package.json - exports shadcn/ui components: { "./components/*": "./src/components/*.tsx", "./lib/*": "./src/lib/*.ts" }</signature>
+      <path>packages/ui/package.json</path>
+    </interface>
+    <interface>
+      <name>Types Package Exports</name>
+      <kind>module-exports</kind>
+      <signature>packages/types/package.json - exports: { ".": "./src/index.ts", "./convex": "./src/convex.ts", "./domain": "./src/domain.ts" }</signature>
+      <path>packages/types/package.json</path>
+    </interface>
+    <interface>
+      <name>Config Package Exports</name>
+      <kind>module-exports</kind>
+      <signature>packages/config/package.json - exports: { "./eslint": "./eslint/index.js", "./typescript": "./typescript/tsconfig.json", "./tailwind": "./tailwind/tailwind.config.js" }</signature>
+      <path>packages/config/package.json</path>
+    </interface>
+  </interfaces>
+
+  <tests>
+    <standards>
+      NO automated tests required for Story 1.1. Story 1.11 ("Setup testing infrastructure with Playwright and Vitest") will create the testing framework. Manual validation only: (1) `turbo build` succeeds for all packages, (2) `turbo dev` starts all dev servers, (3) Hot reload works in web and mobile apps, (4) Convex backend queries/mutations work from both platforms, (5) Shared code changes reflect immediately in both apps.
+    </standards>
+    <locations>
+      Testing infrastructure will be created in Story 1.11. No test directories exist yet. Future tests will follow structure: apps/web/__tests__/, apps/mobile/__tests__/, packages/*/tests/
+    </locations>
+    <ideas>
+      <idea ac="AC1">Verify turbo.json exists and contains valid pipeline configuration (build, dev, lint tasks)</idea>
+      <idea ac="AC2">Verify packages/convex/ contains schema.ts and convex.json points to correct location</idea>
+      <idea ac="AC3">Verify apps/web/ builds successfully and imports work with new paths</idea>
+      <idea ac="AC4">Verify apps/mobile/ initializes with Expo and builds for iOS/Android simulator</idea>
+      <idea ac="AC5">Verify packages/ui/ exports components that import successfully in both web and mobile</idea>
+      <idea ac="AC6">Verify packages/types/ exports Convex inferred types and domain types</idea>
+      <idea ac="AC7">Verify packages/config/ contains shared ESLint, TypeScript, Tailwind configs</idea>
+      <idea ac="AC8">Run `turbo build` and `turbo dev` - verify no errors and all packages build</idea>
+      <idea ac="AC9">Verify workspace dependencies resolve correctly (no "module not found" errors)</idea>
+      <idea ac="AC10">Verify README.md documents monorepo structure and turbo commands</idea>
+    </ideas>
+  </tests>
+</story-context>
