@@ -320,3 +320,52 @@ Claude 3.7 Sonnet (claude-sonnet-4-5-20250929)
 3. Story ready for code review via /bmad:bmm:workflows:code-review
 4. After approval, merge to feat/sundialer branch
 
+
+## Validation Test Results
+
+### Automated Testing
+
+✅ **Test 1: turbo build succeeds** - PASSED
+- Command: `pnpm turbo build --filter=@sunup/web`
+- Result: Compilation successful, static pages generated
+- Fixed: Package exports, schema field names, index names
+
+### Manual Testing Required (User Action Needed)
+
+The following tests require the user to run interactive dev servers:
+
+⏳ **Test 2: turbo dev starts all dev servers**
+```bash
+# Test command:
+pnpm turbo dev
+
+# Expected: Web dev server starts on localhost:3000
+# Expected: Convex dev syncs functions
+```
+
+⏳ **Test 3: Hot reload works in web app**
+```bash
+# After starting dev server, modify apps/web/app/page.tsx
+# Expected: Changes reflect immediately without manual refresh
+```
+
+⏳ **Test 4: Convex backend works**
+```bash
+# After starting dev server and logging in with Clerk:
+# Expected: User query returns firstName + lastName
+# Expected: No Convex API errors in console
+```
+
+⏳ **Test 5: Shared code changes reflect**
+```bash
+# Modify packages/types/src/domain.ts
+# Expected: TypeScript picks up changes in both web and mobile apps
+```
+
+### Validation Status
+
+**Build Validation:** ✅ Complete  
+**Runtime Validation:** ⏳ Requires user interaction  
+
+All acceptance criteria implemented. Story ready for final manual validation and code review.
+
