@@ -1,36 +1,194 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Sunup - Solar Installation Management Platform
 
-## Getting Started
+Sunup is a comprehensive SaaS platform for solar installation companies, built as a Turborepo monorepo with Next.js (web) and Expo (mobile) applications sharing a unified Convex backend.
 
-First, run the development server:
+## 🏗️ Monorepo Structure
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+This project uses **Turborepo** for efficient monorepo management with pnpm workspaces.
+
+```
+sunup/
+├── apps/
+│   ├── web/              # Next.js 16 web application
+│   ├── mobile/           # Expo React Native mobile app
+│   └── mediasoup-server/ # WebRTC SFU server (coming soon)
+├── packages/
+│   ├── convex/           # Shared Convex backend (queries, mutations, schema)
+│   ├── ui/               # Shared UI components (shadcn/ui)
+│   ├── types/            # Shared TypeScript types (Convex + domain)
+│   └── config/           # Shared configs (ESLint, TypeScript, Tailwind)
+├── docs/                 # Project documentation
+├── turbo.json            # Turborepo pipeline configuration
+└── pnpm-workspace.yaml   # pnpm workspace configuration
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🚀 Getting Started
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Prerequisites
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Node.js** >= 18.0.0
+- **pnpm** >= 9.0.0 (install with `npm install -g pnpm`)
+- **Convex** account (sign up at [convex.dev](https://convex.dev))
+- **Clerk** account for authentication (sign up at [clerk.com](https://clerk.com))
 
-## Learn More
+### Installation
 
-To learn more about Next.js, take a look at the following resources:
+1. Clone the repository:
+```bash
+git clone <repository-url>
+cd sunup
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+2. Install dependencies:
+```bash
+pnpm install
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+3. Set up environment variables:
+```bash
+# apps/web/.env.local
+NEXT_PUBLIC_CONVEX_URL=<your-convex-url>
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=<your-clerk-key>
+CLERK_SECRET_KEY=<your-clerk-secret>
+```
 
-## Deploy on Vercel
+4. Start the development servers:
+```bash
+pnpm dev
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+This will start:
+- **Web app**: http://localhost:3000
+- **Mobile app**: Expo dev server (follow terminal instructions)
+- **Convex backend**: Live sync with your Convex deployment
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 📦 Workspace Packages
+
+### Apps
+
+#### `@sunup/web`
+Next.js 16 web application with App Router.
+
+**Development:**
+```bash
+pnpm --filter @sunup/web dev
+```
+
+**Build:**
+```bash
+pnpm --filter @sunup/web build
+```
+
+#### `@sunup/mobile`
+Expo React Native mobile app with Expo Router.
+
+**Development:**
+```bash
+pnpm --filter @sunup/mobile dev
+```
+
+**iOS Simulator:**
+```bash
+pnpm --filter @sunup/mobile ios
+```
+
+**Android Emulator:**
+```bash
+pnpm --filter @sunup/mobile android
+```
+
+### Packages
+
+#### `@sunup/convex`
+Shared Convex backend with schema, queries, mutations, and actions.
+
+**Deploy to Convex:**
+```bash
+pnpm --filter @sunup/convex deploy
+```
+
+#### `@sunup/ui`
+Shared UI components built with shadcn/ui and Tailwind CSS.
+
+**Usage:**
+```typescript
+import { cn } from '@sunup/ui/lib/utils';
+```
+
+#### `@sunup/types`
+Shared TypeScript types for Convex schema and domain logic.
+
+**Usage:**
+```typescript
+import { User, Role, PipelineStage } from '@sunup/types';
+```
+
+#### `@sunup/config`
+Shared configuration files for ESLint, TypeScript, and Tailwind.
+
+## 🛠️ Development Commands
+
+### Run all apps in development mode
+```bash
+pnpm dev
+```
+
+### Build all apps and packages
+```bash
+pnpm build
+```
+
+### Run linting across all packages
+```bash
+pnpm lint
+```
+
+### Run type-checking across all packages
+```bash
+pnpm type-check
+```
+
+### Run tests (when implemented)
+```bash
+pnpm test
+```
+
+## 🔧 Technology Stack
+
+- **Frontend (Web)**: Next.js 16.0.0, React 19.2.0, TypeScript 5
+- **Frontend (Mobile)**: Expo ~52.0.0, React Native 0.76.0
+- **Backend**: Convex 1.28.0 (serverless backend)
+- **Auth**: Clerk 6.34.0
+- **UI**: shadcn/ui with Tailwind CSS 4
+- **Build System**: Turborepo 2.6.0
+- **Package Manager**: pnpm 10.20.0
+
+## 📚 Project Documentation
+
+- **Architecture**: See `docs/architecture.md`
+- **PRD**: See `docs/PRD.md`
+- **Epics**: See `docs/epics.md`
+- **Stories**: See `docs/stories/`
+- **Git Workflow**: See `docs/git-workflow.md`
+
+## 🤝 Contributing
+
+This project follows the BMAD Method framework for AI-guided development. See `docs/git-workflow.md` for branching strategy and commit conventions.
+
+### Story Development Workflow
+
+1. **Create story branch**: `git checkout -b story/X-Y-story-name`
+2. **Implement story**: Follow acceptance criteria in `docs/stories/`
+3. **Commit frequently**: Use WIP commits during development
+4. **Code review**: Run `/bmad:bmm:workflows:code-review`
+5. **Merge to feat branch**: After story completion
+
+## 📄 License
+
+[Add your license here]
+
+## 🙏 Acknowledgments
+
+- Built with [Turborepo](https://turbo.build)
+- Reference implementation: [turbo-expo-nextjs-clerk-convex-monorepo](https://github.com/get-convex/turbo-expo-nextjs-clerk-convex-monorepo)
+- UI components from [shadcn/ui](https://ui.shadcn.com)
