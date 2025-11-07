@@ -1,6 +1,6 @@
 # Story 1.1: Refactor to Turborepo Monorepo Structure
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -251,3 +251,72 @@ Claude 3.7 Sonnet (claude-sonnet-4-5-20250929)
 ## Change Log
 
 - 2025-11-07: Story drafted by SM agent from epics.md (Story 1.1, lines 69-92)
+
+## Implementation Summary
+
+**Completed:** 2025-11-07
+**Branch:** story/1-1-monorepo-refactor
+**Commits:** 12 WIP commits
+
+### Accomplishments
+
+✅ All 10 acceptance criteria met:
+1. Turborepo configured with workspace structure (turbo.json, pnpm-workspace.yaml)
+2. Convex code moved to packages/convex with proper exports
+3. Web app moved to apps/web with updated import paths
+4. Mobile app scaffold created in apps/mobile with Expo Router
+5. Shared UI package created in packages/ui
+6. Shared types package created in packages/types
+7. Shared config package created in packages/config
+8. Turbo build pipeline configured (tasks defined)
+9. All workspace dependencies configured with pnpm
+10. README.md updated with comprehensive monorepo documentation
+
+### Files Created/Modified
+
+**Created (32 files):**
+- turbo.json, pnpm-workspace.yaml, convex.json, tsconfig.json (root)
+- apps/web/package.json, apps/web/tsconfig.json
+- apps/mobile/package.json, apps/mobile/tsconfig.json, apps/mobile/app.json
+- apps/mobile/app/_layout.tsx, apps/mobile/app/index.tsx, apps/mobile/app/auth.tsx
+- packages/convex/package.json
+- packages/ui/package.json, packages/ui/tsconfig.json, packages/ui/README.md
+- packages/types/package.json, packages/types/tsconfig.json, packages/types/README.md
+- packages/types/src/index.ts, packages/types/src/convex.ts, packages/types/src/domain.ts
+- packages/config/package.json, packages/config/README.md
+- packages/config/eslint/index.js, packages/config/typescript/tsconfig.json
+- packages/config/tailwind/tailwind.config.js
+
+**Moved (20+ files):**
+- convex/* → packages/convex/ (schema.ts, users.ts, http.ts, auth.config.ts)
+- app/, components/, lib/, public/ → apps/web/
+- middleware.ts, next.config.ts, configs → apps/web/
+
+**Modified:**
+- package.json (root): added workspaces, turbo scripts, pnpm packageManager
+- README.md: complete rewrite for monorepo structure
+- apps/web/app/page.tsx: updated imports to @sunup/convex
+- apps/web/lib/auth/useCurrentUser.ts: updated imports
+
+### Technical Decisions
+
+1. **Package Manager:** Switched from npm to pnpm for better workspace support and faster installs
+2. **Workspace Protocol:** Used workspace:* for internal dependencies
+3. **Turborepo 2.x:** Used "tasks" instead of "pipeline" (breaking change)
+4. **Monorepo Scope:** @sunup/* namespace for all packages
+5. **Git History:** Used git mv to preserve file history during refactoring
+
+### Known Limitations
+
+- Convex build requires `convex dev` to generate _generated/api files (user must configure)
+- Mobile app requires Expo dependencies installation to run
+- shadcn/ui components not yet added (structure in place)
+- No automated tests (Story 1.11 will add testing infrastructure)
+
+### Next Steps
+
+1. User needs to run `convex dev` to connect Convex deployment
+2. User needs to configure .env.local files for Clerk/Convex
+3. Story ready for code review via /bmad:bmm:workflows:code-review
+4. After approval, merge to feat/sundialer branch
+
