@@ -1,0 +1,20 @@
+{
+  "name": "@sunup/types",
+  "version": "0.1.0",
+  "private": true,
+  "exports": {
+    ".": "./src/index.ts",
+    "./convex": "./src/convex.ts",
+    "./domain": "./src/domain.ts"
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@sunup/convex": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5"
+  }
+}
