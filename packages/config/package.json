@@ -1,0 +1,15 @@
+{
+  "name": "@sunup/config",
+  "version": "0.1.0",
+  "private": true,
+  "exports": {
+    "./eslint": "./eslint/index.js",
+    "./typescript": "./typescript/tsconfig.json",
+    "./tailwind": "./tailwind/tailwind.config.js"
+  },
+  "devDependencies": {
+    "eslint": "^9",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}
