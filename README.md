@@ -47,7 +47,7 @@ pnpm install
 3. Set up environment variables:
 ```bash
 # apps/web/.env.local
-NEXT_PUBLIC_CONVEX_URL=<your-convex-url>
+NEXT_PUBLIC_CONVEX_URL=https://affable-albatross-627.convex.cloud
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=<your-clerk-key>
 CLERK_SECRET_KEY=<your-clerk-secret>
 ```
@@ -162,6 +162,16 @@ pnpm test
 - **UI**: shadcn/ui with Tailwind CSS 4
 - **Build System**: Turborepo 2.6.0
 - **Package Manager**: pnpm 10.20.0
+
+## 📊 Dashboard & Admin
+
+- **Convex Dashboard**: [https://dashboard.convex.dev/deployment/affable-albatross-627](https://dashboard.convex.dev/deployment/affable-albatross-627)
+  - View database tables and documents
+  - Monitor function logs and performance
+  - Test queries and mutations
+- **Convex Demo Page**: [http://localhost:3000/convex-demo](http://localhost:3000/convex-demo)
+  - Real-time subscription demonstration
+  - Verify Convex connection
 
 ## 📚 Project Documentation
 

@@ -443,4 +443,13 @@ export default defineSchema({
     .index("by_scheduled_for", ["scheduledFor"])
     .index("by_status", ["status"])
     .index("by_tenant", ["tenantId"]),
+
+  // ============================================
+  // TASKS (Demo for Story 1.3 AC #5)
+  // ============================================
+  tasks: defineTable({
+    text: v.string(),
+    isCompleted: v.boolean(),
+    createdAt: v.number(), // timestamp
+  }),
 });
