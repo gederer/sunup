@@ -1,6 +1,9 @@
 {
   "/_global-error/page": "app/_global-error/page.js",
   "/_not-found/page": "app/_not-found/page.js",
+  "/convex-demo/page": "app/convex-demo/page.js",
   "/favicon.ico/route": "app/favicon.ico/route.js",
-  "/page": "app/page.js"
+  "/page": "app/page.js",
+  "/theme-demo/page": "app/theme-demo/page.js",
+  "/typography-demo/page": "app/typography-demo/page.js"
 }

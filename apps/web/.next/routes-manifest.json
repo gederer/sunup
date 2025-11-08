@@ -40,10 +40,28 @@
       "namedRegex": "^/_not\\-found(?:/)?$"
     },
     {
+      "page": "/convex-demo",
+      "regex": "^/convex\\-demo(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/convex\\-demo(?:/)?$"
+    },
+    {
       "page": "/favicon.ico",
       "regex": "^/favicon\\.ico(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/favicon\\.ico(?:/)?$"
+    },
+    {
+      "page": "/theme-demo",
+      "regex": "^/theme\\-demo(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/theme\\-demo(?:/)?$"
+    },
+    {
+      "page": "/typography-demo",
+      "regex": "^/typography\\-demo(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/typography\\-demo(?:/)?$"
     }
   ],
   "dataRoutes": [],

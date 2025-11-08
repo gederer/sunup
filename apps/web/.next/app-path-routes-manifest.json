@@ -1,6 +1,9 @@
 {
   "/_global-error/page": "/_global-error",
   "/_not-found/page": "/_not-found",
+  "/convex-demo/page": "/convex-demo",
   "/favicon.ico/route": "/favicon.ico",
-  "/page": "/"
+  "/page": "/",
+  "/theme-demo/page": "/theme-demo",
+  "/typography-demo/page": "/typography-demo"
 }
