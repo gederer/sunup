@@ -1,6 +1,6 @@
 # Story 1.2: Setup TailwindCSS 4 and shadcn/ui Component Library
 
-Status: ready-for-dev
+Status: done
 
 ## Story
 
