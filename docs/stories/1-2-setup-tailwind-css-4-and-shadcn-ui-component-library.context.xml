@@ -1,0 +1,191 @@
+<story-context id="bmad/bmm/workflows/4-implementation/story-context/template" v="1.0">
+  <metadata>
+    <epicId>1</epicId>
+    <storyId>1.2</storyId>
+    <title>Setup TailwindCSS 4 and shadcn/ui Component Library</title>
+    <status>drafted</status>
+    <generatedAt>2025-11-07</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/stories/1-2-setup-tailwind-css-4-and-shadcn-ui-component-library.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>Developer</asA>
+    <iWant>TailwindCSS 4+ and shadcn/ui configured with theming support</iWant>
+    <soThat>I can build consistent, accessible UI components with light/dark mode</soThat>
+    <tasks>
+      - Verify TailwindCSS 4+ installation and configuration (AC: #1)
+      - Initialize shadcn/ui with components directory (AC: #2)
+      - Configure tweakcn theme system for light/dark mode (AC: #3)
+      - Define basic theme variables (AC: #4)
+      - Create sample page demonstrating theme switching (AC: #5)
+      - Configure Tailwind typography plugin (AC: #6)
+      - Verify accessibility compliance (AC: #7)
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+    <criterion id="1">TailwindCSS 4+ installed and configured with Next.js</criterion>
+    <criterion id="2">shadcn/ui initialized with components directory (/components/ui)</criterion>
+    <criterion id="3">tweakcn theme system configured for light/dark mode switching</criterion>
+    <criterion id="4">Basic theme variables defined (colors, spacing, typography)</criterion>
+    <criterion id="5">Sample page demonstrates theme switching functionality</criterion>
+    <criterion id="6">Tailwind typography plugin configured for content rendering</criterion>
+    <criterion id="7">All shadcn/ui components are accessible (WCAG 2.1 Level AA compliant by default)</criterion>
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc>
+        <path>docs/epics.md</path>
+        <title>Epic Breakdown</title>
+        <section>Story 1.2</section>
+        <snippet>As a Developer, I want TailwindCSS 4+ and shadcn/ui configured with theming support, so that I can build consistent, accessible UI components with light/dark mode. Prerequisites: Story 1.1 (project initialization).</snippet>
+      </doc>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>Decision Architecture</title>
+        <section>Technology Stack Details - Frontend Styling</section>
+        <snippet>TailwindCSS 4.x + tweakcn theme system for styling. shadcn/ui (copy-paste components, fully customizable). lucide-react (0.548.0) for icons.</snippet>
+      </doc>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>Decision Architecture</title>
+        <section>Project Structure - Web App</section>
+        <snippet>apps/web/ contains Next.js web application with app/ directory, components/ for app-specific components, and lib/ for web-specific utilities. shadcn/ui components go in apps/web/components/ui/.</snippet>
+      </doc>
+      <doc>
+        <path>docs/stories/1-1-refactor-to-turborepo-monorepo-structure.md</path>
+        <title>Story 1.1 Implementation Summary</title>
+        <section>Known Limitations</section>
+        <snippet>shadcn/ui components not yet added (structure in place). Story 1.1 created packages/ui/ directory but it follows install-on-demand pattern.</snippet>
+      </doc>
+      <doc>
+        <path>README.md</path>
+        <title>Sunup Monorepo Documentation</title>
+        <section>Workspace Packages</section>
+        <snippet>Web app at apps/web/ with Next.js 16, TailwindCSS 4, shadcn/ui. Shared UI package at packages/ui/ for cross-platform components.</snippet>
+      </doc>
+    </docs>
+
+    <code>
+      <artifact>
+        <path>apps/web/app/globals.css</path>
+        <kind>stylesheet</kind>
+        <symbol>:root theme variables</symbol>
+        <lines>1-176</lines>
+        <reason>CRITICAL: Tailwind 4 globals.css already has extensive theme variables defined. Light mode variables at :root (lines 71-125), dark mode via @media prefers-color-scheme (lines 127-162). Uses OKLCH color space. All theme tokens already exist - DO NOT recreate, verify and extend only.</reason>
+      </artifact>
+      <artifact>
+        <path>apps/web/components.json</path>
+        <kind>config</kind>
+        <symbol>shadcn configuration</symbol>
+        <lines>1-22</lines>
+        <reason>CRITICAL: shadcn/ui ALREADY INITIALIZED. Config shows style="new-york", RSC enabled, aliases configured (@/components, @/lib/utils, @/components/ui). Do not re-run init - just install components via shadcn CLI.</reason>
+      </artifact>
+      <artifact>
+        <path>apps/web/package.json</path>
+        <kind>manifest</kind>
+        <symbol>dependencies</symbol>
+        <lines>12-26</lines>
+        <reason>TailwindCSS 4 already installed (line 36: "tailwindcss": "^4"), @tailwindcss/postcss plugin installed (line 29). shadcn CLI tool installed (line 35). lucide-react for icons (line 20). class-variance-authority and clsx for component variants (lines 17-18).</reason>
+      </artifact>
+      <artifact>
+        <path>packages/config/tailwind/tailwind.config.js</path>
+        <kind>config</kind>
+        <symbol>shared theme tokens</symbol>
+        <lines>1-53</lines>
+        <reason>Shared Tailwind config from Story 1.1 with theme extension pattern. Uses HSL format for colors with CSS variables. This is for reference - apps/web uses Tailwind 4 CSS-based config in globals.css.</reason>
+      </artifact>
+      <artifact>
+        <path>apps/web/app/layout.tsx</path>
+        <kind>component</kind>
+        <symbol>RootLayout</symbol>
+        <lines>1-36</lines>
+        <reason>Root layout with ClerkProvider and ConvexClientProvider. This is where ThemeProvider should be added for theme switching (AC #3).</reason>
+      </artifact>
+      <artifact>
+        <path>apps/web/lib/auth</path>
+        <kind>directory</kind>
+        <symbol>utility functions</symbol>
+        <lines>n/a</lines>
+        <reason>Existing lib/ directory structure. Create lib/utils.ts for shadcn utilities (cn helper function) if not exists.</reason>
+      </artifact>
+    </code>
+
+    <dependencies>
+      <node>
+        <package name="tailwindcss" version="^4" required="true">TailwindCSS 4 - ALREADY INSTALLED</package>
+        <package name="@tailwindcss/postcss" version="^4" required="true">TailwindCSS PostCSS plugin - ALREADY INSTALLED</package>
+        <package name="shadcn" version="^3.5.0" required="true">shadcn CLI tool - ALREADY INSTALLED</package>
+        <package name="lucide-react" version="^0.548.0" required="true">Icon library - ALREADY INSTALLED</package>
+        <package name="class-variance-authority" version="^0.7.1" required="true">Component variants - ALREADY INSTALLED</package>
+        <package name="clsx" version="^2.1.1" required="true">Conditional classes - ALREADY INSTALLED</package>
+        <package name="tailwind-merge" version="^3.3.1" required="true">Merge Tailwind classes - ALREADY INSTALLED</package>
+        <package name="tw-animate-css" version="^1.4.0" required="true">Animation utilities - ALREADY INSTALLED</package>
+        <package name="next-themes" version="latest" required="true">Theme switching - NEEDS INSTALLATION (AC #3)</package>
+        <package name="@tailwindcss/typography" version="latest" required="true">Typography plugin - NEEDS INSTALLATION (AC #6)</package>
+      </node>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    <constraint>TailwindCSS 4 uses CSS-based configuration (@theme inline) instead of tailwind.config.js - all theme customization goes in globals.css</constraint>
+    <constraint>Theme variables already extensively defined in globals.css - DO NOT recreate, verify they work and extend only if needed</constraint>
+    <constraint>shadcn/ui already initialized (components.json exists) - DO NOT re-run shadcn init, just add components</constraint>
+    <constraint>Use OKLCH color space for theme colors (already established pattern in globals.css)</constraint>
+    <constraint>Dark mode uses @media (prefers-color-scheme: dark) in globals.css - consider adding class-based toggle with next-themes</constraint>
+    <constraint>Component aliases already configured: @/components, @/lib/utils, @/components/ui - use these in imports</constraint>
+    <constraint>Follow monorepo workspace pattern: web components in apps/web/components/, shared in packages/ui/</constraint>
+    <constraint>Story 1.1 established build validation via: pnpm turbo build --filter=@sunup/web</constraint>
+    <constraint>No automated tests required (Story 1.11 sets up testing) - manual validation only</constraint>
+    <constraint>All shadcn/ui components must maintain WCAG 2.1 Level AA accessibility (do not remove ARIA attributes)</constraint>
+  </constraints>
+
+  <interfaces>
+    <interface>
+      <name>ThemeProvider</name>
+      <kind>React component</kind>
+      <signature>function ThemeProvider({ children, ...props }: { children: React.ReactNode })</signature>
+      <path>TO BE CREATED - apps/web/components/theme-provider.tsx</path>
+    </interface>
+    <interface>
+      <name>ThemeToggle</name>
+      <kind>React component</kind>
+      <signature>function ThemeToggle(): JSX.Element</signature>
+      <path>TO BE CREATED - apps/web/components/theme-toggle.tsx</path>
+    </interface>
+    <interface>
+      <name>cn utility</name>
+      <kind>function</kind>
+      <signature>function cn(...inputs: ClassValue[]): string</signature>
+      <path>TO BE CREATED - apps/web/lib/utils.ts (standard shadcn utility)</path>
+    </interface>
+    <interface>
+      <name>shadcn components</name>
+      <kind>React components</kind>
+      <signature>Button, Card, Input, Label, DropdownMenu - standard shadcn/ui components</signature>
+      <path>TO BE CREATED - apps/web/components/ui/*.tsx via shadcn CLI</path>
+    </interface>
+  </interfaces>
+
+  <tests>
+    <standards>Story 1.11 sets up testing infrastructure (Playwright + Vitest). For Story 1.2, manual validation only: (1) Build verification via turbo build, (2) Visual verification of theme switching, (3) Component rendering in both light/dark modes, (4) Keyboard navigation and screen reader testing for accessibility, (5) Typography rendering with prose content.</standards>
+
+    <locations>
+      No test files required for this story. Future tests will be in:
+      - apps/web/__tests__/ (unit/integration tests via Vitest)
+      - apps/web/e2e/ (end-to-end tests via Playwright)
+    </locations>
+
+    <ideas>
+      <idea ac="1">Verify TailwindCSS 4 utilities work: Test basic classes like bg-primary, text-foreground apply correctly</idea>
+      <idea ac="2">Verify shadcn components install: Run npx shadcn add button and confirm components/ui/button.tsx created</idea>
+      <idea ac="3">Test theme switching: Toggle between light/dark mode and verify CSS variables update</idea>
+      <idea ac="4">Verify theme variables: Check all color tokens (primary, secondary, accent, etc.) render correctly in both modes</idea>
+      <idea ac="5">Test theme demo page: Create /theme-demo route and verify all components visible in both themes</idea>
+      <idea ac="6">Test typography plugin: Create prose content with <article className="prose"> and verify styles apply</idea>
+      <idea ac="7">Manual accessibility test: Keyboard navigate through components, verify focus indicators, test with screen reader (VoiceOver/NVDA)</idea>
+    </ideas>
+  </tests>
+</story-context>
