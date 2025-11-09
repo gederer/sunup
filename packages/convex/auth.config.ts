@@ -1,14 +1,20 @@
+/**
+ * Convex Auth Configuration for better-auth
+ *
+ * Configures Convex to accept JWT tokens from better-auth.
+ *
+ * Story: 1.5 - Integrate better-auth Authentication
+ */
+
 import { AuthConfig } from "convex/server";
 
 export default {
   providers: [
     {
-      // Replace with your own Clerk Issuer URL from your "convex" JWT template
-      // or with `process.env.CLERK_JWT_ISSUER_DOMAIN`
-      // and configure CLERK_JWT_ISSUER_DOMAIN on the Convex Dashboard
-      // See https://docs.convex.dev/auth/clerk#configuring-dev-and-prod-instances
-      domain: process.env.CLERK_JWT_ISSUER_DOMAIN!,
+      // better-auth JWT configuration
+      // The domain should match BETTER_AUTH_URL
+      domain: process.env.BETTER_AUTH_URL || "http://localhost:3000",
       applicationID: "convex",
     },
-  ]
+  ],
 } satisfies AuthConfig;
