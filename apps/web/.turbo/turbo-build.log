@@ -7,25 +7,27 @@
 
  ⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
    Creating an optimized production build ...
- ✓ Compiled successfully in 2.4s
+ ✓ Compiled successfully in 1782.6ms
    Running TypeScript ...
    Collecting page data ...
-   Generating static pages (0/7) ...
-   Generating static pages (1/7) 
-   Generating static pages (3/7) 
-   Generating static pages (5/7) 
- ✓ Generating static pages (7/7) in 346.2ms
+   Generating static pages (0/8) ...
+   Generating static pages (2/8) 
+   Generating static pages (4/8) 
+   Generating static pages (6/8) 
+ ✓ Generating static pages (8/8) in 321.1ms
    Finalizing page optimization ...
 
 Route (app)
 ┌ ○ /
 ├ ○ /_not-found
 ├ ○ /convex-demo
+├ ƒ /profile
 ├ ○ /theme-demo
 └ ○ /typography-demo
 
 
 ƒ Proxy (Middleware)
 
-○  (Static)  prerendered as static content
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
 
