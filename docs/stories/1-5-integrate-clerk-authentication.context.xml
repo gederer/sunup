@@ -1,0 +1,218 @@
+<story-context id="bmad/bmm/workflows/4-implementation/story-context/template" v="1.0">
+  <metadata>
+    <epicId>1</epicId>
+    <storyId>5</storyId>
+    <title>Integrate Clerk Authentication</title>
+    <status>drafted</status>
+    <generatedAt>2025-11-08</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/stories/1-5-integrate-clerk-authentication.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>Developer</asA>
+    <iWant>Clerk authentication integrated with Next.js</iWant>
+    <soThat>users can securely sign in and access the application</soThat>
+    <tasks>
+      - Verify Clerk configuration and middleware (AC: #1)
+      - Verify sign-in and sign-up flows (AC: #2)
+      - Implement and test protected routes (AC: #3)
+      - Verify user session accessibility (AC: #4)
+      - Verify Clerk webhook for user sync (AC: #5)
+      - Create user profile page (AC: #6)
+      - Verify sign-out functionality (AC: #7)
+      - Create authentication documentation (Bonus)
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+    1. Clerk installed and configured with Next.js middleware (AC: #1)
+    2. Sign-in and sign-up flows working via Clerk components (AC: #2)
+    3. Protected routes require authentication (redirect to sign-in if not authenticated) (AC: #3)
+    4. User session accessible in server and client components (AC: #4)
+    5. Clerk webhook configured for user sync to Convex database (AC: #5)
+    6. User profile page displays Clerk user data (AC: #6)
+    7. Sign-out functionality working correctly (AC: #7)
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>Architecture Document</title>
+        <section>Authentication &amp; Authorization</section>
+        <snippet>Clerk integration patterns with Convex, middleware configuration using clerkMiddleware, protected route patterns with createRouteMatcher, JWT-based auth with tenant isolation.</snippet>
+      </doc>
+      <doc>
+        <path>docs/PRD.md</path>
+        <title>Product Requirements Document</title>
+        <section>User Management &amp; Authentication</section>
+        <snippet>FR005: Multi-tenant authentication via Clerk supporting 12 distinct roles with RBAC. OAuth2, session management, and MFA support requirements.</snippet>
+      </doc>
+      <doc>
+        <path>docs/multi-tenant-rls.md</path>
+        <title>Multi-Tenant Row-Level Security Guide</title>
+        <section>Complete RLS Documentation</section>
+        <snippet>Comprehensive guide on RLS implementation with Clerk integration, security patterns, common pitfalls, testing strategies. Critical for understanding tenant isolation and auth flow.</snippet>
+      </doc>
+      <doc>
+        <path>docs/epics.md</path>
+        <title>Epic Breakdown</title>
+        <section>Story 1.5</section>
+        <snippet>Story definition with acceptance criteria and context from epic planning.</snippet>
+      </doc>
+      <doc>
+        <path>docs/story-1.6.5-invitation-workflow-reference.md</path>
+        <title>Invitation Workflow Reference</title>
+        <section>Invitation-based Onboarding</section>
+        <snippet>Reference for invitation workflow (Story 1.6.5) that sets tenantId in Clerk metadata. Related to AC #5 webhook testing.</snippet>
+      </doc>
+    </docs>
+    <code>
+      <artifact>
+        <path>apps/web/middleware.ts</path>
+        <kind>middleware</kind>
+        <symbol>clerkMiddleware</symbol>
+        <lines>1-12</lines>
+        <reason>Existing Clerk middleware configuration. Story must verify and potentially enhance with protected route patterns.</reason>
+      </artifact>
+      <artifact>
+        <path>apps/web/app/layout.tsx</path>
+        <kind>layout</kind>
+        <symbol>ClerkProvider</symbol>
+        <reason>Root layout wrapping app with ClerkProvider. Critical for Clerk functionality (AC #1).</reason>
+      </artifact>
+      <artifact>
+        <path>apps/web/components/ConvexClientProvider.tsx</path>
+        <kind>component</kind>
+        <symbol>ConvexProviderWithClerk</symbol>
+        <reason>Integration layer between Convex and Clerk. Must be working for auth flow (AC #4).</reason>
+      </artifact>
+      <artifact>
+        <path>packages/convex/users.ts</path>
+        <kind>mutation</kind>
+        <symbol>upsertFromClerk</symbol>
+        <lines>15-54</lines>
+        <reason>Clerk webhook handler for user sync. Critical for AC #5. Contains invitation requirement (tenantId check from Story 1.4).</reason>
+      </artifact>
+      <artifact>
+        <path>packages/convex/users.ts</path>
+        <kind>query</kind>
+        <symbol>current</symbol>
+        <lines>6-13</lines>
+        <reason>Query to get current user with RLS. Example of proper auth pattern for profile page (AC #6).</reason>
+      </artifact>
+      <artifact>
+        <path>packages/convex/lib/auth.ts</path>
+        <kind>helper</kind>
+        <symbol>getAuthUserWithTenant</symbol>
+        <lines>62-86</lines>
+        <reason>Core RLS helper that extracts authenticated user and tenantId. Must be used in all queries/mutations (AC #4).</reason>
+      </artifact>
+      <artifact>
+        <path>packages/convex/invitations.ts</path>
+        <kind>mutation</kind>
+        <symbol>createDevInvitation</symbol>
+        <reason>Development helper for testing invitation-based onboarding. Needed for webhook testing (AC #5).</reason>
+      </artifact>
+      <artifact>
+        <path>packages/convex/schema.ts</path>
+        <kind>schema</kind>
+        <symbol>users table</symbol>
+        <reason>User schema definition with tenantId requirement. Foundation for multi-tenant auth.</reason>
+      </artifact>
+    </code>
+    <dependencies>
+      <ecosystem name="Node.js/Next.js">
+        <package name="@clerk/nextjs" version="^6.34.0" />
+        <package name="next" version="16.0.0" />
+        <package name="react" version="19.2.0" />
+        <package name="convex" version="^1.28.0" />
+        <package name="svix" version="^1.81.0" note="Webhook signature verification" />
+        <package name="shadcn/ui" note="For profile page UI components" />
+        <package name="next-themes" version="^0.4.6" />
+        <package name="lucide-react" version="^0.548.0" note="For icons" />
+      </ecosystem>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    <constraint>CRITICAL: Public signup is DISABLED. Users must be invited (tenantId in Clerk metadata required).</constraint>
+    <constraint>All Convex queries/mutations MUST use getAuthUserWithTenant for RLS enforcement.</constraint>
+    <constraint>NEVER accept tenantId as parameter from client - always extract from authenticated context.</constraint>
+    <constraint>Middleware must use clerkMiddleware from @clerk/nextjs/server (not legacy authMiddleware).</constraint>
+    <constraint>Protected routes should use middleware-level protection for better UX (redirect before page load).</constraint>
+    <constraint>Profile page must use shadcn/ui components (Story 1.2 requirement).</constraint>
+    <constraint>Testing: Manual testing only (Story 1.11 will add Vitest/Playwright infrastructure).</constraint>
+    <constraint>Environment variables: NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY, CLERK_SECRET_KEY must be configured.</constraint>
+    <constraint>Webhook testing requires invitation setup (createDevInvitation or manual metadata).</constraint>
+  </constraints>
+
+  <interfaces>
+    <interface>
+      <name>getAuthUserWithTenant</name>
+      <kind>Function</kind>
+      <signature>async function getAuthUserWithTenant(ctx: QueryCtx | MutationCtx): Promise&lt;UserWithTenant&gt;</signature>
+      <path>packages/convex/lib/auth.ts</path>
+      <note>Core RLS helper - MUST be called at start of every query/mutation</note>
+    </interface>
+    <interface>
+      <name>upsertFromClerk</name>
+      <kind>Internal Mutation</kind>
+      <signature>internalMutation({ args: {data: UserJSON}, handler: async (ctx, {data}) =&gt; void })</signature>
+      <path>packages/convex/users.ts</path>
+      <note>Webhook endpoint for Clerk user sync. Requires tenantId in public_metadata.</note>
+    </interface>
+    <interface>
+      <name>current</name>
+      <kind>Query</kind>
+      <signature>query({ args: {}, handler: async (ctx) =&gt; User })</signature>
+      <path>packages/convex/users.ts</path>
+      <note>Get current authenticated user - pattern for profile page</note>
+    </interface>
+    <interface>
+      <name>clerkMiddleware</name>
+      <kind>Next.js Middleware</kind>
+      <signature>clerkMiddleware((auth, req) =&gt; void)</signature>
+      <path>apps/web/middleware.ts</path>
+      <note>Protect routes with auth().protect() for authenticated-only pages</note>
+    </interface>
+    <interface>
+      <name>Clerk Components</name>
+      <kind>React Components</kind>
+      <signature>SignInButton, SignUpButton, UserButton, Authenticated, Unauthenticated</signature>
+      <note>Pre-built Clerk components for auth UI (AC #2, #7)</note>
+    </interface>
+    <interface>
+      <name>Clerk Hooks</name>
+      <kind>React Hooks</kind>
+      <signature>useAuth(): {isLoaded, userId, ...}, useUser(): {user, ...}</signature>
+      <note>Client-side auth state (AC #4)</note>
+    </interface>
+    <interface>
+      <name>Clerk Server Helpers</name>
+      <kind>Server Functions</kind>
+      <signature>auth(): {userId, ...}</signature>
+      <note>Server component/action auth (AC #4)</note>
+    </interface>
+  </interfaces>
+
+  <tests>
+    <standards>Manual testing for Story 1.5 using browser and Convex dashboard. Story 1.11 will implement automated testing with Vitest (unit/integration) and Playwright (e2e). Test invitation-based flow (not standard Clerk tutorials) - users must have tenantId in metadata.</standards>
+    <locations>
+      <location>Manual browser testing for sign-in/sign-up flows</location>
+      <location>Convex dashboard for webhook verification and database inspection</location>
+      <location>Clerk dashboard for user management and webhook configuration</location>
+    </locations>
+    <ideas>
+      <test ac="1">Verify clerkMiddleware configured in middleware.ts and ClerkProvider in layout.tsx. Check environment variables set correctly.</test>
+      <test ac="2">Test sign-in and sign-up flows with Clerk modals. Verify error handling for invalid credentials.</test>
+      <test ac="3">Create protected route (/profile), test redirect when not authenticated, verify access when logged in.</test>
+      <test ac="4">Test useAuth() in client components, auth() in server components. Verify session persistence across reloads.</test>
+      <test ac="5">Test webhook: create user with tenantId metadata → verify sync to Convex. Test error for users without tenantId (invitation requirement).</test>
+      <test ac="6">Create /profile page with shadcn/ui, display Clerk user data (firstName, lastName, email, image). Link to Clerk settings.</test>
+      <test ac="7">Test UserButton sign-out, verify session cleared, test redirect after sign-out.</test>
+      <test bonus="docs">Document Clerk+Convex patterns, protected routes, webhook setup, troubleshooting guide.</test>
+    </ideas>
+  </tests>
+</story-context>

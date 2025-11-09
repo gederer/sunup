@@ -1,11 +1,14 @@
 import {internalMutation, query, QueryCtx} from "./_generated/server";
 import {UserJSON} from "@clerk/backend";
 import {v, Validator} from "convex/values";
+import {getAuthUserWithTenant} from "./lib/auth";
 
 export const current = query({
   args: {},
   handler: async (ctx) => {
-    return await getCurrentUser(ctx);
+    // Use RLS helper to get current user with tenant information
+    const { user } = await getAuthUserWithTenant(ctx);
+    return user;
   }
 });
 
@@ -22,13 +25,29 @@ export const upsertFromClerk = internalMutation({
 
     const user = await userByClerkId(ctx, data.id);
     if (user === null) {
-      // For new users, we need a tenantId - for now, create a default tenant
-      // TODO: Implement proper tenant assignment in Story 1.4
+      // New user signup - must have invitation
+      // Story 1.4: RLS requires tenantId assignment
+      // Story 1.6.5: Full invitation workflow will be implemented
+
+      // Check if user has tenantId in Clerk metadata (set during invitation)
+      const tenantId = (data.public_metadata as any)?.tenantId;
+
+      if (!tenantId) {
+        // Public signup is disabled - users must be invited
+        // Invitation workflow (Story 1.6.5) will set tenantId in Clerk metadata
+        throw new Error(
+          "Account registration requires an invitation. " +
+          "Please contact your organization's administrator to receive an invitation."
+        );
+      }
+
+      // User has valid invitation (tenantId set by invitation process)
       await ctx.db.insert("users", {
         ...userAttributes,
-        tenantId: "default" as any // Temporary hack until Story 1.4
+        tenantId,
       });
     } else {
+      // Existing user - update profile data only
       await ctx.db.patch(user._id, userAttributes);
     }
   }

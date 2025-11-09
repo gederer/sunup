@@ -1,0 +1,187 @@
+<story-context id="bmad/bmm/workflows/4-implementation/story-context/template" v="1.0">
+  <metadata>
+    <epicId>1</epicId>
+    <storyId>4</storyId>
+    <title>Implement Multi-Tenant Row-Level Security (RLS) Foundation</title>
+    <status>drafted</status>
+    <generatedAt>2025-11-08</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/stories/1-4-implement-multi-tenant-row-level-security-rls-foundation.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>Developer</asA>
+    <iWant>every database query to enforce tenantId filtering at the query layer</iWant>
+    <soThat>data isolation between tenants is guaranteed and cross-tenant data leakage is impossible</soThat>
+    <tasks>
+      <task id="1" ac="1,4">Audit and fix schema for RLS compliance</task>
+      <task id="2" ac="2,3">Create RLS helper functions</task>
+      <task id="3" ac="3">Update existing queries/mutations to use RLS helpers</task>
+      <task id="4" ac="5">Create test suite for RLS</task>
+      <task id="5" ac="6">Setup linting rule for tenantId checks</task>
+      <task id="6" ac="7">Create RLS documentation</task>
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+    <criterion id="1">All Convex tables include mandatory `tenantId` field in schema</criterion>
+    <criterion id="2">Helper function `getAuthUserWithTenant(ctx)` returns authenticated user + tenantId</criterion>
+    <criterion id="3">Query wrapper ensures every query/mutation checks tenantId</criterion>
+    <criterion id="4">Composite indexes created: `(tenantId, otherField)` for efficient tenant-scoped queries</criterion>
+    <criterion id="5">Test suite verifies cross-tenant queries return empty results</criterion>
+    <criterion id="6">Code linting rule flags queries missing tenantId check</criterion>
+    <criterion id="7">Documentation in `/docs/multi-tenant-rls.md` explains RLS patterns</criterion>
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>Decision Architecture</title>
+        <section>Authentication &amp; Authorization</section>
+        <snippet>Convex RLS Pattern: Every query filters by tenantId. Prevents cross-tenant data leakage. Enforced at database query layer (cannot be bypassed). Example pattern provided for getAuthUserWithTenant helper.</snippet>
+      </doc>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>Decision Architecture</title>
+        <section>Data Architecture - Multi-Tenancy</section>
+        <snippet>ALL tables include tenantId: v.id("tenants"). ALL tables indexed: .index("by_tenant", ["tenantId"]). ALL queries MUST filter by tenantId (RLS enforcement).</snippet>
+      </doc>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>Decision Architecture</title>
+        <section>Security Architecture - Row-Level Security</section>
+        <snippet>Every query filters by tenantId. Prevents cross-tenant data leakage. PII Protection: Encrypted in transit (HTTPS). Access logged for compliance.</snippet>
+      </doc>
+      <doc>
+        <path>docs/epics.md</path>
+        <title>Sunup - Epic Breakdown</title>
+        <section>Epic 1: Story 1.4</section>
+        <snippet>As a Developer, I want every database query to enforce tenantId filtering at the query layer, So that data isolation between tenants is guaranteed and cross-tenant data leakage is impossible. 7 acceptance criteria defined.</snippet>
+      </doc>
+      <doc>
+        <path>docs/research-multi-tenancy-architecture-2025-11-03.md</path>
+        <title>Multi-Tenancy Architecture Research</title>
+        <section>Row-Level Security Best Practices</section>
+        <snippet>Research on multi-tenant architecture patterns, RLS enforcement strategies, and tenant isolation approaches for B2B SaaS platforms.</snippet>
+      </doc>
+      <doc>
+        <path>docs/git-workflow.md</path>
+        <title>Git Workflow - MANDATORY Procedures</title>
+        <section>Story Implementation Workflow</section>
+        <snippet>NEVER start a story without committing all current work first. ALWAYS create story branch: story/X-Y-story-name. Commit frequently during implementation (WIP commits).</snippet>
+      </doc>
+    </docs>
+
+    <code>
+      <artifact>
+        <path>packages/convex/schema.ts</path>
+        <kind>schema</kind>
+        <symbol>defineSchema</symbol>
+        <lines>1-456</lines>
+        <reason>Complete database schema. 19 out of 20 tables have tenantId field and by_tenant index. Only tasks table (lines 448-454) is missing tenantId - must be fixed for RLS compliance.</reason>
+      </artifact>
+      <artifact>
+        <path>packages/convex/users.ts</path>
+        <kind>queries/mutations</kind>
+        <symbol>getCurrentUser, upsertFromClerk</symbol>
+        <lines>1-71</lines>
+        <reason>User authentication queries. Contains getCurrentUser pattern that will be basis for getAuthUserWithTenant helper. Note line 26: TODO comment explicitly mentions Story 1.4. No tenantId filtering currently implemented.</reason>
+      </artifact>
+      <artifact>
+        <path>packages/convex/tasks.ts</path>
+        <kind>queries/mutations</kind>
+        <symbol>list, add, toggle, remove</symbol>
+        <lines>1-46</lines>
+        <reason>Demo tasks queries/mutations without RLS. No tenantId filtering in queries (line 12). Must be updated to enforce RLS after schema fix and helper creation.</reason>
+      </artifact>
+      <artifact>
+        <path>packages/convex/auth.config.ts</path>
+        <kind>config</kind>
+        <symbol>auth config</symbol>
+        <lines>1-end</lines>
+        <reason>Clerk authentication configuration for Convex. Defines how Clerk JWT tokens are validated and user identity is extracted.</reason>
+      </artifact>
+      <artifact>
+        <path>packages/convex/http.ts</path>
+        <kind>http-actions</kind>
+        <symbol>http routes</symbol>
+        <lines>1-end</lines>
+        <reason>HTTP actions and webhooks. May need RLS considerations for webhook handlers that create/update data.</reason>
+      </artifact>
+    </code>
+
+    <dependencies>
+      <node>
+        <package name="convex" version="^1.28.0">Real-time serverless database and backend framework</package>
+        <package name="@clerk/nextjs" version="^6.34.0">Authentication provider with JWT tokens</package>
+        <package name="next" version="16.0.0">React framework for web app</package>
+        <package name="react" version="19.2.0">UI library</package>
+        <package name="typescript" version="^5">Type-safe JavaScript</package>
+        <package name="svix" version="^1.81.0">Webhook verification library (for Clerk webhooks)</package>
+        <package name="eslint" version="^9">Linting tool (for AC #6: custom linting rule)</package>
+      </node>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    <constraint type="security" priority="critical">EVERY query and mutation MUST filter by tenantId. NEVER trust client-provided tenantId (always extract from authenticated context). NEVER skip tenantId validation (even for "admin" operations).</constraint>
+    <constraint type="architecture" priority="high">RLS helper functions must be in packages/convex/lib/auth.ts. All queries must use .withIndex("by_tenant", (q) => q.eq("tenantId", tenantId)) pattern.</constraint>
+    <constraint type="testing" priority="medium">Story 1.11 adds automated test infrastructure. For Story 1.4, create test files (packages/convex/tests/rls.test.ts) with manual test procedures. Tests won't run automatically until Story 1.11.</constraint>
+    <constraint type="schema" priority="high">Tasks table (lines 448-454 of schema.ts) must add tenantId: v.id("tenants") field and .index("by_tenant", ["tenantId"]). Existing demo tasks may need tenantId backfill or deletion.</constraint>
+    <constraint type="pattern" priority="high">Composite indexes must have tenantId first: .index("by_tenant_and_field", ["tenantId", "field"]). Order matters for query efficiency.</constraint>
+    <constraint type="git" priority="critical">Follow docs/git-workflow.md MANDATORY procedures. Create story branch: story/1-4-implement-multi-tenant-row-level-security-rls-foundation. Commit frequently with WIP commits.</constraint>
+  </constraints>
+
+  <interfaces>
+    <interface>
+      <name>getAuthUserWithTenant</name>
+      <kind>function signature</kind>
+      <signature>export async function getAuthUserWithTenant(ctx: QueryCtx | MutationCtx): Promise&lt;{ user: User, tenantId: Id&lt;"tenants"&gt; }&gt;</signature>
+      <path>packages/convex/lib/auth.ts (to be created)</path>
+      <description>Core RLS helper that extracts Clerk JWT identity, looks up user, returns user object and tenantId. Throws "Unauthorized" if no identity, "User not found" if user doesn't exist.</description>
+    </interface>
+    <interface>
+      <name>requireRole</name>
+      <kind>function signature</kind>
+      <signature>export async function requireRole(ctx: QueryCtx | MutationCtx, allowedRoles: string[]): Promise&lt;{ user: User, tenantId: Id&lt;"tenants"&gt; }&gt;</signature>
+      <path>packages/convex/lib/auth.ts (to be created)</path>
+      <description>Future-use helper for RBAC. Extends getAuthUserWithTenant to also check user roles. Throws "Forbidden" if user lacks required role. Not required for Story 1.4 but good to include in auth.ts.</description>
+    </interface>
+    <interface>
+      <name>Convex Query Pattern with RLS</name>
+      <kind>code pattern</kind>
+      <signature>export const listItems = query({ handler: async (ctx) => { const { tenantId } = await getAuthUserWithTenant(ctx); return await ctx.db.query("items").withIndex("by_tenant", (q) => q.eq("tenantId", tenantId)).collect(); } });</signature>
+      <path>All query files in packages/convex/</path>
+      <description>Standard pattern for RLS-enforced queries. MUST call getAuthUserWithTenant first, then filter by tenantId using withIndex.</description>
+    </interface>
+    <interface>
+      <name>Convex Mutation Pattern with RLS</name>
+      <kind>code pattern</kind>
+      <signature>export const createItem = mutation({ args: {...}, handler: async (ctx, args) => { const { user, tenantId } = await getAuthUserWithTenant(ctx); return await ctx.db.insert("items", { ...args, tenantId, createdAt: Date.now() }); } });</signature>
+      <path>All mutation files in packages/convex/</path>
+      <description>Standard pattern for RLS-enforced mutations. MUST include tenantId in all inserts. Extract tenantId from getAuthUserWithTenant, never accept from client.</description>
+    </interface>
+  </interfaces>
+
+  <tests>
+    <standards>
+Story 1.11 sets up automated testing (Vitest + Playwright). For Story 1.4, create test files with manual test procedures. Test framework: Vitest for unit/integration tests. Test location: packages/convex/tests/. Testing approach: Manual verification of RLS isolation by creating data for multiple tenants and verifying queries return only tenant-scoped results. Build verification: turbo build --filter=@sunup/web must succeed.
+    </standards>
+
+    <locations>
+      <location>packages/convex/tests/rls.test.ts (to be created)</location>
+      <location>Manual testing via Convex dashboard and browser console</location>
+    </locations>
+
+    <ideas>
+      <test ac="1,4">Schema Compliance Test: Verify all 20 tables (including tasks) have tenantId field and by_tenant index. Run npx convex dev and check schema sync succeeds without errors.</test>
+      <test ac="2">Helper Function Test: Call getAuthUserWithTenant in sample query, verify it returns { user, tenantId } for authenticated requests and throws errors for unauthenticated.</test>
+      <test ac="3,5">Cross-Tenant Isolation Test: Create tasks for Tenant A and Tenant B. Query as Tenant A user, verify only Tenant A tasks returned. Query as Tenant B user, verify only Tenant B tasks returned. No overlap.</test>
+      <test ac="3">Mutation RLS Test: Attempt to create task as Tenant A, verify tenantId is automatically set to Tenant A. Attempt direct mutation with Tenant B's tenantId, verify it fails or uses authenticated tenant instead.</test>
+      <test ac="5">Unauthenticated Access Test: Call query without authentication, verify getAuthUserWithTenant throws "Unauthorized" error.</test>
+      <test ac="6">Linting Test: Write query without .withIndex("by_tenant"), run ESLint, verify custom rule flags the violation (if implemented).</test>
+      <test ac="7">Documentation Test: Review docs/multi-tenant-rls.md for completeness: patterns, examples, pitfalls, testing guidance.</test>
+    </ideas>
+  </tests>
+</story-context>

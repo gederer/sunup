@@ -446,10 +446,13 @@ export default defineSchema({
 
   // ============================================
   // TASKS (Demo for Story 1.3 AC #5)
+  // Updated Story 1.4: Added tenantId for RLS
   // ============================================
   tasks: defineTable({
     text: v.string(),
     isCompleted: v.boolean(),
     createdAt: v.number(), // timestamp
-  }),
+    tenantId: v.id("tenants"),
+  })
+    .index("by_tenant", ["tenantId"]),
 });
