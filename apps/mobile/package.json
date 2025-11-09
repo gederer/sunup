@@ -13,12 +13,15 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
+    "@better-auth/expo": "^1.3.34",
     "@sunup/convex": "workspace:*",
     "@sunup/types": "workspace:*",
     "@sunup/ui": "workspace:*",
+    "better-auth": "^1.3.34",
     "convex": "^1.28.0",
     "expo": "~52.0.0",
     "expo-router": "~4.0.0",
+    "expo-secure-store": "^15.0.7",
     "expo-status-bar": "~2.0.0",
     "react": "19.0.0",
     "react-native": "0.76.0"

@@ -2,7 +2,7 @@
  * Multi-Tenant Row-Level Security (RLS) Helpers
  *
  * These helpers enforce tenant isolation by:
- * 1. Extracting user identity from Clerk JWT tokens
+ * 1. Extracting user identity from better-auth JWT tokens
  * 2. Looking up the user in the database
  * 3. Returning the user's tenantId for query filtering
  *
@@ -13,6 +13,7 @@
  * - ALWAYS filter queries by tenantId
  *
  * Story: 1.4 - Implement Multi-Tenant Row-Level Security (RLS) Foundation
+ * Story: 1.5 - Integrate better-auth Authentication
  */
 
 import { QueryCtx, MutationCtx } from "../_generated/server";
@@ -25,7 +26,7 @@ export interface UserWithTenant {
   user: {
     _id: Id<"users">;
     _creationTime: number;
-    clerkId: string;
+    authId: string; // better-auth user ID
     email: string;
     firstName: string;
     lastName: string;
@@ -33,6 +34,7 @@ export interface UserWithTenant {
     tenantId: Id<"tenants">;
   };
   tenantId: Id<"tenants">;
+  roles: string[]; // User's role names
 }
 
 /**
@@ -62,26 +64,37 @@ export interface UserWithTenant {
 export async function getAuthUserWithTenant(
   ctx: QueryCtx | MutationCtx
 ): Promise<UserWithTenant> {
-  // Get Clerk JWT identity
+  // Get better-auth JWT identity
   const identity = await ctx.auth.getUserIdentity();
   if (!identity) {
     throw new Error("Unauthorized");
   }
 
-  // Look up user by Clerk ID
+  // Look up user by better-auth ID
   const user = await ctx.db
     .query("users")
-    .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
+    .withIndex("by_auth_id", (q) => q.eq("authId", identity.subject))
     .first();
 
   if (!user) {
-    throw new Error("User not found");
+    throw new Error("User not found - please contact administrator");
   }
 
-  // Return user and tenantId for RLS filtering
+  // Get user's roles
+  const userRoles = await ctx.db
+    .query("userRoles")
+    .withIndex("by_user", (q) => q.eq("userId", user._id))
+    .collect();
+
+  const roles = userRoles
+    .filter((r) => r.isActive)
+    .map((r) => r.role);
+
+  // Return user, tenantId, and roles for RLS filtering
   return {
     user,
     tenantId: user.tenantId,
+    roles,
   };
 }
 

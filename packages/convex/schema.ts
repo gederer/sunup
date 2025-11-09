@@ -281,7 +281,7 @@ export default defineSchema({
   // USERS (System users - Setters, Consultants, PMs, etc.)
   // ============================================
   users: defineTable({
-    clerkId: v.string(), // Using Clerk for auth
+    authId: v.string(), // better-auth user ID
     email: v.string(),
     firstName: v.string(),
     lastName: v.string(),
@@ -289,7 +289,7 @@ export default defineSchema({
     // Multi-tenant support
     tenantId: v.id("tenants"),
   })
-    .index("by_clerk_id", ["clerkId"])
+    .index("by_auth_id", ["authId"])
     .index("by_email", ["email"])
     .index("by_tenant", ["tenantId"]),
 
