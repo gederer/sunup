@@ -41,7 +41,7 @@ development_status:
   1-2-setup-tailwind-css-4-and-shadcn-ui-component-library: done
   1-3-initialize-convex-backend-and-database: done
   1-4-implement-multi-tenant-row-level-security-rls-foundation: done
-  1-5-integrate-clerk-authentication: ready-for-dev
+  1-5-integrate-clerk-authentication: in-progress
   1-6-implement-role-based-access-control-rbac-for-12-roles: backlog
   1-7-create-pipeline-data-model-and-schema: backlog
   1-8-implement-event-system-for-pipeline-status-changes: backlog

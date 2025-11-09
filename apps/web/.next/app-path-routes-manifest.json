@@ -4,6 +4,7 @@
   "/convex-demo/page": "/convex-demo",
   "/favicon.ico/route": "/favicon.ico",
   "/page": "/",
+  "/profile/page": "/profile",
   "/theme-demo/page": "/theme-demo",
   "/typography-demo/page": "/typography-demo"
 }

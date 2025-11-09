@@ -20,6 +20,12 @@
           "exportedName": "detectKeylessEnvDriftAction",
           "filename": "node_modules/.pnpm/@clerk+nextjs@6.34.5_next@16.0.0_react-dom@19.2.0_react@19.2.0__react@19.2.0__react-dom_e6cb472a7cfaaf736abd65cfcf0e7ce1/node_modules/@clerk/nextjs/dist/esm/app-router/keyless-actions.js"
         },
+        "app/profile/page": {
+          "moduleId": 70413,
+          "async": false,
+          "exportedName": "detectKeylessEnvDriftAction",
+          "filename": "node_modules/.pnpm/@clerk+nextjs@6.34.5_next@16.0.0_react-dom@19.2.0_react@19.2.0__react@19.2.0__react-dom_e6cb472a7cfaaf736abd65cfcf0e7ce1/node_modules/@clerk/nextjs/dist/esm/app-router/keyless-actions.js"
+        },
         "app/theme-demo/page": {
           "moduleId": 46374,
           "async": false,
@@ -37,6 +43,7 @@
         "app/_not-found/page": "rsc",
         "app/convex-demo/page": "rsc",
         "app/page": "rsc",
+        "app/profile/page": "rsc",
         "app/theme-demo/page": "rsc",
         "app/typography-demo/page": "rsc"
       },
@@ -63,6 +70,12 @@
           "exportedName": "invalidateCacheAction",
           "filename": "node_modules/.pnpm/@clerk+nextjs@6.34.5_next@16.0.0_react-dom@19.2.0_react@19.2.0__react@19.2.0__react-dom_e6cb472a7cfaaf736abd65cfcf0e7ce1/node_modules/@clerk/nextjs/dist/esm/app-router/server-actions.js"
         },
+        "app/profile/page": {
+          "moduleId": 70413,
+          "async": false,
+          "exportedName": "invalidateCacheAction",
+          "filename": "node_modules/.pnpm/@clerk+nextjs@6.34.5_next@16.0.0_react-dom@19.2.0_react@19.2.0__react@19.2.0__react-dom_e6cb472a7cfaaf736abd65cfcf0e7ce1/node_modules/@clerk/nextjs/dist/esm/app-router/server-actions.js"
+        },
         "app/theme-demo/page": {
           "moduleId": 46374,
           "async": false,
@@ -80,6 +93,7 @@
         "app/_not-found/page": "action-browser",
         "app/convex-demo/page": "action-browser",
         "app/page": "action-browser",
+        "app/profile/page": "action-browser",
         "app/theme-demo/page": "action-browser",
         "app/typography-demo/page": "action-browser"
       },
@@ -106,6 +120,12 @@
           "exportedName": "createOrReadKeylessAction",
           "filename": "node_modules/.pnpm/@clerk+nextjs@6.34.5_next@16.0.0_react-dom@19.2.0_react@19.2.0__react@19.2.0__react-dom_e6cb472a7cfaaf736abd65cfcf0e7ce1/node_modules/@clerk/nextjs/dist/esm/app-router/keyless-actions.js"
         },
+        "app/profile/page": {
+          "moduleId": 70413,
+          "async": false,
+          "exportedName": "createOrReadKeylessAction",
+          "filename": "node_modules/.pnpm/@clerk+nextjs@6.34.5_next@16.0.0_react-dom@19.2.0_react@19.2.0__react@19.2.0__react-dom_e6cb472a7cfaaf736abd65cfcf0e7ce1/node_modules/@clerk/nextjs/dist/esm/app-router/keyless-actions.js"
+        },
         "app/theme-demo/page": {
           "moduleId": 46374,
           "async": false,
@@ -123,6 +143,7 @@
         "app/_not-found/page": "rsc",
         "app/convex-demo/page": "rsc",
         "app/page": "rsc",
+        "app/profile/page": "rsc",
         "app/theme-demo/page": "rsc",
         "app/typography-demo/page": "rsc"
       },
@@ -149,6 +170,12 @@
           "exportedName": "collectKeylessMetadata",
           "filename": "node_modules/.pnpm/@clerk+nextjs@6.34.5_next@16.0.0_react-dom@19.2.0_react@19.2.0__react@19.2.0__react-dom_e6cb472a7cfaaf736abd65cfcf0e7ce1/node_modules/@clerk/nextjs/dist/esm/server/keyless-custom-headers.js"
         },
+        "app/profile/page": {
+          "moduleId": 70413,
+          "async": false,
+          "exportedName": "collectKeylessMetadata",
+          "filename": "node_modules/.pnpm/@clerk+nextjs@6.34.5_next@16.0.0_react-dom@19.2.0_react@19.2.0__react@19.2.0__react-dom_e6cb472a7cfaaf736abd65cfcf0e7ce1/node_modules/@clerk/nextjs/dist/esm/server/keyless-custom-headers.js"
+        },
         "app/theme-demo/page": {
           "moduleId": 46374,
           "async": false,
@@ -166,6 +193,7 @@
         "app/_not-found/page": "rsc",
         "app/convex-demo/page": "rsc",
         "app/page": "rsc",
+        "app/profile/page": "rsc",
         "app/theme-demo/page": "rsc",
         "app/typography-demo/page": "rsc"
       },
@@ -192,6 +220,12 @@
           "exportedName": "formatMetadataHeaders",
           "filename": "node_modules/.pnpm/@clerk+nextjs@6.34.5_next@16.0.0_react-dom@19.2.0_react@19.2.0__react@19.2.0__react-dom_e6cb472a7cfaaf736abd65cfcf0e7ce1/node_modules/@clerk/nextjs/dist/esm/server/keyless-custom-headers.js"
         },
+        "app/profile/page": {
+          "moduleId": 70413,
+          "async": false,
+          "exportedName": "formatMetadataHeaders",
+          "filename": "node_modules/.pnpm/@clerk+nextjs@6.34.5_next@16.0.0_react-dom@19.2.0_react@19.2.0__react@19.2.0__react-dom_e6cb472a7cfaaf736abd65cfcf0e7ce1/node_modules/@clerk/nextjs/dist/esm/server/keyless-custom-headers.js"
+        },
         "app/theme-demo/page": {
           "moduleId": 46374,
           "async": false,
@@ -209,6 +243,7 @@
         "app/_not-found/page": "rsc",
         "app/convex-demo/page": "rsc",
         "app/page": "rsc",
+        "app/profile/page": "rsc",
         "app/theme-demo/page": "rsc",
         "app/typography-demo/page": "rsc"
       },
@@ -235,6 +270,12 @@
           "exportedName": "deleteKeylessAction",
           "filename": "node_modules/.pnpm/@clerk+nextjs@6.34.5_next@16.0.0_react-dom@19.2.0_react@19.2.0__react@19.2.0__react-dom_e6cb472a7cfaaf736abd65cfcf0e7ce1/node_modules/@clerk/nextjs/dist/esm/app-router/keyless-actions.js"
         },
+        "app/profile/page": {
+          "moduleId": 70413,
+          "async": false,
+          "exportedName": "deleteKeylessAction",
+          "filename": "node_modules/.pnpm/@clerk+nextjs@6.34.5_next@16.0.0_react-dom@19.2.0_react@19.2.0__react@19.2.0__react-dom_e6cb472a7cfaaf736abd65cfcf0e7ce1/node_modules/@clerk/nextjs/dist/esm/app-router/keyless-actions.js"
+        },
         "app/theme-demo/page": {
           "moduleId": 46374,
           "async": false,
@@ -252,6 +293,7 @@
         "app/_not-found/page": "action-browser",
         "app/convex-demo/page": "action-browser",
         "app/page": "action-browser",
+        "app/profile/page": "action-browser",
         "app/theme-demo/page": "action-browser",
         "app/typography-demo/page": "action-browser"
       },
@@ -278,6 +320,12 @@
           "exportedName": "syncKeylessConfigAction",
           "filename": "node_modules/.pnpm/@clerk+nextjs@6.34.5_next@16.0.0_react-dom@19.2.0_react@19.2.0__react@19.2.0__react-dom_e6cb472a7cfaaf736abd65cfcf0e7ce1/node_modules/@clerk/nextjs/dist/esm/app-router/keyless-actions.js"
         },
+        "app/profile/page": {
+          "moduleId": 70413,
+          "async": false,
+          "exportedName": "syncKeylessConfigAction",
+          "filename": "node_modules/.pnpm/@clerk+nextjs@6.34.5_next@16.0.0_react-dom@19.2.0_react@19.2.0__react@19.2.0__react-dom_e6cb472a7cfaaf736abd65cfcf0e7ce1/node_modules/@clerk/nextjs/dist/esm/app-router/keyless-actions.js"
+        },
         "app/theme-demo/page": {
           "moduleId": 46374,
           "async": false,
@@ -295,6 +343,7 @@
         "app/_not-found/page": "action-browser",
         "app/convex-demo/page": "action-browser",
         "app/page": "action-browser",
+        "app/profile/page": "action-browser",
         "app/theme-demo/page": "action-browser",
         "app/typography-demo/page": "action-browser"
       },

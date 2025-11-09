@@ -4,6 +4,7 @@
   "/convex-demo/page": "app/convex-demo/page.js",
   "/favicon.ico/route": "app/favicon.ico/route.js",
   "/page": "app/page.js",
+  "/profile/page": "app/profile/page.js",
   "/theme-demo/page": "app/theme-demo/page.js",
   "/typography-demo/page": "app/typography-demo/page.js"
 }
