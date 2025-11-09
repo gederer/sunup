@@ -1,6 +1,6 @@
 # Story 1.5: Integrate Clerk Authentication
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -358,7 +358,112 @@ Claude Sonnet 4.5 (claude-sonnet-4-5-20250929)
 
 ### Completion Notes List
 
+**Implementation Complete - Ready for Manual Testing (2025-11-08)**
+
+**Acceptance Criteria Status:**
+- ✅ AC #1 (Clerk Configuration): COMPLETE - Middleware and providers verified and enhanced
+- ⏸️ AC #2 (Sign-in/Sign-up Flows): MANUAL TEST REQUIRED - Implementation exists, needs browser verification
+- ✅ AC #3 (Protected Routes): IMPLEMENTATION COMPLETE - Middleware protection added, needs manual testing
+- ⏸️ AC #4 (User Session): MANUAL TEST REQUIRED - All code patterns exist, needs verification
+- ⏸️ AC #5 (Webhook Sync): MANUAL TEST REQUIRED - Webhook exists, needs dashboard verification
+- ✅ AC #6 (Profile Page): COMPLETE - `/profile` page created with Clerk data display
+- ⏸️ AC #7 (Sign-out): MANUAL TEST REQUIRED - UserButton exists, needs manual testing
+- ✅ Bonus (Documentation): COMPLETE - Comprehensive docs created and linked
+
+**Work Completed:**
+1. **Enhanced Middleware** (apps/web/middleware.ts):
+   - Added protected route patterns for `/profile` and `/dashboard`
+   - Implemented `createRouteMatcher` with `auth.protect()` pattern
+   - Fixed Clerk v6 API compatibility (async auth.protect())
+
+2. **Created Profile Page** (apps/web/app/profile/page.tsx):
+   - Server-side authentication with `await auth()` and `currentUser()`
+   - Displays: full name, email, avatar, join date, last sign-in, user ID
+   - Built with shadcn/ui components (Card, Button, Avatar)
+   - Redirect to sign-in if unauthenticated
+   - Links to Clerk user settings for profile editing
+
+3. **Added Avatar Component** (apps/web/components/ui/avatar.tsx):
+   - Installed via `npx shadcn@latest add avatar`
+   - Required for profile page user image display
+
+4. **Created Comprehensive Documentation** (docs/clerk-integration.md):
+   - 400+ lines covering all authentication patterns
+   - Architecture and flow diagrams
+   - Configuration guide (env vars, middleware, providers)
+   - Protected routes patterns (middleware + component-level)
+   - Invitation-based onboarding system (Story 1.4 requirement)
+   - Manual testing procedures and checklists
+   - Troubleshooting common issues (webhook timing, metadata, etc.)
+   - Security best practices (RLS integration, webhook security, MFA)
+   - Linked in README.md documentation section
+
+**Technical Issues Resolved:**
+1. **Clerk v6 API Changes**: Updated `auth()` calls to use `await` in Next.js 16
+2. **Middleware Protection Pattern**: Changed from `(await auth()).protect()` to `await auth.protect()`
+3. **Import Paths**: Corrected component imports to use `@/components/ui/*` alias
+
+**Files Created:**
+- apps/web/app/profile/page.tsx
+- apps/web/components/ui/avatar.tsx (shadcn/ui)
+- docs/clerk-integration.md
+
+**Files Modified:**
+- apps/web/middleware.ts (added protected route patterns)
+- README.md (linked Clerk integration docs)
+- docs/stories/1-5-integrate-clerk-authentication.md (task checkboxes)
+
+**Remaining Work - Manual Testing Only:**
+All code implementation is complete. The following require manual browser/dashboard testing (cannot be automated by AI agent):
+
+1. **Browser Testing** (AC #2, #3, #4, #7):
+   - Click "Sign up" button and complete flow
+   - Click "Sign in" button and verify login
+   - Access `/profile` while logged out (should redirect)
+   - Access `/profile` while logged in (should display)
+   - Verify UserButton displays user info
+   - Test sign-out clears session
+   - Verify session persists across page reloads
+
+2. **Dashboard Verification** (AC #5):
+   - Create test user with invitation (run `createDevInvitation` mutation)
+   - Verify webhook creates user in Convex `users` table
+   - Update user info in Clerk → verify Convex updates
+   - Test uninvited user gets error message
+
+3. **Documentation Link** (Bonus):
+   - Verify README.md link navigates to correct doc file
+
+**Testing Notes:**
+- Story 1.5 is specified as manual testing only
+- Story 1.11 will add automated test infrastructure (Vitest + Playwright)
+- Invitation-based onboarding requires setup before testing:
+  - Run `createDevInvitation` mutation in Convex dashboard, OR
+  - Manually set `tenantId` in Clerk user public metadata
+- Cannot test standard signup flow (public signup disabled per Story 1.4)
+
+**Next Steps:**
+1. Human tester performs manual testing procedures (see docs/clerk-integration.md#Testing)
+2. Verify all acceptance criteria in browser and dashboards
+3. Document any issues found during testing
+4. Mark story as DONE when all manual tests pass
+5. Continue to Story 1.6 (Implement RBAC for 12 Roles)
+
+**Git Commits:**
+- ab64567: docs: Add comprehensive Clerk authentication documentation (AC #1, #6)
+- Previous commits: Profile page implementation, middleware enhancement
+
 ### File List
+
+**Created:**
+- `apps/web/app/profile/page.tsx` - User profile page with Clerk authentication
+- `apps/web/components/ui/avatar.tsx` - shadcn/ui Avatar component (auto-generated)
+- `docs/clerk-integration.md` - Comprehensive Clerk authentication documentation
+
+**Modified:**
+- `apps/web/middleware.ts` - Enhanced with protected route patterns
+- `README.md` - Added Clerk integration documentation link
+- `docs/stories/1-5-integrate-clerk-authentication.md` - Updated task checkboxes and completion notes
 
 ## Change Log
 
