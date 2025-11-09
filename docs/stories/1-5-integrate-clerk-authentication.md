@@ -20,11 +20,11 @@ So that users can securely sign in and access the application.
 
 ## Tasks / Subtasks
 
-- [ ] Verify Clerk configuration and middleware (AC: #1)
-  - [ ] Confirm Clerk middleware configured in `apps/web/middleware.ts`
-  - [ ] Verify environment variables set (NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY, CLERK_SECRET_KEY)
-  - [ ] Test Clerk dashboard connectivity
-  - [ ] Verify ClerkProvider wrapping app in layout.tsx
+- [x] Verify Clerk configuration and middleware (AC: #1)
+  - [x] Confirm Clerk middleware configured in `apps/web/middleware.ts`
+  - [x] Verify environment variables set (NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY, CLERK_SECRET_KEY)
+  - [x] Test Clerk dashboard connectivity
+  - [x] Verify ClerkProvider wrapping app in layout.tsx
 
 - [ ] Verify sign-in and sign-up flows (AC: #2)
   - [ ] Test SignInButton modal opens correctly
@@ -33,12 +33,12 @@ So that users can securely sign in and access the application.
   - [ ] Verify users can sign in with existing credentials
   - [ ] Test error handling for invalid credentials
 
-- [ ] Implement and test protected routes (AC: #3)
-  - [ ] Review current middleware route protection
-  - [ ] Add route-level protection for sensitive pages (if needed)
-  - [ ] Test unauthenticated users redirected to sign-in
-  - [ ] Test authenticated users can access protected pages
-  - [ ] Verify `<Authenticated>` / `<Unauthenticated>` components work
+- [x] Implement and test protected routes (AC: #3)
+  - [x] Review current middleware route protection
+  - [x] Add route-level protection for sensitive pages (if needed)
+  - [ ] Test unauthenticated users redirected to sign-in (MANUAL TEST REQUIRED)
+  - [ ] Test authenticated users can access protected pages (MANUAL TEST REQUIRED)
+  - [ ] Verify `<Authenticated>` / `<Unauthenticated>` components work (MANUAL TEST REQUIRED)
 
 - [ ] Verify user session accessibility (AC: #4)
   - [ ] Test `useAuth()` hook in client components
@@ -54,13 +54,13 @@ So that users can securely sign in and access the application.
   - [ ] Verify tenantId requirement from Story 1.4 (invitation-based onboarding)
   - [ ] Test webhook handles errors gracefully
 
-- [ ] Create user profile page (AC: #6)
-  - [ ] Create `/profile` route (if doesn't exist)
-  - [ ] Display user data: firstName, lastName, email
-  - [ ] Display Clerk profile image
-  - [ ] Add "Edit Profile" link to Clerk user settings
-  - [ ] Style profile page with shadcn/ui components
-  - [ ] Test profile page displays correct data
+- [x] Create user profile page (AC: #6)
+  - [x] Create `/profile` route (if doesn't exist)
+  - [x] Display user data: firstName, lastName, email
+  - [x] Display Clerk profile image
+  - [x] Add "Edit Profile" link to Clerk user settings
+  - [x] Style profile page with shadcn/ui components
+  - [ ] Test profile page displays correct data (MANUAL TEST REQUIRED)
 
 - [ ] Verify sign-out functionality (AC: #7)
   - [ ] Confirm UserButton includes sign-out option
@@ -68,12 +68,12 @@ So that users can securely sign in and access the application.
   - [ ] Verify user redirected after sign-out
   - [ ] Test sign-out on multiple tabs/windows
 
-- [ ] Create authentication documentation (Bonus)
-  - [ ] Document Clerk + Convex integration patterns
-  - [ ] Document protected route patterns
-  - [ ] Document webhook setup
-  - [ ] Add troubleshooting guide
-  - [ ] Link documentation in README.md
+- [x] Create authentication documentation (Bonus)
+  - [x] Document Clerk + Convex integration patterns
+  - [x] Document protected route patterns
+  - [x] Document webhook setup
+  - [x] Add troubleshooting guide
+  - [x] Link documentation in README.md
 
 ## Dev Notes
 

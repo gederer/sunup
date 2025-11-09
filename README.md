@@ -181,6 +181,7 @@ pnpm test
 - **Stories**: See `docs/stories/`
 - **Git Workflow**: See `docs/git-workflow.md`
 - **Multi-Tenant RLS**: See `docs/multi-tenant-rls.md` - Row-Level Security patterns and best practices
+- **Clerk Integration**: See `docs/clerk-integration.md` - Authentication setup, protected routes, and invitation-based onboarding
 
 ## 🤝 Contributing
 
