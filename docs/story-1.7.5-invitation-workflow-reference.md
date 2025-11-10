@@ -1,7 +1,7 @@
-# Story 1.6.5: User Invitation Workflow (Basic Implementation)
+# Story 1.7.5: User Invitation Workflow (Basic Implementation)
 
 **Status:** Not yet created in epics.md (reference document)
-**Prerequisite:** Story 1.6 (RBAC implemented)
+**Prerequisite:** Story 1.7 (RBAC implemented)
 **Priority:** Must be in Epic 1 (required for user onboarding)
 
 ---
@@ -224,7 +224,7 @@ These can be added in later stories:
 
 **For Manual Clerk Setup (Development Only):**
 
-If Clerk API integration is complex, can defer to Story 1.6.5 and use manual process:
+If Clerk API integration is complex, can defer to Story 1.7.5 and use manual process:
 1. Run `createDevInvitation` mutation (from Story 1.4)
 2. Manually set tenantId in Clerk dashboard (user public metadata)
 3. User can signup successfully
@@ -245,9 +245,9 @@ If Clerk API integration is complex, can defer to Story 1.6.5 and use manual pro
 - [Clerk Invitations Documentation](https://clerk.com/docs/users/invitations)
 - [Clerk Backend SDK](https://clerk.com/docs/references/backend/overview)
 - Story 1.4: Multi-Tenant RLS (tenantId requirement)
-- Story 1.6: RBAC (role-based access to invite users)
+- Story 1.7: RBAC (role-based access to invite users)
 - `docs/multi-tenant-rls.md` - Security patterns
 
 ---
 
-**This document serves as a reference for creating Story 1.6.5 in epics.md and implementing the invitation workflow.**
+**This document serves as a reference for creating Story 1.7.5 in epics.md and implementing the invitation workflow.**

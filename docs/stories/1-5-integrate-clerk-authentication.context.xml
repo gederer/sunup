@@ -62,10 +62,10 @@
         <snippet>Story definition with acceptance criteria and context from epic planning.</snippet>
       </doc>
       <doc>
-        <path>docs/story-1.6.5-invitation-workflow-reference.md</path>
+        <path>docs/story-1.7.5-invitation-workflow-reference.md</path>
         <title>Invitation Workflow Reference</title>
         <section>Invitation-based Onboarding</section>
-        <snippet>Reference for invitation workflow (Story 1.6.5) that sets tenantId in Clerk metadata. Related to AC #5 webhook testing.</snippet>
+        <snippet>Reference for invitation workflow (Story 1.7.5) that sets tenantId in Clerk metadata. Related to AC #5 webhook testing.</snippet>
       </doc>
     </docs>
     <code>
@@ -143,7 +143,7 @@
     <constraint>Middleware must use clerkMiddleware from @clerk/nextjs/server (not legacy authMiddleware).</constraint>
     <constraint>Protected routes should use middleware-level protection for better UX (redirect before page load).</constraint>
     <constraint>Profile page must use shadcn/ui components (Story 1.2 requirement).</constraint>
-    <constraint>Testing: Manual testing only (Story 1.11 will add Vitest/Playwright infrastructure).</constraint>
+    <constraint>Testing: Manual testing only (Story 1.6 will add Vitest/Playwright infrastructure).</constraint>
     <constraint>Environment variables: NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY, CLERK_SECRET_KEY must be configured.</constraint>
     <constraint>Webhook testing requires invitation setup (createDevInvitation or manual metadata).</constraint>
   </constraints>
@@ -198,7 +198,7 @@
   </interfaces>
 
   <tests>
-    <standards>Manual testing for Story 1.5 using browser and Convex dashboard. Story 1.11 will implement automated testing with Vitest (unit/integration) and Playwright (e2e). Test invitation-based flow (not standard Clerk tutorials) - users must have tenantId in metadata.</standards>
+    <standards>Manual testing for Story 1.5 using browser and Convex dashboard. Story 1.6 will implement automated testing with Vitest (unit/integration) and Playwright (e2e). Test invitation-based flow (not standard Clerk tutorials) - users must have tenantId in metadata.</standards>
     <locations>
       <location>Manual browser testing for sign-in/sign-up flows</location>
       <location>Convex dashboard for webhook verification and database inspection</location>

@@ -30,12 +30,12 @@ Each epic includes:
 ## Epic Summary
 
 **Total Epics:** 6
-**Total Stories:** 86 stories
+**Total Stories:** 87 stories
 **Target Timeline:** 21 weeks (MVP)
 
 | Epic | Stories | Focus Area |
 |------|---------|------------|
-| Epic 1: Foundation & Infrastructure | 12 | Multi-tenant architecture, auth, pipeline system, CI/CD |
+| Epic 1: Foundation & Infrastructure | 13 | Multi-tenant architecture, auth, pipeline system, CI/CD |
 | Epic 2: Core CRM & Pipeline Management | 13 | Person/Organization CRUD, pipeline tracking, Mapbox, notifications |
 | Epic 3: Predictive Dialer & Campaign Management | 21 | SignalWire SIP telephony, predictive dialing, call routing, scripts |
 | Epic 4: Video Conferencing & Unified Meeting Interface | 18 | Mediasoup WebRTC, unified meeting view, handoff system, financing |
@@ -50,7 +50,7 @@ Each epic includes:
 5. Epic 5 → Contractors see real-time commission transparency (key retention driver)
 6. Epic 6 → Gamification and learning drive engagement and performance
 
-**Total Story Count vs. PRD Estimate:** 86 stories (PRD estimate: 63-91) ✅ Within range
+**Total Story Count vs. PRD Estimate:** 87 stories (PRD estimate: 63-91) ✅ Within range
 
 ---
 
@@ -168,7 +168,55 @@ So that users can securely sign in and access the application.
 
 ---
 
-**Story 1.6: Implement Role-Based Access Control (RBAC) for 12 Roles**
+**Story 1.6: Setup Testing Infrastructure with Playwright and Vitest**
+
+As a Developer,
+I want testing infrastructure configured with E2E and unit test capabilities,
+So that I can write tests for all features in subsequent epics.
+
+**Acceptance Criteria:**
+1. Vitest 4.0.7+ configured for unit/integration tests
+2. Playwright 1.56+ configured for E2E tests
+3. Sample unit test demonstrates Convex query/mutation testing
+4. Sample E2E test demonstrates authentication flow (sign-in, protected route access)
+5. Test commands in package.json: `npm test`, `npm run test:e2e`
+6. Code coverage reporting configured (aim for 95%+ target)
+7. Documentation in `/docs/testing.md` explains testing patterns
+
+**Prerequisites:** Story 1.5 (Authentication and RBAC implemented)
+
+---
+
+**Story 1.6.5: Address Testing Debt from User Management**
+
+As a Developer,
+I want comprehensive test coverage for user management mutations (invitations.ts) and RLS examples (tasks.ts),
+So that security-critical code has automated verification before RBAC implementation.
+
+**Acceptance Criteria:**
+1. Unit tests written for all 4 mutations in `packages/convex/invitations.ts`:
+   - `createUser`: Test permission checks, multi-tenant validation, role assignment
+   - `listUsers`: Test RLS filtering (System Admin sees all, others see own tenant)
+   - `setUserActiveStatus`: Test user activation/deactivation with permission checks
+   - `updateUserRole`: Test add/remove roles with validation logic
+2. Integration tests written for all 4 endpoints in `packages/convex/tasks.ts`:
+   - `list`: Test tenant-scoped task listing with RLS
+   - `add`: Test task creation with automatic tenantId assignment
+   - `toggle`: Test task update with cross-tenant security verification
+   - `remove`: Test task deletion with security checks
+3. Test coverage >95% for both `invitations.ts` and `tasks.ts`
+4. All tests follow patterns from `auth.test.ts` and `permissions.test.ts` (vi.mock for better-auth, mock Convex context)
+5. All existing tests remain passing (79 tests in auth.test.ts, permissions.test.ts, users.test.ts, rls.test.ts)
+6. Coverage report confirms >95% line/function/branch/statement coverage for both files
+7. Tests verify correct index usage (by_auth_id, by_tenant, by_user_id) for RLS enforcement
+
+**Prerequisites:** Story 1.6 (Testing infrastructure configured)
+
+**Note:** This story addresses technical debt discovered during Story 1.6 implementation. Stories 1.3-1.5 (Convex initialization, RLS foundation, better-auth integration) were implemented before testing infrastructure existed. Now that Vitest is configured and test patterns are established, this story ensures user management and RLS examples have comprehensive test coverage before building 12-role RBAC on top of this foundation.
+
+---
+
+**Story 1.7: Implement Role-Based Access Control (RBAC) for 12 Roles**
 
 As a System Admin,
 I want users assigned to one of 12 roles with role-based permissions enforced,
@@ -183,11 +231,11 @@ So that each user has appropriate access to features and data.
 6. Test suite verifies unauthorized role access returns error
 7. Documentation in `/docs/rbac.md` explains role hierarchy and permissions
 
-**Prerequisites:** Story 1.5 (Clerk authentication integrated)
+**Prerequisites:** Story 1.6.5 (User management and RLS tested - CRITICAL: Do not proceed with RBAC until user/role foundation has >95% test coverage)
 
 ---
 
-**Story 1.7: Create Pipeline Data Model and Schema**
+**Story 1.8: Create Pipeline Data Model and Schema**
 
 As a Developer,
 I want a configurable pipeline schema supporting Lead → Set → Met → QMet → Sale → Installation stages,
@@ -206,7 +254,7 @@ So that all roles can track customer progress through the sales lifecycle.
 
 ---
 
-**Story 1.8: Implement Event System for Pipeline Status Changes**
+**Story 1.9: Implement Event System for Pipeline Status Changes**
 
 As a Developer,
 I want pipeline status changes to trigger events that notify other parts of the system,
@@ -221,11 +269,11 @@ So that cascading actions (notifications, commission calculations) happen automa
 6. Events are stored in `pipelineEvents` table for audit trail
 7. Documentation in `/docs/event-system.md` explains event patterns
 
-**Prerequisites:** Story 1.7 (Pipeline data model created)
+**Prerequisites:** Story 1.8 (Pipeline data model created)
 
 ---
 
-**Story 1.9: Create Person and Organization Base Schema**
+**Story 1.10: Create Person and Organization Base Schema**
 
 As a Developer,
 I want Person and Organization data models with tenant isolation and basic fields,
@@ -240,11 +288,11 @@ So that subsequent epics can build CRM functionality on this foundation.
 6. Validation: Email format, required fields
 7. Sample data seeded for testing (10 persons, 3 organizations)
 
-**Prerequisites:** Story 1.7 (Pipeline data model created)
+**Prerequisites:** Story 1.8 (Pipeline data model created)
 
 ---
 
-**Story 1.10: Setup GitHub Actions CI/CD Pipeline**
+**Story 1.11: Setup GitHub Actions CI/CD Pipeline**
 
 As a Developer,
 I want automated testing and deployment on every push to main branch,
@@ -259,26 +307,7 @@ So that code quality is maintained and deployments are reliable.
 6. Deployment status visible in GitHub PR checks
 7. README.md documents CI/CD pipeline and deployment process
 
-**Prerequisites:** Story 1.9 (schemas created, testable codebase exists)
-
----
-
-**Story 1.11: Setup Testing Infrastructure with Playwright and Vitest**
-
-As a Developer,
-I want testing infrastructure configured with E2E and unit test capabilities,
-So that I can write tests for all features in subsequent epics.
-
-**Acceptance Criteria:**
-1. Vitest 4.0.7+ configured for unit/integration tests
-2. Playwright 1.56+ configured for E2E tests
-3. Sample unit test demonstrates Convex query/mutation testing
-4. Sample E2E test demonstrates authentication flow (sign-in, protected route access)
-5. Test commands in package.json: `npm test`, `npm run test:e2e`
-6. Code coverage reporting configured (aim for 95%+ target)
-7. Documentation in `/docs/testing.md` explains testing patterns
-
-**Prerequisites:** Story 1.6 (RBAC implemented, testable features exist)
+**Prerequisites:** Story 1.10 (schemas created, testable codebase exists)
 
 ---
 
@@ -297,7 +326,7 @@ So that stakeholders can access the live application and Epic 2 features can be 
 6. Smoke test verifies: Sign-in works, protected route accessible with correct role
 7. Production URL documented in README.md and shared with team
 
-**Prerequisites:** Story 1.10 (CI/CD pipeline configured)
+**Prerequisites:** Story 1.11 (CI/CD pipeline configured)
 
 ---
 
@@ -440,7 +469,7 @@ So that pipeline status is always accurate and auditable.
 6. Toast notification confirms stage change
 7. Real-time updates propagate to all users viewing that Person
 
-**Prerequisites:** Story 2.2 (Person detail page exists), Epic 1 Story 1.8 (Event system)
+**Prerequisites:** Story 2.2 (Person detail page exists), Epic 1 Story 1.9 (Event system)
 
 ---
 
@@ -478,7 +507,7 @@ So that I know when my appointments result in sales and commissions.
 6. Filter: "All Sets", "This Week", "This Month"
 7. Count badges: Total Sets, QMets, Sales (this week/month)
 
-**Prerequisites:** Story 2.6 (Pipeline transitions working), Epic 1 Story 1.6 (RBAC for Setter role)
+**Prerequisites:** Story 2.6 (Pipeline transitions working), Epic 1 Story 1.7 (RBAC for Setter role)
 
 ---
 
@@ -497,7 +526,7 @@ So that I know when customers complete installation and I can follow up if neede
 6. Filter: "All Sales", "This Week", "This Month"
 7. Count badges: Total Sales, Installations Complete, Pending Installations
 
-**Prerequisites:** Story 2.6 (Pipeline transitions working), Epic 1 Story 1.6 (RBAC for Consultant role)
+**Prerequisites:** Story 2.6 (Pipeline transitions working), Epic 1 Story 1.7 (RBAC for Consultant role)
 
 ---
 
@@ -516,7 +545,7 @@ So that I can identify bottlenecks and coach effectively.
 6. Real-time updates for all dashboard metrics
 7. Date range filter: Today, This Week, This Month, All Time
 
-**Prerequisites:** Story 2.6 (Pipeline transitions working), Epic 1 Story 1.6 (RBAC for SalesManager role)
+**Prerequisites:** Story 2.6 (Pipeline transitions working), Epic 1 Story 1.7 (RBAC for SalesManager role)
 
 ---
 
@@ -573,7 +602,7 @@ So that I stay informed without constantly refreshing dashboards.
 6. Notification sound optional (user preference toggle)
 7. Notification history accessible in notification dropdown (last 20)
 
-**Prerequisites:** Story 2.6 (Pipeline transitions emit events), Epic 1 Story 1.8 (Event system)
+**Prerequisites:** Story 2.6 (Pipeline transitions emit events), Epic 1 Story 1.9 (Event system)
 
 ---
 
@@ -641,7 +670,7 @@ So that our company has dedicated numbers for campaigns.
 6. Remove phone number button (soft delete, preserves call history)
 7. Phone numbers automatically provisioned via SignalWire API (manual assignment for MVP)
 
-**Prerequisites:** Epic 1 Story 1.6 (RBAC for SystemAdmin role)
+**Prerequisites:** Epic 1 Story 1.7 (RBAC for SystemAdmin role)
 
 ---
 
@@ -679,7 +708,7 @@ So that I can optimize calling efficiency for my Setter team.
 6. Pause/Resume campaign buttons (changes status, stops/starts predictive dialing)
 7. Real-time updates when campaign data changes
 
-**Prerequisites:** Story 3.1 (Campaign schema with dialingRatio and routingAlgorithm fields), Epic 1 Story 1.6 (RBAC for SetterManager role)
+**Prerequisites:** Story 3.1 (Campaign schema with dialingRatio and routingAlgorithm fields), Epic 1 Story 1.7 (RBAC for SetterManager role)
 
 ---
 
@@ -938,7 +967,7 @@ So that I can provide support and optimize team productivity.
 6. Configuration controls: Adjust dialing ratio, Change routing algorithm, Pause/Resume campaign
 7. All metrics update in real-time (WebSocket subscriptions)
 
-**Prerequisites:** Story 3.14 (Hours tracking), Story 3.12 (Dispositions), Story 3.6 (Predictive dialer running), Epic 1 Story 1.6 (RBAC for SetterManager role)
+**Prerequisites:** Story 3.14 (Hours tracking), Story 3.12 (Dispositions), Story 3.6 (Predictive dialer running), Epic 1 Story 1.7 (RBAC for SetterManager role)
 
 ---
 
@@ -957,7 +986,7 @@ So that I can identify improvement opportunities.
 6. Filters: Date range, Campaign, Disposition type, Qualification status
 7. Export to CSV for offline analysis
 
-**Prerequisites:** Story 3.12 (Call dispositions), Story 3.11 (Qualification tracking), Epic 1 Story 1.6 (RBAC for SalesManager role)
+**Prerequisites:** Story 3.12 (Call dispositions), Story 3.11 (Qualification tracking), Epic 1 Story 1.7 (RBAC for SalesManager role)
 
 ---
 
@@ -1314,7 +1343,7 @@ So that I can intervene and prevent missed appointments.
 6. System learns optimal staffing patterns (Phase 2 AI feature - placeholder for now)
 7. Email backup sent to Sales Manager if no browser response within 5 minutes
 
-**Prerequisites:** Story 4.12 (Handoff system), Epic 1 Story 1.6 (RBAC for SalesManager role)
+**Prerequisites:** Story 4.12 (Handoff system), Epic 1 Story 1.7 (RBAC for SalesManager role)
 
 ---
 

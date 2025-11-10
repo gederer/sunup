@@ -127,7 +127,7 @@
   <constraints>
     <constraint type="security" priority="critical">EVERY query and mutation MUST filter by tenantId. NEVER trust client-provided tenantId (always extract from authenticated context). NEVER skip tenantId validation (even for "admin" operations).</constraint>
     <constraint type="architecture" priority="high">RLS helper functions must be in packages/convex/lib/auth.ts. All queries must use .withIndex("by_tenant", (q) => q.eq("tenantId", tenantId)) pattern.</constraint>
-    <constraint type="testing" priority="medium">Story 1.11 adds automated test infrastructure. For Story 1.4, create test files (packages/convex/tests/rls.test.ts) with manual test procedures. Tests won't run automatically until Story 1.11.</constraint>
+    <constraint type="testing" priority="medium">Story 1.6 adds automated test infrastructure. For Story 1.4, create test files (packages/convex/tests/rls.test.ts) with manual test procedures. Tests won't run automatically until Story 1.6.</constraint>
     <constraint type="schema" priority="high">Tasks table (lines 448-454 of schema.ts) must add tenantId: v.id("tenants") field and .index("by_tenant", ["tenantId"]). Existing demo tasks may need tenantId backfill or deletion.</constraint>
     <constraint type="pattern" priority="high">Composite indexes must have tenantId first: .index("by_tenant_and_field", ["tenantId", "field"]). Order matters for query efficiency.</constraint>
     <constraint type="git" priority="critical">Follow docs/git-workflow.md MANDATORY procedures. Create story branch: story/1-4-implement-multi-tenant-row-level-security-rls-foundation. Commit frequently with WIP commits.</constraint>
@@ -166,7 +166,7 @@
 
   <tests>
     <standards>
-Story 1.11 sets up automated testing (Vitest + Playwright). For Story 1.4, create test files with manual test procedures. Test framework: Vitest for unit/integration tests. Test location: packages/convex/tests/. Testing approach: Manual verification of RLS isolation by creating data for multiple tenants and verifying queries return only tenant-scoped results. Build verification: turbo build --filter=@sunup/web must succeed.
+Story 1.6 sets up automated testing (Vitest + Playwright). For Story 1.4, create test files with manual test procedures. Test framework: Vitest for unit/integration tests. Test location: packages/convex/tests/. Testing approach: Manual verification of RLS isolation by creating data for multiple tenants and verifying queries return only tenant-scoped results. Build verification: turbo build --filter=@sunup/web must succeed.
     </standards>
 
     <locations>

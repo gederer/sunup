@@ -152,7 +152,7 @@ Polish Items (Low Priority):
 - `upsertFromClerk` requires `tenantId` in Clerk public metadata
 - Throws error for uninvited users: "Account registration requires an invitation"
 - Development helper available: `createDevInvitation` mutation (manual Clerk metadata setup)
-- Story 1.6.5 will implement full invitation workflow
+- Story 1.7.5 will implement full invitation workflow
 
 **Implementation Pattern:**
 ```typescript
@@ -180,7 +180,7 @@ if (user === null) {
 2. **Must use invitation-based testing:**
    - Option A: Run `createDevInvitation` mutation in Convex dashboard
    - Option B: Manually set `tenantId` in Clerk user public metadata
-   - Option C: Wait for Story 1.6.5 full invitation workflow
+   - Option C: Wait for Story 1.7.5 full invitation workflow
 3. **Test webhook with invited users only**
 4. **Verify error message for uninvited users**
 
@@ -194,7 +194,7 @@ if (user === null) {
 - `packages/convex/schema.ts` - All tables have tenantId and by_tenant indexes
 
 **Testing Notes:**
-- Story 1.11 will add automated testing infrastructure (Vitest/Playwright)
+- Story 1.6 will add automated testing infrastructure (Vitest/Playwright)
 - For Story 1.5, use manual testing procedures
 - Focus on invitation-based onboarding flow (different from standard Clerk tutorials)
 
@@ -331,7 +331,7 @@ export const current = query({
    - Verify session cleared
    - Verify cannot access protected routes after sign-out
 
-**Note:** Story 1.11 will add automated test infrastructure (Vitest + Playwright). For Story 1.5, document test procedures and run manual tests.
+**Note:** Story 1.6 will add automated test infrastructure (Vitest + Playwright). For Story 1.5, document test procedures and run manual tests.
 
 ### Security Considerations
 
@@ -481,7 +481,7 @@ All code implementation is complete. The following require manual browser/dashbo
 
 **Testing Notes:**
 - Story 1.5 is specified as manual testing only
-- Story 1.11 will add automated test infrastructure (Vitest + Playwright)
+- Story 1.6 will add automated test infrastructure (Vitest + Playwright)
 - Invitation-based onboarding requires setup before testing:
   - Run `createDevInvitation` mutation in Convex dashboard, OR
   - Manually set `tenantId` in Clerk user public metadata
@@ -635,7 +635,7 @@ Story 1.5 successfully implements Clerk authentication integration with all 7 ac
 
 ### Test Coverage and Gaps
 
-**Current Test Coverage:** ⚠️ **No automated tests** (expected - Story 1.11 will add testing infrastructure)
+**Current Test Coverage:** ⚠️ **No automated tests** (expected - Story 1.6 will add testing infrastructure)
 
 **Manual Testing Required** (documented in `docs/clerk-integration.md`):
 - ✅ Sign-in and sign-up flows (AC #2)
@@ -644,7 +644,7 @@ Story 1.5 successfully implements Clerk authentication integration with all 7 ac
 - ✅ Webhook sync to Convex database (AC #5)
 - ✅ Sign-out and session clearing (AC #7)
 
-**Recommended Future Automated Tests** (for Story 1.11):
+**Recommended Future Automated Tests** (for Story 1.6):
 - **Unit Tests:**
   - Profile page component rendering
   - Middleware protection logic
@@ -865,7 +865,7 @@ Story 1.5 successfully implements Clerk authentication integration with all 7 ac
 - ✅ Updated Story 1.5 with migration details
 - ⏳ Finalizing migration summary document
 - 📋 Manual testing procedures documented
-- 📋 Automated tests deferred to Story 1.11
+- 📋 Automated tests deferred to Story 1.6
 
 ### Implementation Highlights
 
@@ -913,8 +913,8 @@ Story 1.5 successfully implements Clerk authentication integration with all 7 ac
 - [ ] Test coverage documentation
 
 **Future Stories**:
-- Story 1.11: Automated testing infrastructure (Vitest + Playwright)
-- Story 1.6.5: Full invitation workflow with email templates
+- Story 1.6: Automated testing infrastructure (Vitest + Playwright)
+- Story 1.7.5: Full invitation workflow with email templates
 - Future: Webhook signature verification for production
 
 ### Files Created (Total: 11 files)

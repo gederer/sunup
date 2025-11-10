@@ -134,7 +134,7 @@ So that I can build consistent, accessible UI components with light/dark mode.
 
 ### Testing Strategy
 
-Since Story 1.11 sets up testing infrastructure (Playwright + Vitest), **NO automated tests** are required for this story. Validation is manual:
+Since Story 1.6 sets up testing infrastructure (Playwright + Vitest), **NO automated tests** are required for this story. Validation is manual:
 
 1. **Build Verification:** `turbo build --filter=@sunup/web` succeeds
 2. **Visual Verification:** Theme demo page renders correctly in light/dark modes

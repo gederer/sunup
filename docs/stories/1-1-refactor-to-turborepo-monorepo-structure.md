@@ -168,7 +168,7 @@ This is a **brownfield refactor** - we are not creating a new project, but restr
 
 ### Testing Strategy
 
-Since this is Story 1.1 and Story 1.11 sets up testing infrastructure (Playwright + Vitest), **NO automated tests** are required for this story. Validation is manual:
+Since this is Story 1.1 and Story 1.6 sets up testing infrastructure (Playwright + Vitest), **NO automated tests** are required for this story. Validation is manual:
 
 1. **Build Verification:** `turbo build` succeeds for all packages
 2. **Dev Server Verification:** `turbo dev` starts all development servers
@@ -312,7 +312,7 @@ Claude 3.7 Sonnet (claude-sonnet-4-5-20250929)
 - Convex build requires `convex dev` to generate _generated/api files (user must configure)
 - Mobile app requires Expo dependencies installation to run
 - shadcn/ui components not yet added (structure in place)
-- No automated tests (Story 1.11 will add testing infrastructure)
+- No automated tests (Story 1.6 will add testing infrastructure)
 
 ### Next Steps
 
@@ -416,7 +416,7 @@ This is an **excellent monorepo refactor** that successfully migrates the projec
 
 ### Test Coverage and Gaps
 
-**Testing Strategy:** NO automated tests required per story context (Story 1.11 creates testing infrastructure).
+**Testing Strategy:** NO automated tests required per story context (Story 1.6 creates testing infrastructure).
 
 **Validation Status:**
 - ✅ Automated build test PASSED

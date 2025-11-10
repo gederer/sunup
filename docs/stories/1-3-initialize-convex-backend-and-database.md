@@ -101,7 +101,7 @@ So that I have a real-time, serverless backend for data management.
 - TailwindCSS 4.1.17 with @plugin syntax
 - shadcn/ui components at `apps/web/components/ui/`
 - Theme system with `.dark` class selector
-- Manual testing until Story 1.11 (no automated tests yet)
+- Manual testing until Story 1.6 (no automated tests yet)
 
 ### Project Structure Notes
 
@@ -172,7 +172,7 @@ export default defineSchema({
 
 ### Testing Strategy
 
-Since Story 1.11 sets up testing infrastructure (Playwright + Vitest), **NO automated tests** are required for this story. Validation is manual:
+Since Story 1.6 sets up testing infrastructure (Playwright + Vitest), **NO automated tests** are required for this story. Validation is manual:
 
 1. **Initialization Verification:** Convex CLI completes successfully
 2. **Client Verification:** Browser console shows successful connection

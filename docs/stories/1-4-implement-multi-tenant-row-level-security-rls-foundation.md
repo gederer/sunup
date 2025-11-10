@@ -51,7 +51,7 @@ So that data isolation between tenants is guaranteed and cross-tenant data leaka
   - [x] Test: Mutation from tenant A cannot modify tenant B data
   - [x] Test: `getAuthUserWithTenant` throws error for unauthenticated requests
   - [x] Test: Cross-tenant queries return empty results (not errors)
-  - [x] Manual test procedures documented (automated tests in Story 1.11)
+  - [x] Manual test procedures documented (automated tests in Story 1.6)
 
 - [x] Setup linting rule for tenantId checks (AC: #6)
   - [x] Research ESLint custom rule for Convex query patterns
@@ -105,7 +105,7 @@ So that data isolation between tenants is guaranteed and cross-tenant data leaka
 - TailwindCSS 4.1.17 with @plugin syntax
 - shadcn/ui components at `apps/web/components/ui/`
 - Theme system with `.dark` class selector
-- Manual testing until Story 1.11 (no automated tests yet)
+- Manual testing until Story 1.6 (no automated tests yet)
 
 **From Story 1.3 (Status: done)**
 - Convex location: `packages/convex/` (monorepo structure)
@@ -114,7 +114,7 @@ So that data isolation between tenants is guaranteed and cross-tenant data leaka
 - ConvexClientProvider: `apps/web/components/ConvexClientProvider.tsx`
 - Clerk integration working with `ConvexProviderWithClerk`
 - Updated .env.local with deployment: `affable-albatross-627`
-- Manual testing approach (no automated tests until Story 1.11)
+- Manual testing approach (no automated tests until Story 1.6)
 
 ### Project Structure Notes
 
@@ -229,7 +229,7 @@ export async function requireRole(ctx, allowedRoles: string[]) {
 5. **Cross-tenant Test:** Manually verify queries with different Clerk users return different data sets
 6. **Build Verification:** `turbo build --filter=@sunup/web` succeeds
 
-**Note:** Story 1.11 will add automated test infrastructure (Vitest + Playwright). For Story 1.4, we'll create test files (`packages/convex/tests/rls.test.ts`) with test placeholders, but they won't run automatically until Story 1.11 sets up the test runner.
+**Note:** Story 1.6 will add automated test infrastructure (Vitest + Playwright). For Story 1.4, we'll create test files (`packages/convex/tests/rls.test.ts`) with test placeholders, but they won't run automatically until Story 1.6 sets up the test runner.
 
 ### Security Considerations
 
@@ -274,7 +274,7 @@ export async function requireRole(ctx, allowedRoles: string[]) {
    - Order matters: tenantId should be first in composite index
 
 5. **Testing Without Automated Tests:**
-   - Story 1.11 sets up Vitest/Playwright
+   - Story 1.6 sets up Vitest/Playwright
    - For Story 1.4, create test files with manual test procedures
    - Document how to manually verify RLS isolation
 
@@ -325,7 +325,7 @@ Claude Sonnet 4.5 (claude-sonnet-4-5-20250929)
    - `packages/convex/tasks.ts` - All queries filter by tenantId, mutations verify ownership
    - `packages/convex/users.ts` - Uses getAuthUserWithTenant, proper tenant assignment on user creation
 
-4. **Test Suite (AC #5)**: Created `packages/convex/tests/rls.test.ts` with 8 manual test scenarios documenting cross-tenant isolation, authentication, and schema compliance. Automated tests deferred to Story 1.11.
+4. **Test Suite (AC #5)**: Created `packages/convex/tests/rls.test.ts` with 8 manual test scenarios documenting cross-tenant isolation, authentication, and schema compliance. Automated tests deferred to Story 1.6.
 
 5. **Linting Strategy (AC #6)**: Documented linting approach in ESLint config. Custom AST parsing for Convex patterns deemed too complex; relying on TypeScript type checking, runtime errors, and code review.
 
@@ -333,7 +333,7 @@ Claude Sonnet 4.5 (claude-sonnet-4-5-20250929)
    - Why RLS is critical (compliance, trust, security)
    - Implementation patterns (query, mutation, update/delete, RBAC)
    - 5 common pitfalls with wrong/right examples
-   - Testing strategy (manual until Story 1.11)
+   - Testing strategy (manual until Story 1.6)
    - 3 working code examples
    - Security checklist for code review
 
@@ -344,7 +344,7 @@ Claude Sonnet 4.5 (claude-sonnet-4-5-20250929)
 - All queries use composite indexes for performance: `(tenantId, otherField)`
 
 **Future Considerations:**
-- Story 1.11 will add automated test infrastructure (Vitest)
+- Story 1.6 will add automated test infrastructure (Vitest)
 - Custom ESLint rules can be added in future story if needed
 - RBAC helpers ready for use in permission-sensitive operations
 
@@ -354,14 +354,14 @@ After implementation review, identified that new users signing up via Clerk woul
 - Require `tenantId` in Clerk public metadata (set by invitation process)
 - Throw clear error message for uninvited users: "Account registration requires an invitation"
 
-Created `packages/convex/invitations.ts` with development helper (`createDevInvitation`) for manual testing. Full invitation workflow (email, tokens, expiration, UI) will be implemented in **Story 1.6.5**.
+Created `packages/convex/invitations.ts` with development helper (`createDevInvitation`) for manual testing. Full invitation workflow (email, tokens, expiration, UI) will be implemented in **Story 1.7.5**.
 
 ### File List
 
 **Files Created:**
 - `packages/convex/lib/auth.ts` - RLS helper functions (getAuthUserWithTenant, requireRole, getCurrentUserOrNull)
 - `packages/convex/tests/rls.test.ts` - RLS test suite with 8 manual test scenarios
-- `packages/convex/invitations.ts` - Development invitation helper (Story 1.6.5 will add full workflow)
+- `packages/convex/invitations.ts` - Development invitation helper (Story 1.7.5 will add full workflow)
 - `docs/multi-tenant-rls.md` - Comprehensive RLS documentation (400+ lines)
 
 **Files Modified:**
@@ -416,7 +416,7 @@ All 7 acceptance criteria are **fully implemented** with verified code evidence:
 | AC #2 | Helper function `getAuthUserWithTenant(ctx)` returns authenticated user + tenantId | ✅ IMPLEMENTED | lib/auth.ts:62-86 - Function implemented with proper error handling (throws "Unauthorized" if not logged in, "User not found" if user doesn't exist). Returns `{ user, tenantId }` |
 | AC #3 | Query wrapper ensures every query/mutation checks tenantId | ✅ IMPLEMENTED | tasks.ts:15,28,43,62 - All queries/mutations call getAuthUserWithTenant(); tasks.ts:19 uses .withIndex("by_tenant"); tasks.ts:48,68 verify tenantId before mutations; users.ts:10 uses getAuthUserWithTenant in current() query |
 | AC #4 | Composite indexes created: `(tenantId, otherField)` for efficient tenant-scoped queries | ✅ IMPLEMENTED | schema.ts - Grep verified 15 `.index("by_tenant", ["tenantId"])` indexes across all tables requiring them. Examples: users:294, tasks:457, userRoles:324 |
-| AC #5 | Test suite verifies cross-tenant queries return empty results | ✅ IMPLEMENTED | tests/rls.test.ts:1-219 - Comprehensive test suite with 8 manual test scenarios documented including cross-tenant isolation tests (lines 95-101, 117-122). Note: Manual tests only; automated tests deferred to Story 1.11 |
+| AC #5 | Test suite verifies cross-tenant queries return empty results | ✅ IMPLEMENTED | tests/rls.test.ts:1-219 - Comprehensive test suite with 8 manual test scenarios documented including cross-tenant isolation tests (lines 95-101, 117-122). Note: Manual tests only; automated tests deferred to Story 1.6 |
 | AC #6 | Code linting rule flags queries missing tenantId check | ⚠️ PARTIAL | config/eslint/index.js:10-18 - Documented linting strategy with rationale for deferring automated rule. Relies on: TypeScript type checking, runtime errors, code review, and developer documentation. Custom AST parsing deemed too complex for Convex patterns |
 | AC #7 | Documentation in `/docs/multi-tenant-rls.md` explains RLS patterns | ✅ IMPLEMENTED | docs/multi-tenant-rls.md:1-400+ - Comprehensive documentation covering architecture, implementation patterns, common pitfalls, testing strategy, working examples, and security checklist. Linked in README.md |
 
@@ -492,7 +492,7 @@ All tasks marked complete have been **systematically verified** with code eviden
 - ✅ AC #7 (Documentation): Verified by file existence and content review
 
 **Gaps:**
-- Automated test execution deferred to Story 1.11 (Vitest/Playwright setup) - **Acceptable** as per story plan
+- Automated test execution deferred to Story 1.6 (Vitest/Playwright setup) - **Acceptable** as per story plan
 - No integration tests with actual Clerk authentication - **Acceptable** for MVP; manual testing sufficient
 - No performance benchmarks for composite indexes - **Acceptable**; performance validation can be done in production monitoring
 
@@ -521,7 +521,7 @@ All tasks marked complete have been **systematically verified** with code eviden
 - Requires invitation with tenantId in Clerk metadata
 - Clear error message for uninvited users
 - Development helper provided for manual testing
-- Full implementation planned for Story 1.6.5
+- Full implementation planned for Story 1.7.5
 
 ### Security Notes
 
@@ -581,5 +581,5 @@ All tasks marked complete have been **systematically verified** with code eviden
 **Advisory Notes (No Action Required):**
 - Note: Story completion notes claim "20 tables" but schema has 16 tables. Consider updating completion notes for accuracy (not blocking).
 - Note: Consider adding automated ESLint rule for RLS in future story when AST parsing complexity can be addressed.
-- Note: When Story 1.11 adds Vitest, convert manual test procedures in rls.test.ts to automated tests.
-- Note: Story 1.6.5 will implement full invitation workflow (email, tokens, UI) to replace manual `createDevInvitation` helper.
+- Note: When Story 1.6 adds Vitest, convert manual test procedures in rls.test.ts to automated tests.
+- Note: Story 1.7.5 will implement full invitation workflow (email, tokens, UI) to replace manual `createDevInvitation` helper.

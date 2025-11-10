@@ -193,7 +193,7 @@
     <constraint>Workspace protocol: Use "workspace:*" for internal package dependencies in package.json files (e.g., "@sunup/convex": "workspace:*").</constraint>
     <constraint>Tailwind content paths: When UI moves to packages/ui/, Tailwind configs in apps must scan that package directory: `content: ['../../packages/ui/src/**/*.{ts,tsx}']`</constraint>
     <constraint>Package naming convention: Use "@sunup/" scope for all internal packages (@sunup/convex, @sunup/ui, @sunup/types, @sunup/config).</constraint>
-    <constraint>No automated tests required: Story 1.11 creates testing infrastructure. Validate Story 1.1 manually via build/dev commands.</constraint>
+    <constraint>No automated tests required: Story 1.6 creates testing infrastructure. Validate Story 1.1 manually via build/dev commands.</constraint>
     <constraint>Reference implementation: Follow patterns from https://github.com/get-convex/turbo-expo-nextjs-clerk-convex-monorepo for Convex + Expo + Turborepo integration.</constraint>
     <constraint>Package manager recommendation: Consider using pnpm instead of npm for better monorepo workspace support, faster installs, and strict dependency resolution.</constraint>
   </constraints>
@@ -239,10 +239,10 @@
 
   <tests>
     <standards>
-      NO automated tests required for Story 1.1. Story 1.11 ("Setup testing infrastructure with Playwright and Vitest") will create the testing framework. Manual validation only: (1) `turbo build` succeeds for all packages, (2) `turbo dev` starts all dev servers, (3) Hot reload works in web and mobile apps, (4) Convex backend queries/mutations work from both platforms, (5) Shared code changes reflect immediately in both apps.
+      NO automated tests required for Story 1.1. Story 1.6 ("Setup testing infrastructure with Playwright and Vitest") will create the testing framework. Manual validation only: (1) `turbo build` succeeds for all packages, (2) `turbo dev` starts all dev servers, (3) Hot reload works in web and mobile apps, (4) Convex backend queries/mutations work from both platforms, (5) Shared code changes reflect immediately in both apps.
     </standards>
     <locations>
-      Testing infrastructure will be created in Story 1.11. No test directories exist yet. Future tests will follow structure: apps/web/__tests__/, apps/mobile/__tests__/, packages/*/tests/
+      Testing infrastructure will be created in Story 1.6. No test directories exist yet. Future tests will follow structure: apps/web/__tests__/, apps/mobile/__tests__/, packages/*/tests/
     </locations>
     <ideas>
       <idea ac="AC1">Verify turbo.json exists and contains valid pipeline configuration (build, dev, lint tasks)</idea>

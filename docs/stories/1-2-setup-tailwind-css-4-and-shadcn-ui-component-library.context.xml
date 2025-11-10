@@ -138,7 +138,7 @@
     <constraint>Component aliases already configured: @/components, @/lib/utils, @/components/ui - use these in imports</constraint>
     <constraint>Follow monorepo workspace pattern: web components in apps/web/components/, shared in packages/ui/</constraint>
     <constraint>Story 1.1 established build validation via: pnpm turbo build --filter=@sunup/web</constraint>
-    <constraint>No automated tests required (Story 1.11 sets up testing) - manual validation only</constraint>
+    <constraint>No automated tests required (Story 1.6 sets up testing) - manual validation only</constraint>
     <constraint>All shadcn/ui components must maintain WCAG 2.1 Level AA accessibility (do not remove ARIA attributes)</constraint>
   </constraints>
 
@@ -170,7 +170,7 @@
   </interfaces>
 
   <tests>
-    <standards>Story 1.11 sets up testing infrastructure (Playwright + Vitest). For Story 1.2, manual validation only: (1) Build verification via turbo build, (2) Visual verification of theme switching, (3) Component rendering in both light/dark modes, (4) Keyboard navigation and screen reader testing for accessibility, (5) Typography rendering with prose content.</standards>
+    <standards>Story 1.6 sets up testing infrastructure (Playwright + Vitest). For Story 1.2, manual validation only: (1) Build verification via turbo build, (2) Visual verification of theme switching, (3) Component rendering in both light/dark modes, (4) Keyboard navigation and screen reader testing for accessibility, (5) Typography rendering with prose content.</standards>
 
     <locations>
       No test files required for this story. Future tests will be in:
