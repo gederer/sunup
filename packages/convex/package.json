@@ -5,12 +5,9 @@
   "exports": {
     ".": "./convex.config.ts",
     "./schema": "./schema.ts",
-    "./auth": "./auth.ts",
     "./auth.config": "./auth.config.ts",
-    "./auth/permissions": "./auth/permissions.ts",
     "./users": "./users.ts",
     "./http": "./http.ts",
-    "./lib/auth": "./lib/auth.ts",
     "./_generated/api": "./_generated/api.js",
     "./_generated/api.d.ts": "./_generated/api.d.ts",
     "./_generated/dataModel": "./_generated/dataModel.d.ts",
@@ -21,8 +18,6 @@
     "deploy": "convex deploy"
   },
   "dependencies": {
-    "@convex-dev/better-auth": "^0.9.7",
-    "better-auth": "^1.3.34",
     "convex": "^1.28.0"
   },
   "devDependencies": {
