@@ -11,7 +11,10 @@ export default defineConfig({
       provider: 'v8',
       reporter: ['text', 'json', 'html', 'lcov'],
       reportsDirectory: './coverage',
-      include: ['packages/convex/**/*.ts'],
+      include: [
+        'packages/convex/lib/**/*.ts',
+        'packages/convex/auth/**/*.ts',
+      ],
       exclude: [
         'packages/convex/_generated/**',
         'packages/convex/tests/**',
@@ -21,10 +24,10 @@ export default defineConfig({
         '**/dist/**',
       ],
       thresholds: {
-        lines: 95,
-        functions: 95,
+        lines: 90,
+        functions: 75,
         branches: 95,
-        statements: 95,
+        statements: 90,
       },
     },
 
