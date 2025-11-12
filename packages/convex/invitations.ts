@@ -1,99 +1,73 @@
 /**
- * User Invitation System with better-auth Admin API
+ * User Invitation System (Basic Implementation for Story 1.4)
  *
- * Uses better-auth Admin plugin to create users directly.
- * Full invitation workflow (Story 1.6.5) will add:
+ * Full invitation workflow will be implemented in Story 1.6.5
+ * This provides a basic mechanism for development/testing
+ *
+ * Story 1.6.5 will add:
  * - userInvitations table in schema
- * - Invitation email flow with magic links
+ * - Full invitation email flow
  * - Token-based invitation acceptance
  * - Expiration handling
  * - UI for inviting users
- *
- * Story: 1.5 - Integrate better-auth Authentication
  */
 
-import { internalMutation, mutation } from "./_generated/server";
+import { internalMutation } from "./_generated/server";
 import { v } from "convex/values";
-import {
-  createUserInTenant,
-  listUsersForTenant,
-  setUserActiveStatusInTenant,
-  updateUserRoleInTenant,
-} from "./lib/invitations";
 
 /**
- * Create a new user using better-auth Admin API
+ * DEVELOPMENT ONLY: Manually create an invitation by setting Clerk metadata
  *
- * This mutation creates a user directly in the better-auth system
- * and syncs them to the Convex database with the specified tenant.
+ * This is a temporary helper for development until Story 1.6.5 implements
+ * the full invitation workflow with email, tokens, and expiration.
  *
- * Requires: "user:create" permission (System Admin, Recruiter, Trainer)
+ * Usage via Convex dashboard:
+ * 1. Run this mutation with email and tenantId
+ * 2. Manually set the tenantId in Clerk dashboard:
+ *    - Go to Clerk dashboard > Users
+ *    - Click on user
+ *    - Public metadata: { "tenantId": "j57abc123..." }
+ * 3. User can now sign up successfully
  *
- * @param email - Email address for the new user
- * @param firstName - First name
- * @param lastName - Last name
- * @param tenantId - Tenant ID to assign
- * @param roles - Array of role names to assign (default: ["Setter"])
- * @returns Created user information
+ * @param email - Email address to invite
+ * @param tenantId - Tenant ID to assign to user
+ * @returns Instructions for completing the invitation
  */
-export const createUser = mutation({
+export const createDevInvitation = internalMutation({
   args: {
     email: v.string(),
-    firstName: v.string(),
-    lastName: v.string(),
     tenantId: v.id("tenants"),
-    roles: v.optional(v.array(v.string())),
+    notes: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    return await createUserInTenant(ctx, args);
-  },
-});
+    // Verify tenant exists
+    const tenant = await ctx.db.get(args.tenantId);
+    if (!tenant) {
+      throw new Error(`Tenant not found: ${args.tenantId}`);
+    }
 
-/**
- * List users in the system
- *
- * System Admins can see all users.
- * Other roles can only see users in their tenant.
- *
- * Requires: "user:read" permission
- */
-export const listUsers = mutation({
-  args: {
-    limit: v.optional(v.number()),
-  },
-  handler: async (ctx, args) => {
-    return await listUsersForTenant(ctx, args.limit);
-  },
-});
+    // Log invitation for tracking
+    console.log(`[DEV INVITATION] Email: ${args.email}, Tenant: ${tenant.name} (${args.tenantId})`);
 
-/**
- * Update user activation status
- *
- * Requires: "user:update" permission (System Admin, Recruiter, Trainer)
- */
-export const setUserActiveStatus = mutation({
-  args: {
-    userId: v.id("users"),
-    isActive: v.boolean(),
-  },
-  handler: async (ctx, args) => {
-    return await setUserActiveStatusInTenant(ctx, args);
-  },
-});
-
-/**
- * Assign or remove role from user
- *
- * Requires: "user:update" permission (System Admin, managers)
- */
-export const updateUserRole = mutation({
-  args: {
-    userId: v.id("users"),
-    role: v.string(),
-    action: v.union(v.literal("add"), v.literal("remove")),
-  },
-  handler: async (ctx, args) => {
-    return await updateUserRoleInTenant(ctx, args);
+    return {
+      success: true,
+      message: "Development invitation created",
+      instructions: [
+        "1. Go to Clerk dashboard: https://dashboard.clerk.com",
+        "2. Navigate to Users section",
+        `3. Find or invite user: ${args.email}`,
+        "4. Click on the user to edit",
+        "5. In 'Public metadata' section, add:",
+        `   { "tenantId": "${args.tenantId}" }`,
+        "6. Save changes",
+        "7. User can now sign up successfully",
+      ],
+      email: args.email,
+      tenantId: args.tenantId,
+      tenantName: tenant.name,
+      notes: args.notes,
+      nextStory: "Story 1.6.5 will automate this process with invitation emails and tokens",
+    };
   },
 });
 

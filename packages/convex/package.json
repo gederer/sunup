@@ -11,7 +11,6 @@
     "./users": "./users.ts",
     "./http": "./http.ts",
     "./lib/auth": "./lib/auth.ts",
-    "./lib/permissions": "./lib/permissions.ts",
     "./_generated/api": "./_generated/api.js",
     "./_generated/api.d.ts": "./_generated/api.d.ts",
     "./_generated/dataModel": "./_generated/dataModel.d.ts",
