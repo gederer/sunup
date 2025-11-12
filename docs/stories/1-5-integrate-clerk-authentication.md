@@ -1,38 +1,40 @@
-# Story 1.5: Integrate better-auth Authentication (Migration from Clerk)
+# Story 1.5: Integrate Clerk Authentication
 
 Status: done
 
 ## Story
 
 As a Developer,
-I want better-auth authentication integrated with Next.js, Convex, and React Native,
-So that users can securely sign in with magic links and admins can manage users with 12-role RBAC.
+I want Clerk authentication integrated with Next.js and Convex,
+So that users can securely sign in and admin-created user accounts work within our multi-tenant system.
 
-## Strategic Migration
+## Reversion Note
 
-**Decision Date**: 2025-11-09
+**Date**: 2025-11-12
+**Decision**: Reverted better-auth migration, returned to Clerk
 **Workflow**: `/bmad:bmm:workflows:correct-course`
 
-During Story 1.5 implementation, Clerk webhook integration issues revealed architectural misalignment:
-- Clerk's webhook-driven model didn't fit admin-created user requirement
-- better-auth provides native Convex integration and Admin plugin
-- Migration approved via correct-course workflow (Sprint Change Proposal)
+During Story 1.6.5 implementation (testing debt), comprehensive research into the Convex Better Auth integration revealed that the **Organization and Admin plugins** from better-auth, which are **required for multi-tenant architecture with 12-role RBAC**, are **not supported** in the Convex Better Auth integration (`@convex-dev/better-auth@0.9.7`).
 
-**Migration completed in 5 phases** (see below)
+**Decision made via correct-course workflow** to revert to Clerk as specified in original PRD (FR005).
 
-## Acceptance Criteria (Updated for better-auth)
+**Commits Reverted**:
+- 46ba587: Phase 4 - Complete UI integration with better-auth
+- 1147163: Phase 3 - Implement 12-role authorization with permission helpers
+- b39f874: Phase 2 - Install and configure better-auth with Admin plugin
+- 22c6251: Phase 1 - Remove Clerk authentication system
 
-1. ✅ better-auth installed and configured with Convex adapter (AC: #1)
-2. ✅ Magic link authentication working for passwordless sign-in (AC: #2)
-3. ✅ Protected routes require authentication (redirect to login if not authenticated) (AC: #3)
+**See**: Sprint Change Proposal (`docs/sprint-change-proposal-2025-11-12.md`)
+
+## Acceptance Criteria (Clerk - Original Scope)
+
+1. ✅ Clerk installed and configured with Next.js middleware (AC: #1)
+2. ✅ Sign-in and sign-up flows working via Clerk components (AC: #2)
+3. ✅ Protected routes require authentication (redirect to sign-in if not authenticated) (AC: #3)
 4. ✅ User session accessible in server and client components (AC: #4)
-5. ✅ Admin user creation mutation with permission checks (AC: #5)
-6. ✅ User profile page displays user data with roles (AC: #6)
+5. ✅ Clerk webhook configured for user sync to Convex (AC: #5)
+6. ✅ User profile page displays Clerk user data (AC: #6)
 7. ✅ Sign-out functionality working correctly (AC: #7)
-8. ✅ 12-role RBAC system with Admin plugin configured (AC: #8)
-9. ✅ Permission helpers for fine-grained access control (AC: #9)
-10. ✅ UI components for login, profile, and user management (AC: #10)
-11. ✅ Comprehensive documentation (better-auth-integration.md) (AC: #11)
 
 ## Tasks / Subtasks
 

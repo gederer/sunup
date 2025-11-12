@@ -22,7 +22,7 @@ This must be the **first implementation story** to establish proper code sharing
 - TypeScript 5.x
 - TailwindCSS 4.x
 - Convex 1.28.0 (backend + real-time database)
-- better-auth 1.3.34 (passwordless authentication with 12-role RBAC)
+- Clerk 6.34.0 (authentication with 12-role RBAC)
 - shadcn/ui components
 - Multi-tenant schema with RLS (all tables include tenantId)
 
@@ -36,7 +36,7 @@ This must be the **first implementation story** to establish proper code sharing
 | **Styling** | TailwindCSS | 4.x | All | Utility-first, rapid development, consistent design |
 | **UI Components** | shadcn/ui | Latest | All | Accessible, customizable, copy-paste components |
 | **Backend/Database** | Convex | 1.28.0 | All | Real-time subscriptions, serverless, TypeScript-native |
-| **Authentication** | better-auth | 1.3.34 | Epic 1 | Magic link passwordless auth, Admin plugin with 12-role RBAC, multi-tenant support |
+| **Authentication** | Clerk | 6.34.0 | Epic 1 | OAuth2, passwordless, MFA support, webhook-based user sync, multi-tenant support via metadata |
 | **Telephony** | SignalWire Programmable Voice | Latest SDK | Epic 3 | SIP-based predictive dialer, call routing, recordings |
 | **WebRTC/Video** | Mediasoup SFU (separate server) | v3.x | Epic 4 | Custom WebRTC for 1-to-1 video, full control, scalable |
 | **TURN/STUN** | Self-hosted coturn | Latest | Epic 4 | NAT traversal for WebRTC, cost-effective |
@@ -73,13 +73,13 @@ sunup/
 │   │   │   │   ├── admin/           # System admin
 │   │   │   │   └── commissions/     # Commission tracking
 │   │   │   ├── api/                 # API routes
-│   │   │   │   └── webhooks/        # better-auth, SignalWire webhooks
+│   │   │   │   └── webhooks/        # Clerk, SignalWire webhooks
 │   │   │   ├── components/          # App-specific components
 │   │   │   │   ├── features/        # Feature components
 │   │   │   │   └── layouts/         # Layout components
 │   │   │   └── lib/                 # Web-specific utilities
 │   │   ├── public/                  # Static assets
-│   │   ├── middleware.ts            # better-auth auth middleware
+│   │   ├── middleware.ts            # Clerk auth middleware
 │   │   └── package.json
 │   │
 │   ├── mobile/                       # Expo React Native app
@@ -171,7 +171,7 @@ sunup/ (current)
 
 | Epic | Primary Modules/Services | Key Technologies |
 |------|-------------------------|------------------|
-| **Epic 1: Foundation & Infrastructure** | `packages/convex`, `apps/web`, monorepo setup, CI/CD | Turborepo, Convex, better-auth, Vitest, Playwright, Sentry |
+| **Epic 1: Foundation & Infrastructure** | `packages/convex`, `apps/web`, monorepo setup, CI/CD | Turborepo, Convex, Clerk, Vitest, Playwright, Sentry |
 | **Epic 2: Core CRM & Pipeline Management** | `packages/convex/mutations/pipeline.ts`, `apps/web/app/(dashboard)/crm/` | Convex mutations, Mapbox GL JS, real-time subscriptions |
 | **Epic 3: Predictive Dialer & Campaign Management** | `packages/convex/actions/signalwire.ts`, `packages/convex/crons/predictive-dialer.ts`, `apps/mobile/app/(tabs)/setters/` | SignalWire SDK, Convex actions, Cloudflare R2, React Native |
 | **Epic 4: Video Conferencing & Unified Meeting Interface** | `apps/mediasoup-server`, `apps/web/app/(dashboard)/consultants/meeting/`, `apps/mobile/app/(tabs)/consultants/` | Mediasoup v3, WebRTC, coturn, WebSockets, React Native |
@@ -207,10 +207,11 @@ sunup/ (current)
   - TypeScript-native queries/mutations
   - Scheduled functions (crons)
   - HTTP actions for external APIs
-- **Authentication:** better-auth 1.3.34 with @convex-dev/better-auth 0.9.7
-  - Magic link passwordless authentication
-  - Admin plugin with 12-role RBAC
-  - Session management via Convex adapter
+- **Authentication:** Clerk 6.34.0 with Convex integration
+  - OAuth2, passwordless authentication with magic links
+  - MFA support for enhanced security
+  - Webhook-based user sync to Convex
+  - Multi-tenant support via Clerk metadata
   - Admin-created users (no public signup)
 
 **External Services:**
@@ -242,10 +243,12 @@ sunup/ (current)
 
 ### Integration Points
 
-**better-auth ↔ Convex:**
-- better-auth stores sessions in Convex via @convex-dev/better-auth adapter
-- Next.js middleware validates sessions and protects routes
+**Clerk ↔ Convex:**
+- Clerk webhooks sync user data to Convex (user creation, updates, deletions)
+- Next.js middleware validates Clerk sessions and protects routes
+- Session validation via Clerk JWT tokens passed to Convex
 - Convex auth helpers retrieve authenticated user with tenant context
+- Multi-tenant isolation via tenantId stored in Clerk public metadata
 - All queries enforce RLS via tenantId check
 
 **SignalWire ↔ Convex:**
@@ -725,7 +728,7 @@ export const createCommission = mutation({
 
 **Already Defined in Existing Schema:**
 - **tenants**: Multi-tenant root (1 tenant = 1 solar company)
-- **users**: System users (Setters, Consultants, etc.) with better-auth integration
+- **users**: System users (Setters, Consultants, etc.) with Clerk integration
 - **userRoles**: Many-to-many role assignments (12 roles)
 - **organizations**: Households, commercial entities (potential customers)
 - **people**: Individuals within organizations (decision makers, contacts)
@@ -854,11 +857,14 @@ export async function POST(req: NextRequest) {
 
 ### Authentication & Authorization
 
-**better-auth Integration:**
-- Session-based authentication with magic links
-- Sessions stored in Convex via @convex-dev/better-auth adapter
-- Next.js middleware validates sessions on protected routes
+**Clerk Integration:**
+- OAuth2 and passwordless authentication with magic links
+- MFA support for enhanced security
+- Webhook-based user sync to Convex (create, update, delete)
+- Next.js middleware validates Clerk sessions on protected routes
+- Session validation via Clerk JWT tokens
 - Convex auth helpers retrieve authenticated user with tenant context
+- Multi-tenant isolation via tenantId stored in Clerk public metadata
 
 **RBAC (12 Roles):**
 - Roles defined in `userRoles` table

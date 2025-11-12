@@ -1,9 +1,37 @@
 # Story 1.6.5: Address Testing Debt from User Management
 
 **Epic**: 1 - Foundation & Infrastructure
-**Status**: Backlog
+**Status**: in-progress
 **Priority**: HIGH - CRITICAL before Story 1.7 (RBAC)
 **Created**: 2025-11-09 (Sprint Change Proposal)
+
+---
+
+## Reversion Impact Note
+
+**Date**: 2025-11-12
+**Status Change**: done → in-progress
+
+This story was completed for better-auth implementation with 123 passing tests and >90% coverage. However, due to the reversion to Clerk (Sprint Change Proposal 2025-11-12), all test files will be deleted as part of git revert operations.
+
+**Work Completed (Pre-Reversion)**:
+- ✅ Created lib/tasks.ts and lib/invitations.ts with extracted helper functions
+- ✅ 123 tests passing (20 tasks + 24 invitations + 79 existing)
+- ✅ Coverage: 94.92% statements, 98.55% branches, 80.55% functions, 94.73% lines
+
+**Work Lost in Reversion**:
+- tests/tasks.test.ts (20 tests)
+- tests/invitations.test.ts (24 tests)
+- tests/permissions.test.ts (79 tests)
+- lib/invitations.ts (better-auth specific)
+- lib/permissions.ts (better-auth specific)
+
+**Next Steps**:
+- Re-implement Story 1.6.5 after Clerk reversion stabilizes
+- Adapt test patterns for Clerk authentication
+- Target same coverage thresholds (>90%)
+
+**See**: Sprint Change Proposal (`docs/sprint-change-proposal-2025-11-12.md`)
 
 ---
 
