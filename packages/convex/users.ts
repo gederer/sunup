@@ -30,18 +30,35 @@ export const upsertFromClerk = internalMutation({
       // Story 1.6.5: Full invitation workflow will be implemented
 
       // Check if user has tenantId in Clerk metadata (set during invitation)
-      const tenantId = (data.public_metadata as any)?.tenantId;
+      let tenantId = (data.public_metadata as any)?.tenantId;
 
       if (!tenantId) {
-        // Public signup is disabled - users must be invited
-        // Invitation workflow (Story 1.6.5) will set tenantId in Clerk metadata
-        throw new Error(
-          "Account registration requires an invitation. " +
-          "Please contact your organization's administrator to receive an invitation."
-        );
+        // TEMPORARY: Auto-assign default tenant for development
+        // TODO: Story 1.6.5 will implement proper invitation workflow
+        // Production will require tenantId in Clerk metadata before signup
+
+        // Get or create default tenant
+        const defaultTenant = await ctx.db
+          .query("tenants")
+          .filter((q) => q.eq(q.field("name"), "Default Organization"))
+          .first();
+
+        if (defaultTenant) {
+          tenantId = defaultTenant._id;
+        } else {
+          // Create default tenant for development
+          tenantId = await ctx.db.insert("tenants", {
+            name: "Default Organization",
+            slug: "default",
+            isActive: true,
+          });
+          console.log("Created default tenant for development:", tenantId);
+        }
+
+        console.log(`Auto-assigned user ${data.email_addresses[0]?.email_address} to default tenant`);
       }
 
-      // User has valid invitation (tenantId set by invitation process)
+      // User has valid invitation (tenantId set by invitation process or auto-assigned)
       await ctx.db.insert("users", {
         ...userAttributes,
         tenantId,
