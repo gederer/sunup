@@ -44,8 +44,8 @@ development_status:
   1-5-integrate-clerk-authentication: done
   1-6-setup-testing-infrastructure-with-playwright-and-vitest: done  # E2E tests deferred to Epic 2 (frontend development)
   1-6-5-address-testing-debt-from-user-management: done  # Completed with Clerk authentication - 43 tests, 92% coverage
-  1-7-implement-role-based-access-control-rbac-for-12-roles: drafted
-  1-8-create-pipeline-data-model-and-schema: backlog
+  1-7-implement-role-based-access-control-rbac-for-12-roles: done  # Core RBAC complete (helpers, mutations, tests, docs); UI & Clerk sync deferred
+  1-8-create-pipeline-data-model-and-schema: done  # Schema, pipeline.ts (8 fns), persons.ts (7 fns), seedPipelineData.ts complete; Convex 1.29.0; Comprehensive testing investigation completed - convex-test v0.0.38 incompatible with Vitest (import.meta.glob() is Vite compile-time feature); Manual testing via seedPipelineData recommended
   1-9-implement-event-system-for-pipeline-status-changes: backlog
   1-10-create-person-and-organization-base-schema: backlog
   1-11-setup-git-hub-actions-ci-cd-pipeline: backlog

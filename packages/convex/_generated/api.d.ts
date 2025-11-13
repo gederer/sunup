@@ -8,11 +8,18 @@
  * @module
  */
 
+import type * as convex__generated_api from "../convex/_generated/api.js";
+import type * as convex__generated_server from "../convex/_generated/server.js";
 import type * as http from "../http.js";
 import type * as invitations from "../invitations.js";
 import type * as lib_auth from "../lib/auth.js";
 import type * as lib_tasks from "../lib/tasks.js";
+import type * as persons from "../persons.js";
+import type * as pipeline from "../pipeline.js";
+import type * as rbacDemo from "../rbacDemo.js";
+import type * as seedPipelineData from "../seedPipelineData.js";
 import type * as tasks from "../tasks.js";
+import type * as userRoles from "../userRoles.js";
 import type * as users from "../users.js";
 
 import type {
@@ -30,11 +37,18 @@ import type {
  * ```
  */
 declare const fullApi: ApiFromModules<{
+  "convex/_generated/api": typeof convex__generated_api;
+  "convex/_generated/server": typeof convex__generated_server;
   http: typeof http;
   invitations: typeof invitations;
   "lib/auth": typeof lib_auth;
   "lib/tasks": typeof lib_tasks;
+  persons: typeof persons;
+  pipeline: typeof pipeline;
+  rbacDemo: typeof rbacDemo;
+  seedPipelineData: typeof seedPipelineData;
   tasks: typeof tasks;
+  userRoles: typeof userRoles;
   users: typeof users;
 }>;
 declare const fullApiWithMounts: typeof fullApi;

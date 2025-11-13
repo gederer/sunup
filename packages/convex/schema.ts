@@ -48,12 +48,18 @@ export default defineSchema({
     lastName: v.string(),
     email: v.string(),
     phone: v.optional(v.string()),
+    // Pipeline tracking (Story 1.8)
+    currentPipelineStage: v.optional(v.string()), // Current stage in sales pipeline
+    organizationId: v.optional(v.id("organizations")), // Primary organization affiliation
     // Multi-tenant support
     tenantId: v.id("tenants"),
   })
     .index("by_tenant", ["tenantId"])
     .index("by_email", ["email"])
-    .index("by_tenant_and_email", ["tenantId", "email"]),
+    .index("by_tenant_and_email", ["tenantId", "email"])
+    .index("by_pipeline_stage", ["currentPipelineStage"])
+    .index("by_tenant_and_stage", ["tenantId", "currentPipelineStage"])
+    .index("by_organization", ["organizationId"]),
 
   // ============================================
   // ORGANIZATION MEMBERS (Many-to-Many)
@@ -324,6 +330,46 @@ export default defineSchema({
     .index("by_tenant", ["tenantId"])
     .index("by_user_and_role", ["userId", "role"])
     .index("by_tenant_and_role", ["tenantId", "role"]),
+
+  // ============================================
+  // PIPELINE STAGES (Story 1.8)
+  // ============================================
+  pipelineStages: defineTable({
+    name: v.string(), // Lead, Set, Met, QMet, Sale, Installation
+    order: v.number(), // Determines stage sequence (1, 2, 3, ...)
+    category: v.union(
+      v.literal("sales"),
+      v.literal("installation"),
+      v.literal("completed")
+    ),
+    description: v.optional(v.string()),
+    isActive: v.boolean(), // Stages can be deactivated without deletion
+    // Multi-tenant support
+    tenantId: v.id("tenants"),
+  })
+    .index("by_tenant", ["tenantId"])
+    .index("by_tenant_and_order", ["tenantId", "order"])
+    .index("by_tenant_and_active", ["tenantId", "isActive"])
+    .index("by_name", ["name"]),
+
+  // ============================================
+  // PIPELINE HISTORY (Story 1.8)
+  // ============================================
+  pipelineHistory: defineTable({
+    personId: v.id("people"),
+    fromStage: v.optional(v.string()), // null for initial stage assignment
+    toStage: v.string(),
+    changedByUserId: v.id("users"), // Who made the change
+    changeReason: v.optional(v.string()), // Optional note about why stage changed
+    timestamp: v.number(), // When the change occurred
+    // Multi-tenant support
+    tenantId: v.id("tenants"),
+  })
+    .index("by_person", ["personId"])
+    .index("by_tenant", ["tenantId"])
+    .index("by_timestamp", ["timestamp"])
+    .index("by_person_and_timestamp", ["personId", "timestamp"])
+    .index("by_changed_by", ["changedByUserId"]),
 
   // ============================================
   // TENANTS (Multi-tenant support)
