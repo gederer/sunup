@@ -49,7 +49,6 @@ export const upsertFromClerk = internalMutation({
           // Create default tenant for development
           tenantId = await ctx.db.insert("tenants", {
             name: "Default Organization",
-            slug: "default",
             isActive: true,
           });
           console.log("Created default tenant for development:", tenantId);
