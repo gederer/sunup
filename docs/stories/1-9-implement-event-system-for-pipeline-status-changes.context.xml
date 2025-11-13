@@ -1,0 +1,175 @@
+<story-context id="bmad/bmm/workflows/4-implementation/story-context/template" v="1.0">
+  <metadata>
+    <epicId>1</epicId>
+    <storyId>1.9</storyId>
+    <title>Implement Event System for Pipeline Status Changes</title>
+    <status>drafted</status>
+    <generatedAt>2025-11-13</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/stories/1-9-implement-event-system-for-pipeline-status-changes.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>Developer</asA>
+    <iWant>pipeline status changes to trigger events that notify other parts of the system</iWant>
+    <soThat>cascading actions (notifications, commission calculations) happen automatically</soThat>
+    <tasks>
+      - Create `pipelineEvents` table in schema (AC: #6)
+      - Create event emitter utilities in `packages/convex/lib/events.ts` (AC: #1, #5)
+      - Implement event subscription pattern (AC: #2)
+      - Create sample event handler for logging (AC: #3)
+      - Update `movePersonToStage` mutation to emit events (AC: #4)
+      - Write comprehensive tests
+      - Create documentation in `/docs/event-system.md` (AC: #7)
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+    1. Event emitter function `emitPipelineEvent(ctx, personId, fromStage, toStage)` publishes events
+    2. Event subscription pattern allows listeners to register handlers
+    3. Sample event handler logs pipeline changes (demonstrates pattern)
+    4. Pipeline mutation triggers event on status change
+    5. Event payload includes: tenantId, personId, userId (who changed), timestamp, fromStage, toStage
+    6. Events are stored in `pipelineEvents` table for audit trail
+    7. Documentation in `/docs/event-system.md` explains event patterns
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc>
+        <path>docs/epics.md</path>
+        <title>Epic Breakdown - Story 1.9</title>
+        <section>Epic 1: Foundation & Infrastructure</section>
+        <snippet>Story 1.9 implements an event-driven architecture for pipeline status changes, enabling cascading actions like notifications and commission calculations. Prerequisites: Story 1.8 (Pipeline data model created).</snippet>
+      </doc>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>Decision Architecture</title>
+        <section>Backend/Database - Convex</section>
+        <snippet>Convex provides real-time subscriptions and serverless architecture. Event system leverages Convex mutations for real-time updates, with events table for audit trail and async processing.</snippet>
+      </doc>
+      <doc>
+        <path>docs/stories/1-8-create-pipeline-data-model-and-schema.md</path>
+        <title>Story 1.8 Completion</title>
+        <section>Pipeline Implementation</section>
+        <snippet>Completed pipeline.ts with 8 functions including movePersonToStage() mutation. Schema includes pipelineStages, people, and pipelineHistory tables with RLS. Testing infrastructure configured with convex-test v0.0.38 and edge-runtime environment.</snippet>
+      </doc>
+    </docs>
+    <code>
+      <artifact>
+        <path>packages/convex/schema.ts</path>
+        <kind>schema</kind>
+        <symbol>pipelineHistory table</symbol>
+        <lines>358-372</lines>
+        <reason>Demonstrates existing pipeline tracking pattern. New pipelineEvents table should follow similar structure with tenantId, indexes, and RLS.</reason>
+      </artifact>
+      <artifact>
+        <path>packages/convex/pipeline.ts</path>
+        <kind>mutation</kind>
+        <symbol>movePersonToStage</symbol>
+        <lines>325-405</lines>
+        <reason>This mutation must be updated to emit pipeline events (AC #4). Currently logs to pipelineHistory at line 389-397. Add event emission after successful transition.</reason>
+      </artifact>
+      <artifact>
+        <path>packages/convex/lib/auth.ts</path>
+        <kind>helper</kind>
+        <symbol>getAuthUserWithTenant</symbol>
+        <lines>83-100</lines>
+        <reason>Use this helper in event emitter functions to enforce tenantId validation and RLS (AC #5). Returns user and tenantId for event payload.</reason>
+      </artifact>
+      <artifact>
+        <path>packages/convex/tests/pipeline.test.ts</path>
+        <kind>test</kind>
+        <symbol>setupTestEnvironment, authentication pattern</symbol>
+        <lines>19-48</lines>
+        <reason>Test helper patterns for creating tenant, user, and authenticated context. Use t.withIdentity({ subject: "test_clerk_user" }) for authenticated mutations/queries.</reason>
+      </artifact>
+    </code>
+    <dependencies>
+      <node>
+        <package name="convex" version="1.29.0" />
+        <package name="convex-test" version="0.0.38" />
+        <package name="@edge-runtime/vm" version="^5.0.0" />
+        <package name="vitest" version="4.0.7" />
+        <package name="jsdom" version="^27.2.0" />
+        <package name="@vitejs/plugin-react" version="^5.1.1" />
+        <package name="vite-tsconfig-paths" version="^5.1.4" />
+      </node>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    <constraint>ALL database tables MUST include tenantId field for multi-tenant RLS enforcement</constraint>
+    <constraint>ALL queries and mutations MUST call getAuthUserWithTenant(ctx) first to enforce tenant isolation</constraint>
+    <constraint>Use composite indexes pattern: (tenantId, otherField) for efficient tenant-scoped queries</constraint>
+    <constraint>Use v.id("tableName") for foreign key references in schema</constraint>
+    <constraint>Event emission should NOT fail the entire mutation - use try/catch to prevent blocking main operation</constraint>
+    <constraint>Event payload structure must be validated to ensure required fields (tenantId, personId, userId, timestamp, fromStage, toStage)</constraint>
+    <constraint>Schema definitions use Convex v.object(), v.string(), v.number(), v.boolean(), v.id(), v.optional(), v.union(), v.array() validators</constraint>
+    <constraint>Follow naming convention: camelCase for fields, PascalCase for types</constraint>
+  </constraints>
+
+  <interfaces>
+    <interface>
+      <name>emitPipelineEvent</name>
+      <kind>function</kind>
+      <signature>async function emitPipelineEvent(ctx: MutationCtx, payload: PipelineEventPayload): Promise&lt;Id&lt;"pipelineEvents"&gt;&gt;</signature>
+      <path>packages/convex/lib/events.ts</path>
+    </interface>
+    <interface>
+      <name>PipelineEventPayload</name>
+      <kind>type</kind>
+      <signature>type PipelineEventPayload = { personId: Id&lt;"people"&gt;; fromStage: string | undefined; toStage: string; reason?: string; }</signature>
+      <path>packages/convex/lib/events.ts</path>
+    </interface>
+    <interface>
+      <name>pipelineEvents table schema</name>
+      <kind>schema</kind>
+      <signature>defineTable({ tenantId: v.id("tenants"), personId: v.id("people"), userId: v.id("users"), timestamp: v.number(), fromStage: v.optional(v.string()), toStage: v.string(), eventType: v.string(), metadata: v.optional(v.string()) }).index("by_tenant", ["tenantId"]).index("by_person_and_timestamp", ["personId", "timestamp"]).index("by_tenant_and_timestamp", ["tenantId", "timestamp"])</signature>
+      <path>packages/convex/schema.ts</path>
+    </interface>
+    <interface>
+      <name>getAuthUserWithTenant</name>
+      <kind>helper</kind>
+      <signature>async function getAuthUserWithTenant(ctx: QueryCtx | MutationCtx): Promise&lt;{ user: User; tenantId: Id&lt;"tenants"&gt; }&gt;</signature>
+      <path>packages/convex/lib/auth.ts</path>
+    </interface>
+  </interfaces>
+
+  <tests>
+    <standards>
+      Testing Infrastructure: Vitest 4.0.7 with @edge-runtime/vm for Convex tests.
+
+      Test Environment: Use 'edge-runtime' environment (NOT jsdom) in vitest.config.mts for convex-test compatibility.
+
+      Authentication: Tests use t.withIdentity({ subject: "test_clerk_user" }) to authenticate mutations/queries.
+
+      Setup Pattern: Create tenant, user, and System Administrator role in setupTestEnvironment helper. Use t.run() for database operations.
+
+      Module Loading: Use import.meta.glob("../**/!(*.*.*)*.*s") pattern for monorepo function discovery.
+
+      Assertions: Use Vitest expect() for assertions. Test both success and error cases.
+
+      Coverage Target: Aim for comprehensive coverage of all acceptance criteria and edge cases.
+    </standards>
+    <locations>
+      - packages/convex/tests/*.test.ts (unit and integration tests)
+      - Test files should be co-located with implementation in tests/ directory
+      - Story 1.9: Create packages/convex/tests/events.test.ts
+    </locations>
+    <ideas>
+      <test ac="1">Test emitPipelineEvent function creates event record with correct payload structure</test>
+      <test ac="1">Test emitPipelineEvent validates required fields (tenantId, personId, userId, timestamp, fromStage, toStage)</test>
+      <test ac="2">Test event subscription pattern allows multiple handlers to register for same event type</test>
+      <test ac="3">Test sample logging handler receives and processes pipeline change events correctly</test>
+      <test ac="4">Test movePersonToStage mutation emits event after successful stage transition</test>
+      <test ac="4">Test movePersonToStage continues even if event emission fails (error handling)</test>
+      <test ac="5">Test event payload includes all required fields: tenantId, personId, userId, timestamp, fromStage, toStage</test>
+      <test ac="6">Test events are stored in pipelineEvents table and can be queried by tenant</test>
+      <test ac="6">Test pipelineEvents table enforces RLS (tenant isolation)</test>
+      <test>Test event emission for initial stage assignment (fromStage = null)</test>
+      <test>Test event emission for stage rollback (moving backward in pipeline)</test>
+      <test>Test concurrent event emissions don't interfere with each other</test>
+    </ideas>
+  </tests>
+</story-context>
