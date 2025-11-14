@@ -1,0 +1,256 @@
+<story-context id="bmad/bmm/workflows/4-implementation/story-context/template" v="1.0">
+  <metadata>
+    <epicId>1</epicId>
+    <storyId>1.11</storyId>
+    <title>Setup GitHub Actions CI/CD Pipeline</title>
+    <status>drafted</status>
+    <generatedAt>2025-11-14</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/stories/1-11-setup-git-hub-actions-ci-cd-pipeline.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>Developer</asA>
+    <iWant>automated testing and deployment on every push to main branch</iWant>
+    <soThat>code quality is maintained and deployments are reliable</soThat>
+    <tasks>
+      - Create GitHub Actions workflow file (.github/workflows/ci.yml)
+      - Configure CI job: lint, type-check, test on pull requests
+      - Configure CD job: deploy to Vercel on push to main
+      - Configure GitHub secrets (VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID)
+      - Set up branch protection rules requiring CI passing
+      - Update README.md with CI/CD documentation
+      - Test end-to-end: verify CI fails on errors, passes on fixes, CD deploys
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+    1. GitHub Actions workflow file (`.github/workflows/ci.yml`) created
+    2. CI pipeline runs on every pull request: lint, type-check, test
+    3. CD pipeline deploys to Vercel on push to main branch
+    4. Environment secrets configured in GitHub (Convex, Clerk, Vercel)
+    5. Branch protection rules require CI passing before merge
+    6. Deployment status visible in GitHub PR checks
+    7. README.md documents CI/CD pipeline and deployment process
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>Decision Architecture</title>
+        <section>Testing Stack</section>
+        <snippet>Vitest (unit), React Testing Library (component), Playwright (E2E). Testing strategy emphasizes fast unit tests with comprehensive coverage.</snippet>
+      </doc>
+      <doc>
+        <path>docs/epics.md</path>
+        <title>Epic 1 - Story 1.11</title>
+        <section>Setup GitHub Actions CI/CD Pipeline</section>
+        <snippet>CI pipeline runs on every pull request: lint, type-check, test. CD pipeline deploys to Vercel on push to main branch. Branch protection rules require CI passing before merge.</snippet>
+      </doc>
+      <doc>
+        <path>README.md</path>
+        <title>Sunup - Solar Installation Management Platform</title>
+        <section>Development Commands</section>
+        <snippet>Turborepo monorepo with pnpm workspaces. Commands: pnpm dev, pnpm build, pnpm lint, pnpm type-check, pnpm test. Web app: apps/web (Next.js 16), Backend: packages/convex.</snippet>
+      </doc>
+      <doc>
+        <path>docs/stories/1-10-create-person-and-organization-base-schema.md</path>
+        <title>Story 1.10 - Previous Story Context</title>
+        <section>Testing Infrastructure</section>
+        <snippet>129 tests passing across 9 test files (100% pass rate). Vitest for unit tests, Convex-test 0.0.38. Tests run with pnpm test in packages/convex.</snippet>
+      </doc>
+    </docs>
+    <code>
+      <artifact>
+        <path>turbo.json</path>
+        <kind>config</kind>
+        <symbol>turbo pipeline</symbol>
+        <lines>1-24</lines>
+        <reason>Defines Turborepo tasks: build, dev, lint, test, type-check. CI will execute these tasks.</reason>
+      </artifact>
+      <artifact>
+        <path>package.json</path>
+        <kind>config</kind>
+        <symbol>root scripts</symbol>
+        <lines>9-19</lines>
+        <reason>Root-level scripts for CI: pnpm lint, pnpm type-check, pnpm test. Uses Turborepo for monorepo orchestration.</reason>
+      </artifact>
+      <artifact>
+        <path>apps/web/package.json</path>
+        <kind>config</kind>
+        <symbol>web app scripts</symbol>
+        <lines>5-11</lines>
+        <reason>Web app build and deployment target. Scripts: next dev, next build, next start for Vercel deployment.</reason>
+      </artifact>
+      <artifact>
+        <path>packages/convex/vitest.config.mts</path>
+        <kind>config</kind>
+        <symbol>vitest configuration</symbol>
+        <lines>1-18</lines>
+        <reason>Test configuration for Convex package. Uses edge-runtime environment, includes all .test/.spec files, excludes generated code.</reason>
+      </artifact>
+      <artifact>
+        <path>apps/web/eslint.config.mjs</path>
+        <kind>config</kind>
+        <symbol>eslint configuration</symbol>
+        <lines>all</lines>
+        <reason>Linting configuration for web app. CI will run eslint to enforce code standards.</reason>
+      </artifact>
+      <artifact>
+        <path>apps/web/tsconfig.json</path>
+        <kind>config</kind>
+        <symbol>typescript configuration</symbol>
+        <lines>all</lines>
+        <reason>TypeScript configuration for web app. CI will run tsc --noEmit for type-checking.</reason>
+      </artifact>
+      <artifact>
+        <path>packages/convex/tests/</path>
+        <kind>directory</kind>
+        <symbol>test suite</symbol>
+        <lines>N/A</lines>
+        <reason>Contains 9 test files with 129 tests. CI will execute all tests via pnpm test.</reason>
+      </artifact>
+    </code>
+    <dependencies>
+      <node>
+        <package name="pnpm" version="10.20.0" reason="Package manager - required in CI" />
+        <package name="turbo" version="^2.6.0" reason="Monorepo build system - orchestrates CI tasks" />
+        <package name="vitest" version="4.0.7" reason="Test runner - executes unit tests in CI" />
+        <package name="eslint" version="^9" reason="Linter - enforces code standards in CI" />
+        <package name="typescript" version="^5" reason="Type-checker - validates types in CI" />
+        <package name="next" version="16.0.0" reason="Web framework - builds app for Vercel deployment" />
+        <package name="convex" version="^1.29.0" reason="Backend - serverless deployment (separate from web)" />
+        <package name="@clerk/nextjs" version="^6.34.0" reason="Auth - environment variables managed in Vercel" />
+      </node>
+      <github-actions>
+        <action name="actions/checkout" version="v4" reason="Check out repository code" />
+        <action name="actions/setup-node" version="v4" reason="Set up Node.js 18.x environment" />
+        <action name="pnpm/action-setup" version="v2" reason="Install and cache pnpm" />
+      </github-actions>
+      <vercel>
+        <cli name="vercel" reason="Deploy web app to Vercel from CI/CD pipeline" />
+      </vercel>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    - Use pnpm 10.20.0 as package manager (configured in root package.json)
+    - Use Node.js 18.x for CI environment (matches project requirement: >=18.0.0)
+    - Run tests with edge-runtime environment (configured in vitest.config.mts)
+    - Cache pnpm store in GitHub Actions to speed up builds
+    - Run lint, type-check, test sequentially (fail fast on errors)
+    - Only deploy to Vercel on push to main branch (not on PRs)
+    - Use Vercel CLI with --prod flag for production deployments
+    - Environment variables (NEXT_PUBLIC_CONVEX_URL, Clerk keys) managed in Vercel dashboard, not GitHub secrets
+    - GitHub secrets needed: VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID
+    - Branch protection: require status check "CI / lint-type-check-test" to pass
+    - Do not run E2E tests in CI yet (Playwright tests deferred to Epic 2)
+  </constraints>
+
+  <interfaces>
+    <interface>
+      <name>Turborepo Tasks</name>
+      <kind>build-system</kind>
+      <signature>
+        - build: Builds all apps and packages (depends on ^build)
+        - lint: Runs ESLint across all packages (depends on ^lint)
+        - type-check: Runs TypeScript compiler checks (depends on ^type-check)
+        - test: Runs Vitest unit tests (depends on ^build, outputs coverage/)
+        - dev: Development mode (cache: false, persistent: true)
+      </signature>
+      <path>turbo.json</path>
+    </interface>
+    <interface>
+      <name>Root Package Scripts</name>
+      <kind>npm-scripts</kind>
+      <signature>
+        - pnpm dev: Start all apps in development mode
+        - pnpm build: Build all apps and packages
+        - pnpm lint: Run linting across all packages
+        - pnpm type-check: Run type-checking across all packages
+        - pnpm test: Run unit tests (Vitest)
+        - pnpm test:e2e: Run E2E tests (Playwright - not yet implemented)
+      </signature>
+      <path>package.json</path>
+    </interface>
+    <interface>
+      <name>Web App Package Scripts</name>
+      <kind>npm-scripts</kind>
+      <signature>
+        - pnpm --filter @sunup/web dev: Start Next.js dev server
+        - pnpm --filter @sunup/web build: Build Next.js app for production
+        - pnpm --filter @sunup/web lint: Run ESLint on web app
+        - pnpm --filter @sunup/web type-check: Run TypeScript type-checking
+      </signature>
+      <path>apps/web/package.json</path>
+    </interface>
+    <interface>
+      <name>GitHub Actions Workflow Events</name>
+      <kind>ci-triggers</kind>
+      <signature>
+        on:
+          pull_request:
+            branches: [main]
+          push:
+            branches: [main]
+      </signature>
+      <path>.github/workflows/ci.yml (to be created)</path>
+    </interface>
+    <interface>
+      <name>Vercel CLI Deployment</name>
+      <kind>deployment</kind>
+      <signature>
+        vercel deploy --prod --token=$VERCEL_TOKEN
+
+        Environment variables injected by Vercel:
+        - NEXT_PUBLIC_CONVEX_URL
+        - NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
+        - CLERK_SECRET_KEY
+        - CLERK_WEBHOOK_SECRET
+      </signature>
+      <path>Vercel CLI</path>
+    </interface>
+  </interfaces>
+
+  <tests>
+    <standards>
+      Unit tests run via Vitest 4.0.7 with edge-runtime environment. Tests located in packages/convex/tests/ with .test.ts/.spec.ts extensions. Current test suite: 129 tests across 9 files (100% pass rate). Use convex-test for Convex function testing with authenticated contexts. E2E tests via Playwright deferred to Epic 2.
+    </standards>
+    <locations>
+      - packages/convex/tests/**/*.{test,spec}.{ts,tsx}
+      - Root command: pnpm test (executes Vitest across all packages)
+      - Coverage output: coverage/ directory
+    </locations>
+    <ideas>
+      <test ac="1,2,3">
+        <description>Test GitHub Actions workflow file syntax and structure</description>
+        <approach>Manual verification: Create .github/workflows/ci.yml, validate YAML syntax, verify job names and steps</approach>
+      </test>
+      <test ac="2">
+        <description>Test CI pipeline executes on pull request</description>
+        <approach>Integration test: Create test PR with lint error, verify CI fails. Fix error, verify CI passes.</approach>
+      </test>
+      <test ac="3">
+        <description>Test CD pipeline deploys to Vercel on main push</description>
+        <approach>Integration test: Merge to main, verify Vercel deployment triggers, check deployment URL in commit status</approach>
+      </test>
+      <test ac="4">
+        <description>Verify GitHub secrets are configured</description>
+        <approach>Manual verification: Check GitHub repository settings > Secrets and variables > Actions. Verify VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID exist.</approach>
+      </test>
+      <test ac="5">
+        <description>Test branch protection rules enforce CI passing</description>
+        <approach>Manual verification: Attempt to merge PR with failing CI, verify merge is blocked. Fix CI, verify merge is allowed.</approach>
+      </test>
+      <test ac="6">
+        <description>Verify deployment status visible in PR checks</description>
+        <approach>Manual verification: Check PR checks tab for Vercel deployment status and preview URL</approach>
+      </test>
+      <test ac="7">
+        <description>Verify README.md documents CI/CD process</description>
+        <approach>Manual verification: Review README.md for CI/CD section with workflow descriptions, secret setup, and deployment process</approach>
+      </test>
+    </ideas>
+  </tests>
+</story-context>
