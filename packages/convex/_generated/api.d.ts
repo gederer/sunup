@@ -16,6 +16,7 @@ import type * as lib_auth from "../lib/auth.js";
 import type * as lib_eventHandlers from "../lib/eventHandlers.js";
 import type * as lib_events from "../lib/events.js";
 import type * as lib_tasks from "../lib/tasks.js";
+import type * as organizations from "../organizations.js";
 import type * as persons from "../persons.js";
 import type * as pipeline from "../pipeline.js";
 import type * as rbacDemo from "../rbacDemo.js";
@@ -48,6 +49,7 @@ declare const fullApi: ApiFromModules<{
   "lib/eventHandlers": typeof lib_eventHandlers;
   "lib/events": typeof lib_events;
   "lib/tasks": typeof lib_tasks;
+  organizations: typeof organizations;
   persons: typeof persons;
   pipeline: typeof pipeline;
   rbacDemo: typeof rbacDemo;
