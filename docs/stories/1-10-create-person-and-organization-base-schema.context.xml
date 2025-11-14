@@ -1,0 +1,238 @@
+<story-context id="bmad/bmm/workflows/4-implementation/story-context/template" v="1.0">
+  <metadata>
+    <epicId>1</epicId>
+    <storyId>10</storyId>
+    <title>Create Person and Organization Base Schema</title>
+    <status>drafted</status>
+    <generatedAt>2025-11-14</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/stories/1-10-create-person-and-organization-base-schema.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>Developer</asA>
+    <iWant>Person and Organization data models with tenant isolation and basic fields</iWant>
+    <soThat>subsequent epics can build CRM functionality on this foundation</soThat>
+    <tasks>
+      - Create packages/convex/organizations.ts file with CRUD operations
+        - Implement createOrganization mutation with validation (name, type, billingAddress, primaryContactPersonId)
+        - Implement updateOrganization mutation with partial update support
+        - Implement deleteOrganization mutation with dependency checking
+      - Implement query functions: getOrganizationById, listOrganizationsByTenant (with type filter, pagination)
+      - Write comprehensive tests for organizations (21 test cases covering CRUD, validation, multi-tenant isolation)
+      - Verify integration with existing persons functionality
+      - Verify sample data seeding still works (3 organizations, 10 persons)
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+    1. persons table with fields: tenantId, firstName, lastName, email, phone, currentPipelineStage, organizationId ✅ COMPLETE (Story 1.8)
+    2. organizations table with fields: tenantId, name, address, primaryContactId ✅ SCHEMA COMPLETE (Story 1.8), CRUD OPERATIONS REQUIRED
+    3. Composite indexes: (tenantId, email), (tenantId, organizationId) ✅ COMPLETE (Story 1.8)
+    4. CRUD mutations with tenantId enforcement:
+       - createPerson, updatePerson, deletePerson ✅ COMPLETE (Story 1.8)
+       - createOrganization, updateOrganization, deleteOrganization ❌ REQUIRED
+    5. Query functions:
+       - getPersonById, listPersonsByTenant, getPersonsByOrganization ✅ COMPLETE (Story 1.8)
+       - getOrganizationById, listOrganizationsByTenant ❌ REQUIRED
+    6. Validation: Email format, required fields ✅ PERSONS COMPLETE (Story 1.8), ORGANIZATIONS VALIDATION REQUIRED
+    7. Sample data seeded for testing (10 persons, 3 organizations) ✅ COMPLETE (Story 1.8 - seedPipelineData.ts)
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>Decision Architecture</title>
+        <section>Multi-tenant RLS Foundation</section>
+        <snippet>Multi-tenant schema with RLS (all tables include tenantId). Convex 1.28.0 backend with real-time database. TypeScript 5.x strict mode.</snippet>
+      </doc>
+      <doc>
+        <path>docs/testing.md</path>
+        <title>Testing Documentation</title>
+        <section>Testing Strategy</section>
+        <snippet>Three-layer testing: Unit tests (Vitest), Integration tests (Vitest + Convex), E2E (Playwright). Coverage target: 95%+ for authentication and core business logic.</snippet>
+      </doc>
+      <doc>
+        <path>docs/stories/1-8-create-pipeline-data-model-and-schema.md</path>
+        <title>Story 1.8: Pipeline Data Model</title>
+        <section>Implementation</section>
+        <snippet>Created people and organizations schema tables, persons.ts CRUD operations (7 functions), seedPipelineData.ts with 10 persons and 3 organizations. Full multi-tenant RLS enforcement.</snippet>
+      </doc>
+      <doc>
+        <path>docs/stories/1-9-implement-event-system-for-pipeline-status-changes.md</path>
+        <title>Story 1.9: Event System</title>
+        <section>Testing Patterns</section>
+        <snippet>Use t.withIdentity({ subject: "test_clerk_user" }) for authentication in tests. RLS pattern: Always use getAuthUserWithTenant(ctx) helper. 18 tests passing.</snippet>
+      </doc>
+      <doc>
+        <path>docs/rbac.md</path>
+        <title>RBAC Documentation</title>
+        <section>Role System</section>
+        <snippet>15 roles defined with multi-tenant isolation. All RBAC helpers enforce tenantId validation. getAuthUserWithTenant is the foundational security helper.</snippet>
+      </doc>
+    </docs>
+    <code>
+      <artifact>
+        <path>packages/convex/schema.ts</path>
+        <kind>schema</kind>
+        <symbol>organizations table</symbol>
+        <lines>18-41</lines>
+        <reason>Organizations table schema definition - already exists with all required fields (name, type, taxId, billingAddress, primaryContactPersonId, tenantId) and indexes</reason>
+      </artifact>
+      <artifact>
+        <path>packages/convex/schema.ts</path>
+        <kind>schema</kind>
+        <symbol>people table</symbol>
+        <lines>46-62</lines>
+        <reason>People table schema with organizationId foreign key reference - integration point for organizations</reason>
+      </artifact>
+      <artifact>
+        <path>packages/convex/persons.ts</path>
+        <kind>service</kind>
+        <symbol>createPerson, updatePerson, deletePerson, getPersonById, listPersonsByTenant, getPersonsByOrganization</symbol>
+        <lines>32-390</lines>
+        <reason>Complete reference implementation for CRUD patterns, validation (isValidEmail), multi-tenant RLS enforcement, error handling. Use as template for organizations.ts</reason>
+      </artifact>
+      <artifact>
+        <path>packages/convex/lib/auth.ts</path>
+        <kind>helper</kind>
+        <symbol>getAuthUserWithTenant</symbol>
+        <lines>1-50</lines>
+        <reason>CRITICAL RLS helper - MUST be used in every query/mutation to enforce tenant isolation. Returns user and tenantId from Clerk JWT.</reason>
+      </artifact>
+      <artifact>
+        <path>packages/convex/seedPipelineData.ts</path>
+        <kind>seed</kind>
+        <symbol>seedPipelineData mutation</symbol>
+        <lines>100-150</lines>
+        <reason>Creates 3 sample organizations with proper schema structure. Shows billingAddress validation pattern and organization types.</reason>
+      </artifact>
+      <artifact>
+        <path>packages/convex/tests/pipeline.test.ts</path>
+        <kind>test</kind>
+        <symbol>pipeline tests</symbol>
+        <lines>1-200</lines>
+        <reason>Testing patterns for Convex mutations/queries with convex-test. Shows t.withIdentity() authentication pattern and multi-tenant test scenarios.</reason>
+      </artifact>
+    </code>
+    <dependencies>
+      <node>
+        <package>convex</package>
+        <version>1.29.0</version>
+        <reason>Backend framework for serverless database and real-time queries/mutations</reason>
+      </node>
+      <node>
+        <package>@clerk/backend</package>
+        <version>^1.0.0</version>
+        <reason>Authentication provider for user identity and JWT validation</reason>
+      </node>
+      <node>
+        <package>vitest</package>
+        <version>4.0.7</version>
+        <reason>Test framework for unit and integration tests</reason>
+      </node>
+      <node>
+        <package>convex-test</package>
+        <version>0.0.38</version>
+        <reason>Testing utilities for Convex queries/mutations with database</reason>
+      </node>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    <constraint>
+      <rule>CRITICAL SECURITY: Every query and mutation MUST use getAuthUserWithTenant(ctx) to enforce tenant isolation</rule>
+      <source>packages/convex/lib/auth.ts:10-14</source>
+    </constraint>
+    <constraint>
+      <rule>NEVER accept tenantId as a parameter from the client - always derive from authenticated user context</rule>
+      <source>packages/convex/lib/auth.ts:12</source>
+    </constraint>
+    <constraint>
+      <rule>All validation must happen server-side in mutation handlers - validate required fields, formats, and foreign key references</rule>
+      <source>packages/convex/persons.ts:44-98</source>
+    </constraint>
+    <constraint>
+      <rule>Trim all string inputs to prevent whitespace issues (firstName.trim(), email.toLowerCase().trim())</rule>
+      <source>packages/convex/persons.ts:102-104</source>
+    </constraint>
+    <constraint>
+      <rule>Foreign key validation pattern: await ctx.db.get(foreignId) then verify tenantId matches current user's tenant</rule>
+      <source>packages/convex/persons.ts:74-80</source>
+    </constraint>
+    <constraint>
+      <rule>billingAddress validation: All 5 fields (street, city, state, zipCode, country) must be present and non-empty strings</rule>
+      <source>packages/convex/schema.ts:28-34</source>
+    </constraint>
+    <constraint>
+      <rule>Organization type must be one of: "Residential", "Commercial", "Nonprofit", "Government", "Educational"</rule>
+      <source>packages/convex/schema.ts:20-26</source>
+    </constraint>
+    <constraint>
+      <rule>Use clear, specific error messages for validation failures (e.g., "Organization not found or access denied")</rule>
+      <source>packages/convex/persons.ts:154, 158, 249</source>
+    </constraint>
+  </constraints>
+  <interfaces>
+    <interface>
+      <name>getAuthUserWithTenant</name>
+      <kind>function signature</kind>
+      <signature>async function getAuthUserWithTenant(ctx: QueryCtx | MutationCtx): Promise&lt;{ user: UserDoc; tenantId: Id&lt;"tenants"&gt; }&gt;</signature>
+      <path>packages/convex/lib/auth.ts</path>
+      <reason>MUST be called at the start of every query/mutation handler to enforce RLS</reason>
+    </interface>
+    <interface>
+      <name>createOrganization</name>
+      <kind>mutation signature</kind>
+      <signature>mutation({ args: { name: v.string(), type: v.union(...), billingAddress: v.object({...}), taxId: v.optional(v.string()), primaryContactPersonId: v.optional(v.id("people")) }, handler: async (ctx, args) =&gt; {...} })</signature>
+      <path>packages/convex/organizations.ts (TO BE CREATED)</path>
+      <reason>Primary CRUD mutation to create organizations with full validation</reason>
+    </interface>
+    <interface>
+      <name>updateOrganization</name>
+      <kind>mutation signature</kind>
+      <signature>mutation({ args: { organizationId: v.id("organizations"), name: v.optional(v.string()), type: v.optional(v.union(...)), billingAddress: v.optional(v.object({...})), taxId: v.optional(v.string()), primaryContactPersonId: v.optional(v.id("people")) }, handler: async (ctx, args) =&gt; {...} })</signature>
+      <path>packages/convex/organizations.ts (TO BE CREATED)</path>
+      <reason>Partial update mutation following persons.ts pattern</reason>
+    </interface>
+    <interface>
+      <name>deleteOrganization</name>
+      <kind>mutation signature</kind>
+      <signature>mutation({ args: { organizationId: v.id("organizations") }, handler: async (ctx, args) =&gt; {...} })</signature>
+      <path>packages/convex/organizations.ts (TO BE CREATED)</path>
+      <reason>Delete mutation with dependency checking (people, projects)</reason>
+    </interface>
+    <interface>
+      <name>getOrganizationById</name>
+      <kind>query signature</kind>
+      <signature>query({ args: { organizationId: v.id("organizations") }, handler: async (ctx, args) =&gt; OrganizationDoc | null })</signature>
+      <path>packages/convex/organizations.ts (TO BE CREATED)</path>
+      <reason>Fetch single organization with RLS enforcement</reason>
+    </interface>
+    <interface>
+      <name>listOrganizationsByTenant</name>
+      <kind>query signature</kind>
+      <signature>query({ args: { type: v.optional(v.union(...)), limit: v.optional(v.number()) }, handler: async (ctx, args) =&gt; OrganizationDoc[] })</signature>
+      <path>packages/convex/organizations.ts (TO BE CREATED)</path>
+      <reason>List query with type filter and pagination support</reason>
+    </interface>
+  </interfaces>
+  <tests>
+    <standards>
+      Use Vitest 4.0.7 with convex-test 0.0.38 for Convex function testing. Authentication via t.withIdentity({ subject: "test_clerk_user" }). Test structure: describe blocks for each function, individual test cases for success/validation/multi-tenant scenarios. Aim for 95%+ coverage. Follow patterns from packages/convex/tests/pipeline.test.ts and events.test.ts.
+    </standards>
+    <locations>
+      packages/convex/tests/*.test.ts
+    </locations>
+    <ideas>
+      AC #2,#4: Test createOrganization with valid data (all types: Residential, Commercial, Nonprofit, Government, Educational), validate required fields (name, type, billingAddress), validate billingAddress structure (all 5 fields present), validate invalid primaryContactPersonId, test multi-tenant isolation
+      AC #4: Test updateOrganization partial updates (name only, billingAddress only, primaryContactPersonId only), validate non-existent org, validate wrong tenant org, validate invalid primaryContactPersonId
+      AC #4: Test deleteOrganization success, validate non-existent org, validate wrong tenant org, test dependency checking (organizations with associated people)
+      AC #5: Test getOrganizationById with valid ID, test with invalid ID (returns null), test with other tenant's ID (returns null)
+      AC #5: Test listOrganizationsByTenant returns all orgs for tenant, test type filter (Residential only, Commercial only), test limit parameter (default 50, custom limit, max 100)
+      AC #1,#5: Test integration with persons: createPerson with valid organizationId, getPersonsByOrganization query, verify org update doesn't break person relationships
+      AC #7: Test seedPipelineData creates 3 organizations with correct types and addresses, creates 10 persons with 3 org associations
+    </ideas>
+  </tests>
+</story-context>

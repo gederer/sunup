@@ -38,16 +38,16 @@ story_location: "{project-root}/docs/stories"
 development_status:
   epic-1: backlog
   1-1-refactor-to-turborepo-monorepo-structure: done
-  1-2-setup-tailwind-css-4-and-shadcn-ui-component-library: done
+  1-2-setup-tailwind-css-4-and-shadcn-ui-component-library: done  # Retrospective review completed 2025-11-14 - Implementation verified, documentation gaps noted
   1-3-initialize-convex-backend-and-database: done
   1-4-implement-multi-tenant-row-level-security-rls-foundation: done
   1-5-integrate-clerk-authentication: done
   1-6-setup-testing-infrastructure-with-playwright-and-vitest: done  # E2E tests deferred to Epic 2 (frontend development)
-  1-6-5-address-testing-debt-from-user-management: done  # Completed with Clerk authentication - 43 tests, 92% coverage
-  1-7-implement-role-based-access-control-rbac-for-12-roles: done  # Core RBAC complete (helpers, mutations, tests, docs); UI & Clerk sync deferred
-  1-8-create-pipeline-data-model-and-schema: done  # Schema, pipeline.ts (8 fns), persons.ts (7 fns), seedPipelineData.ts complete; Convex 1.29.0; Comprehensive testing investigation completed - convex-test v0.0.38 incompatible with Vitest (import.meta.glob() is Vite compile-time feature); Manual testing via seedPipelineData recommended
-  1-9-implement-event-system-for-pipeline-status-changes: in-progress
-  1-10-create-person-and-organization-base-schema: backlog
+  1-6-5-address-testing-debt-from-user-management: done  # Retrospective review 2025-11-14: 100 tests, 88% coverage; tasks.ts RLS testing excellent (95%+); user mgmt re-scoped for Clerk
+  1-7-implement-role-based-access-control-rbac-for-12-roles: done  # Retrospective review 2025-11-14: 15 roles (not 12), 7 RBAC helpers, 39 tests (89% auth.ts), 19KB rbac.md; UI & Clerk sync deferred (non-blocking)
+  1-8-create-pipeline-data-model-and-schema: done  # Retrospective review 2025-11-14: 3 tables (pipelineStages, people updates, pipelineHistory), pipeline.ts (9 fns), persons.ts (7 fns), seedPipelineData.ts; 6 pipeline tests + event integration test passing; Skip prevention enforced; Manual testing via seedPipelineData available
+  1-9-implement-event-system-for-pipeline-status-changes: done
+  1-10-create-person-and-organization-base-schema: ready-for-dev  # Context generated 2025-11-14 - organizations.ts CRUD operations required to complete CRM foundation from Story 1.8
   1-11-setup-git-hub-actions-ci-cd-pipeline: backlog
   1-12-deploy-initial-application-to-vercel-production: backlog
   epic-1-retrospective: optional

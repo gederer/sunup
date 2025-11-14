@@ -1,7 +1,7 @@
 # Role-Based Access Control (RBAC) Guide
 
 **Story:** 1.7 - Implement Role-Based Access Control (RBAC) for 15 Roles
-**Last Updated:** 2025-01-13
+**Last Updated:** 2025-11-13
 
 ---
 

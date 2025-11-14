@@ -112,17 +112,17 @@ describe("Event Emission", () => {
     const t = convexTest(schema, modules);
     const { userId, tenantId } = await setupTestEnvironment(t);
     const personId = await createTestPerson(t, tenantId);
+    const asUser = t.withIdentity({ subject: "test_clerk_user" });
 
     // Emit event using test mutation
-    const eventId = await t.mutation(
+    const eventId = await asUser.mutation(
       api.testMutations.testEmitPipelineEvent,
       {
         personId,
         fromStage: "Lead",
         toStage: "Set",
         reason: "Test reason",
-      },
-      { auth: { subject: "test_clerk_user" } }
+      }
     );
 
     // Verify event was created
@@ -148,16 +148,16 @@ describe("Event Emission", () => {
     const t = convexTest(schema, modules);
     const { tenantId } = await setupTestEnvironment(t);
     const personId = await createTestPerson(t, tenantId);
+    const asUser = t.withIdentity({ subject: "test_clerk_user" });
 
     // Emit event with undefined fromStage
-    const eventId = await t.mutation(
+    const eventId = await asUser.mutation(
       api.testMutations.testEmitPipelineEvent,
       {
         personId,
         fromStage: undefined,
         toStage: "Lead",
-      },
-      { auth: { subject: "test_clerk_user" } }
+      }
     );
 
     const event = await t.run(async (ctx) => {
@@ -170,22 +170,21 @@ describe("Event Emission", () => {
 
   test("emitPipelineEvent validates required fields", async () => {
     const t = convexTest(schema, modules);
-    await setupTestEnvironment(t);
+    const { tenantId } = await setupTestEnvironment(t);
+    const personId = await createTestPerson(t, tenantId);
+    const asUser = t.withIdentity({ subject: "test_clerk_user" });
 
-    const personId = "test" as Id<"people">;
-
-    // Missing toStage should throw
+    // Missing toStage should throw - Convex schema validation catches this
     await expect(
-      t.mutation(
+      asUser.mutation(
         api.testMutations.testEmitPipelineEvent,
         {
           personId,
           fromStage: "Lead",
           toStage: undefined as any,
-        },
-        { auth: { subject: "test_clerk_user" } }
+        }
       )
-    ).rejects.toThrow("toStage is required");
+    ).rejects.toThrow("Missing required field `toStage`");
   });
 });
 
@@ -198,36 +197,34 @@ describe("Event Storage", () => {
     const t = convexTest(schema, modules);
     const { tenantId } = await setupTestEnvironment(t);
     const personId = await createTestPerson(t, tenantId);
+    const asUser = t.withIdentity({ subject: "test_clerk_user" });
 
     // Emit multiple events
-    await t.mutation(
+    await asUser.mutation(
       api.testMutations.testEmitPipelineEvent,
       {
         personId,
         fromStage: undefined,
         toStage: "Lead",
-      },
-      { auth: { subject: "test_clerk_user" } }
+      }
     );
 
-    await t.mutation(
+    await asUser.mutation(
       api.testMutations.testEmitPipelineEvent,
       {
         personId,
         fromStage: "Lead",
         toStage: "Set",
-      },
-      { auth: { subject: "test_clerk_user" } }
+      }
     );
 
-    await t.mutation(
+    await asUser.mutation(
       api.testMutations.testEmitPipelineEvent,
       {
         personId,
         fromStage: "Set",
         toStage: "Met",
-      },
-      { auth: { subject: "test_clerk_user" } }
+      }
     );
 
     // Query events by tenant
@@ -250,6 +247,7 @@ describe("Event Storage", () => {
     // Setup first tenant
     const { tenantId: tenant1Id } = await setupTestEnvironment(t);
     const person1Id = await createTestPerson(t, tenant1Id);
+    const asUser1 = t.withIdentity({ subject: "test_clerk_user" });
 
     // Setup second tenant
     const tenant2Id = await t.run(async (ctx) => {
@@ -271,14 +269,13 @@ describe("Event Storage", () => {
     });
 
     // Emit events for both tenants
-    await t.mutation(
+    await asUser1.mutation(
       api.testMutations.testEmitPipelineEvent,
       {
         personId: person1Id,
         fromStage: undefined,
         toStage: "Lead",
-      },
-      { auth: { subject: "test_clerk_user" } }
+      }
     );
 
     // Create second user for tenant 2
@@ -303,14 +300,14 @@ describe("Event Storage", () => {
       });
     });
 
-    await t.mutation(
+    const asUser2 = t.withIdentity({ subject: "test_clerk_user_2" });
+    await asUser2.mutation(
       api.testMutations.testEmitPipelineEvent,
       {
         personId: person2Id,
         fromStage: undefined,
         toStage: "Lead",
-      },
-      { auth: { subject: "test_clerk_user_2" } }
+      }
     );
 
     // Verify tenant 1 only sees their events
@@ -364,18 +361,18 @@ describe("Event Subscription Pattern", () => {
     const t = convexTest(schema, modules);
     const { tenantId } = await setupTestEnvironment(t);
     const personId = await createTestPerson(t, tenantId);
+    const asUser = t.withIdentity({ subject: "test_clerk_user" });
 
     const { EventHandlerRegistry } = await import("../lib/eventHandlers");
 
     // Create event
-    const eventId = await t.mutation(
+    const eventId = await asUser.mutation(
       api.testMutations.testEmitPipelineEvent,
       {
         personId,
         fromStage: "Lead",
         toStage: "Set",
-      },
-      { auth: { subject: "test_clerk_user" } }
+      }
     );
 
     const event = await t.run(async (ctx) => {
@@ -411,18 +408,18 @@ describe("Event Subscription Pattern", () => {
     const t = convexTest(schema, modules);
     const { tenantId } = await setupTestEnvironment(t);
     const personId = await createTestPerson(t, tenantId);
+    const asUser = t.withIdentity({ subject: "test_clerk_user" });
 
     const { EventHandlerRegistry } = await import("../lib/eventHandlers");
 
     // Create event
-    const eventId = await t.mutation(
+    const eventId = await asUser.mutation(
       api.testMutations.testEmitPipelineEvent,
       {
         personId,
         fromStage: "Lead",
         toStage: "Set",
-      },
-      { auth: { subject: "test_clerk_user" } }
+      }
     );
 
     const event = await t.run(async (ctx) => {
@@ -452,19 +449,19 @@ describe("Event Subscription Pattern", () => {
     const t = convexTest(schema, modules);
     const { tenantId } = await setupTestEnvironment(t);
     const personId = await createTestPerson(t, tenantId);
+    const asUser = t.withIdentity({ subject: "test_clerk_user" });
 
     const { logPipelineChange } = await import("../lib/eventHandlers");
 
     // Create event
-    const eventId = await t.mutation(
+    const eventId = await asUser.mutation(
       api.testMutations.testEmitPipelineEvent,
       {
         personId,
         fromStage: "Lead",
         toStage: "Set",
         reason: "Test transition",
-      },
-      { auth: { subject: "test_clerk_user" } }
+      }
     );
 
     const event = await t.run(async (ctx) => {
@@ -503,16 +500,16 @@ describe("Pipeline Mutation Integration", () => {
     const { tenantId } = await setupTestEnvironment(t);
     await createTestStages(t, tenantId);
     const personId = await createTestPerson(t, tenantId);
+    const asUser = t.withIdentity({ subject: "test_clerk_user" });
 
     // Move person to next stage
-    await t.mutation(
+    await asUser.mutation(
       api.pipeline.movePersonToStage,
       {
         personId,
         toStage: "Set",
         reason: "Qualified by setter",
-      },
-      { auth: { subject: "test_clerk_user" } }
+      }
     );
 
     // Verify event was created
@@ -539,16 +536,16 @@ describe("Pipeline Mutation Integration", () => {
     const { tenantId } = await setupTestEnvironment(t);
     await createTestStages(t, tenantId);
     const personId = await createTestPerson(t, tenantId);
+    const asUser = t.withIdentity({ subject: "test_clerk_user" });
 
     // This test verifies error handling is in place
     // The mutation should succeed even if event emission has issues
-    const result = await t.mutation(
+    const result = await asUser.mutation(
       api.pipeline.movePersonToStage,
       {
         personId,
         toStage: "Set",
-      },
-      { auth: { subject: "test_clerk_user" } }
+      }
     );
 
     expect(result.success).toBe(true);
