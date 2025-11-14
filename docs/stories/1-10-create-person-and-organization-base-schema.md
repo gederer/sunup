@@ -1,6 +1,6 @@
 # Story 1.10: Create Person and Organization Base Schema
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -26,65 +26,65 @@ So that subsequent epics can build CRM functionality on this foundation.
 
 ## Tasks / Subtasks
 
-- [ ] Create `packages/convex/organizations.ts` file (AC: #2, #4, #5, #6)
-  - [ ] Implement `createOrganization` mutation with validation
-    - [ ] Validate required fields (name, type, billingAddress)
-    - [ ] Validate billingAddress structure (street, city, state, zipCode, country all present)
-    - [ ] Enforce tenantId isolation
-    - [ ] Validate primaryContactPersonId if provided (must belong to tenant)
-  - [ ] Implement `updateOrganization` mutation with validation
-    - [ ] Verify organization belongs to current tenant
-    - [ ] Validate updated fields (name, billingAddress structure)
-    - [ ] Validate primaryContactPersonId if provided
-    - [ ] Apply partial updates only for provided fields
-  - [ ] Implement `deleteOrganization` mutation
-    - [ ] Verify organization belongs to current tenant
-    - [ ] Check for dependent records (people, projects) and handle appropriately
-    - [ ] Perform deletion with proper error handling
+- [x] Create `packages/convex/organizations.ts` file (AC: #2, #4, #5, #6)
+  - [x] Implement `createOrganization` mutation with validation
+    - [x] Validate required fields (name, type, billingAddress)
+    - [x] Validate billingAddress structure (street, city, state, zipCode, country all present)
+    - [x] Enforce tenantId isolation
+    - [x] Validate primaryContactPersonId if provided (must belong to tenant)
+  - [x] Implement `updateOrganization` mutation with validation
+    - [x] Verify organization belongs to current tenant
+    - [x] Validate updated fields (name, billingAddress structure)
+    - [x] Validate primaryContactPersonId if provided
+    - [x] Apply partial updates only for provided fields
+  - [x] Implement `deleteOrganization` mutation
+    - [x] Verify organization belongs to current tenant
+    - [x] Check for dependent records (people, projects) and handle appropriately
+    - [x] Perform deletion with proper error handling
 
-- [ ] Implement query functions for organizations (AC: #5)
-  - [ ] `getOrganizationById` query
-    - [ ] Validate organization belongs to current tenant
-    - [ ] Return null if not found or wrong tenant
-  - [ ] `listOrganizationsByTenant` query
-    - [ ] Support pagination (limit parameter, default: 50, max: 100)
-    - [ ] Filter by organization type (optional parameter)
-    - [ ] Return all organizations for current tenant
+- [x] Implement query functions for organizations (AC: #5)
+  - [x] `getOrganizationById` query
+    - [x] Validate organization belongs to current tenant
+    - [x] Return null if not found or wrong tenant
+  - [x] `listOrganizationsByTenant` query
+    - [x] Support pagination (limit parameter, default: 50, max: 100)
+    - [x] Filter by organization type (optional parameter)
+    - [x] Return all organizations for current tenant
 
-- [ ] Write comprehensive tests for organizations (AC: all)
-  - [ ] Test `createOrganization` mutation
-    - [ ] Test successful creation with valid data
-    - [ ] Test validation: required fields (name, type, billingAddress)
-    - [ ] Test validation: billingAddress structure completeness
-    - [ ] Test validation: invalid primaryContactPersonId
-    - [ ] Test multi-tenant isolation (cannot create for another tenant)
-  - [ ] Test `updateOrganization` mutation
-    - [ ] Test successful update with partial fields
-    - [ ] Test validation: cannot update non-existent organization
-    - [ ] Test validation: cannot update organization from another tenant
-    - [ ] Test validation: invalid primaryContactPersonId
-  - [ ] Test `deleteOrganization` mutation
-    - [ ] Test successful deletion
-    - [ ] Test validation: cannot delete non-existent organization
-    - [ ] Test validation: cannot delete organization from another tenant
-  - [ ] Test query functions
-    - [ ] Test `getOrganizationById` with valid ID
-    - [ ] Test `getOrganizationById` with invalid ID (returns null)
-    - [ ] Test `getOrganizationById` with other tenant's ID (returns null)
-    - [ ] Test `listOrganizationsByTenant` returns correct results
-    - [ ] Test `listOrganizationsByTenant` with type filter
-    - [ ] Test `listOrganizationsByTenant` respects limit parameter
+- [x] Write comprehensive tests for organizations (AC: all)
+  - [x] Test `createOrganization` mutation
+    - [x] Test successful creation with valid data
+    - [x] Test validation: required fields (name, type, billingAddress)
+    - [x] Test validation: billingAddress structure completeness
+    - [x] Test validation: invalid primaryContactPersonId
+    - [x] Test multi-tenant isolation (cannot create for another tenant)
+  - [x] Test `updateOrganization` mutation
+    - [x] Test successful update with partial fields
+    - [x] Test validation: cannot update non-existent organization
+    - [x] Test validation: cannot update organization from another tenant
+    - [x] Test validation: invalid primaryContactPersonId
+  - [x] Test `deleteOrganization` mutation
+    - [x] Test successful deletion
+    - [x] Test validation: cannot delete non-existent organization
+    - [x] Test validation: cannot delete organization from another tenant
+  - [x] Test query functions
+    - [x] Test `getOrganizationById` with valid ID
+    - [x] Test `getOrganizationById` with invalid ID (returns null)
+    - [x] Test `getOrganizationById` with other tenant's ID (returns null)
+    - [x] Test `listOrganizationsByTenant` returns correct results
+    - [x] Test `listOrganizationsByTenant` with type filter
+    - [x] Test `listOrganizationsByTenant` respects limit parameter
 
-- [ ] Verify integration with existing persons functionality (AC: #4, #5)
-  - [ ] Test `createPerson` with valid organizationId
-  - [ ] Test `getPersonsByOrganization` query
-  - [ ] Test organization update doesn't break person relationships
-  - [ ] Test organization deletion handling with associated persons
+- [x] Verify integration with existing persons functionality (AC: #4, #5)
+  - [x] Test `createPerson` with valid organizationId
+  - [x] Test `getPersonsByOrganization` query
+  - [x] Test organization update doesn't break person relationships
+  - [x] Test organization deletion handling with associated persons
 
-- [ ] Verify sample data seeding still works (AC: #7)
-  - [ ] Confirm `seedPipelineData.ts` creates 3 organizations
-  - [ ] Confirm `seedPipelineData.ts` creates 10 persons (3 with org associations)
-  - [ ] Test seeding can be run successfully end-to-end
+- [x] Verify sample data seeding still works (AC: #7)
+  - [x] Confirm `seedPipelineData.ts` creates 3 organizations
+  - [x] Confirm `seedPipelineData.ts` creates 10 persons (3 with org associations)
+  - [x] Test seeding can be run successfully end-to-end
 
 ## Dev Notes
 
@@ -222,14 +222,46 @@ if (args.primaryContactPersonId) {
 
 ### Agent Model Used
 
-{{agent_model_name_version}}
+Claude Sonnet 4.5 (claude-sonnet-4-5-20250929)
 
 ### Debug Log References
 
+**Implementation Plan:**
+1. Created `organizations.ts` following patterns from `persons.ts`
+2. Implemented validation helper: `isValidBillingAddress()`
+3. Implemented CRUD mutations: `createOrganization`, `updateOrganization`, `deleteOrganization`
+4. Implemented query functions: `getOrganizationById`, `listOrganizationsByTenant`
+5. Created comprehensive test suite with 29 test cases
+6. Fixed 3 test failures related to invalid ID format validation
+7. Verified all 129 tests pass across full test suite
+
+**Key Implementation Details:**
+- All mutations enforce tenant isolation via `getAuthUserWithTenant(ctx)`
+- Billing address validation ensures all 5 required fields are present
+- Primary contact person validation checks tenant ownership
+- Query functions return null for not-found or wrong-tenant records
+- List query supports type filtering and pagination (default 50, max 100)
+- All string inputs are trimmed to prevent whitespace issues
+
 ### Completion Notes List
 
+✅ **organizations.ts created** - Full CRUD operations with validation following persons.ts patterns
+✅ **29 comprehensive tests** - All passing, covering CRUD operations, validation, and multi-tenant isolation
+✅ **Integration verified** - Existing persons tests (6) and all other tests (129 total) passing
+✅ **Seeding confirmed** - seedPipelineData.ts already creates 3 organizations and 10 persons
+✅ **All acceptance criteria met** - Organizations CRUD operations complete CRM foundation from Story 1.8
+
 ### File List
+
+**Created:**
+- packages/convex/organizations.ts
+- packages/convex/tests/organizations.test.ts
+
+**Modified:**
+- docs/stories/1-10-create-person-and-organization-base-schema.md (task completion, dev notes)
+- docs/sprint-status.yaml (status: ready-for-dev → in-progress → review)
 
 ## Change Log
 
 - 2025-11-14: Story drafted (create-story workflow) - Scope: Create organizations.ts with CRUD operations to complete CRM foundation from Story 1.8
+- 2025-11-14: Story completed (dev-story workflow) - Created organizations.ts with 5 functions (3 mutations, 2 queries), 29 passing tests, all ACs satisfied
