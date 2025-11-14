@@ -64,11 +64,13 @@ export const assignRole = mutation({
       throw new Error(`Invalid role: ${args.role}`);
     }
 
+    const validatedRole = args.role as Role;
+
     // Check for duplicate role assignment
     const existingRole = await ctx.db
       .query("userRoles")
       .withIndex("by_user_and_role", (q) =>
-        q.eq("userId", args.userId).eq("role", args.role)
+        q.eq("userId", args.userId).eq("role", validatedRole)
       )
       .first();
 
@@ -93,7 +95,7 @@ export const assignRole = mutation({
     // Create the role assignment
     const userRoleId = await ctx.db.insert("userRoles", {
       userId: args.userId,
-      role: args.role as any,
+      role: validatedRole as any,
       isActive: true,
       isPrimary: args.isPrimary ?? false,
       tenantId,

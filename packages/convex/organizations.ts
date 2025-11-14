@@ -291,9 +291,10 @@ export const listOrganizationsByTenant = query({
 
     if (args.type) {
       // Filter by organization type
+      const orgType = args.type; // Extract to satisfy TypeScript narrowing in callback
       organizations = await ctx.db
         .query("organizations")
-        .withIndex("by_type", (q) => q.eq("type", args.type))
+        .withIndex("by_type", (q) => q.eq("type", orgType))
         .filter((q) => q.eq(q.field("tenantId"), tenantId))
         .take(limit);
     } else {
