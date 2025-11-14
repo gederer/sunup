@@ -16,6 +16,7 @@ import { v } from "convex/values";
 import { query, mutation, internalMutation } from "./_generated/server";
 import { getAuthUserWithTenant, requireRole } from "./lib/auth";
 import { Id } from "./_generated/dataModel";
+import { emitPipelineEvent } from "./lib/events";
 
 /**
  * Get ordered pipeline stages for a tenant
@@ -395,6 +396,20 @@ export const movePersonToStage = mutation({
       timestamp: Date.now(),
       tenantId,
     });
+
+    // Emit pipeline event for cascading actions (Story 1.9)
+    // Wrapped in try/catch to prevent blocking the main mutation
+    try {
+      await emitPipelineEvent(ctx, {
+        personId: args.personId,
+        fromStage: person.currentPipelineStage ?? undefined,
+        toStage: args.toStage,
+        reason: args.reason,
+      });
+    } catch (error) {
+      console.error("Failed to emit pipeline event:", error);
+      // Don't fail the mutation - event emission is non-critical
+    }
 
     return {
       success: true,

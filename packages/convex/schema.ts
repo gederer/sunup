@@ -372,6 +372,24 @@ export default defineSchema({
     .index("by_changed_by", ["changedByUserId"]),
 
   // ============================================
+  // PERSON PIPELINE EVENTS (Story 1.9)
+  // ============================================
+  personPipelineEvents: defineTable({
+    personId: v.id("people"),
+    fromStage: v.optional(v.string()), // null for initial stage assignment
+    toStage: v.string(),
+    userId: v.id("users"), // Who triggered the event
+    timestamp: v.number(), // When the event occurred
+    eventType: v.string(), // Type of event (e.g., "pipeline.stage_changed")
+    metadata: v.optional(v.string()), // Additional event data as JSON string
+    // Multi-tenant support
+    tenantId: v.id("tenants"),
+  })
+    .index("by_tenant", ["tenantId"])
+    .index("by_person_and_timestamp", ["personId", "timestamp"])
+    .index("by_tenant_and_timestamp", ["tenantId", "timestamp"]),
+
+  // ============================================
   // TENANTS (Multi-tenant support)
   // ============================================
   tenants: defineTable({
