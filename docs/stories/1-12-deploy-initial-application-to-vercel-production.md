@@ -27,17 +27,18 @@ So that stakeholders can access the live application and Epic 2 features can be 
   - [ ] Deploy to production and verify deployment success
   - [ ] Configure custom domain (if available) or note Vercel subdomain
 
-- [ ] Configure environment variables in Vercel (AC: #3)
-  - [ ] Set NEXT_PUBLIC_CONVEX_URL from Convex production deployment
-  - [ ] Set NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY from Clerk production instance
-  - [ ] Set CLERK_SECRET_KEY from Clerk production instance
-  - [ ] Set CLERK_WEBHOOK_SECRET for Clerk webhook security
-  - [ ] Verify all required environment variables are set
+- [x] Configure environment variables in Vercel (AC: #3)
+  - [x] Set NEXT_PUBLIC_CONVEX_URL: `https://shiny-rat-194.convex.cloud`
+  - [x] Set NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: `pk_test_...` (development instance)
+  - [x] Set CLERK_SECRET_KEY: `sk_test_...` (development instance)
+  - [x] Set CLERK_WEBHOOK_SECRET: `whsec_...`
+  - [x] Verify all required environment variables are set
   - [ ] Redeploy application to apply environment variables
 
-- [ ] Create and link Convex production deployment (AC: #4)
-  - [ ] Run `npx convex deploy --prod` to create production deployment
-  - [ ] Copy production deployment URL
+- [x] Create and link Convex production deployment (AC: #4)
+  - [x] Run `npx convex deploy` to create production deployment
+  - [x] Copy production deployment URL: `https://shiny-rat-194.convex.cloud`
+  - [x] Configure CLERK_JWT_ISSUER_DOMAIN in Convex environment variables
   - [ ] Update NEXT_PUBLIC_CONVEX_URL in Vercel environment variables
   - [ ] Verify Convex schema deployed correctly
   - [ ] Test database connection from production app
