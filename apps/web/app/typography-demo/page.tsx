@@ -25,14 +25,14 @@ export default function TypographyDemoPage() {
 
           <p>
             The <code>@tailwindcss/typography</code> plugin provides a set of prose classes
-            you can use to add beautiful typographic defaults to any vanilla HTML you don't
+            you can use to add beautiful typographic defaults to any vanilla HTML you don&apos;t
             control, like HTML rendered from Markdown, or pulled from a CMS.
           </p>
 
           <blockquote>
             <p>
-              "The typography plugin adds a set of prose classes that can be used to
-              quickly add sensible typography styles to content blocks."
+              &ldquo;The typography plugin adds a set of prose classes that can be used to
+              quickly add sensible typography styles to content blocks.&rdquo;
             </p>
           </blockquote>
 
@@ -53,7 +53,7 @@ export default function TypographyDemoPage() {
 
           <h3>Code Examples</h3>
 
-          <p>Inline code looks like this: <code>const example = 'Hello World'</code></p>
+          <p>Inline code looks like this: <code>const example = &apos;Hello World&apos;</code></p>
 
           <p>Block code examples:</p>
 
@@ -157,7 +157,7 @@ console.log(greet('World'));`}</code></pre>
           </p>
 
           <p>
-            Combined with TailwindCSS 4's theming system and shadcn/ui components,
+            Combined with TailwindCSS 4&apos;s theming system and shadcn/ui components,
             you have a complete design system ready for production use.
           </p>
         </article>
