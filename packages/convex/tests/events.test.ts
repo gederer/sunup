@@ -13,7 +13,7 @@
  */
 
 import { convexTest } from "convex-test";
-import { expect, test, describe } from "vitest";
+import { expect, test, describe, vi } from "vitest";
 import { api } from "../_generated/api";
 import schema from "../schema";
 import { Id } from "../_generated/dataModel";

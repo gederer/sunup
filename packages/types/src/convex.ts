@@ -14,9 +14,9 @@ export type { Doc, Id };
 export type User = Doc<'users'>;
 export type UserId = Id<'users'>;
 
-// Person types
-export type Person = Doc<'persons'>;
-export type PersonId = Id<'persons'>;
+// Person types (table name: 'people')
+export type Person = Doc<'people'>;
+export type PersonId = Id<'people'>;
 
 // Organization types
 export type Organization = Doc<'organizations'>;
@@ -26,18 +26,14 @@ export type OrganizationId = Id<'organizations'>;
 export type Campaign = Doc<'campaigns'>;
 export type CampaignId = Id<'campaigns'>;
 
-// Call types
-export type Call = Doc<'calls'>;
-export type CallId = Id<'calls'>;
-
 // Appointment types
 export type Appointment = Doc<'appointments'>;
 export type AppointmentId = Id<'appointments'>;
 
-// Commission types
-export type Commission = Doc<'commissions'>;
-export type CommissionId = Id<'commissions'>;
-
-// Leaderboard types
-export type Leaderboard = Doc<'leaderboards'>;
-export type LeaderboardId = Id<'leaderboards'>;
+// Future table types (to be implemented in later epics)
+// export type Call = Doc<'calls'>;
+// export type CallId = Id<'calls'>;
+// export type Commission = Doc<'commissions'>;
+// export type CommissionId = Id<'commissions'>;
+// export type Leaderboard = Doc<'leaderboards'>;
+// export type LeaderboardId = Id<'leaderboards'>;
