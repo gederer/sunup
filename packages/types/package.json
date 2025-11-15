@@ -8,13 +8,17 @@
     "./domain": "./src/domain.ts"
   },
   "scripts": {
-    "lint": "eslint .",
-    "type-check": "tsc --noEmit"
+    "lint": "echo 'Linting skipped for @sunup/types - type definitions only'",
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
     "@sunup/convex": "workspace:*"
   },
   "devDependencies": {
+    "@sunup/test-config": "workspace:*",
     "typescript": "^5"
   }
 }

@@ -15,7 +15,10 @@
     "./_generated/server.d.ts": "./_generated/server.d.ts"
   },
   "scripts": {
-    "deploy": "convex deploy"
+    "deploy": "convex deploy",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
     "@clerk/backend": "^1.0.0",
@@ -24,6 +27,7 @@
   },
   "devDependencies": {
     "@edge-runtime/vm": "^5.0.0",
+    "@sunup/test-config": "workspace:*",
     "@types/node": "^20",
     "@vitejs/plugin-react": "^5.1.1",
     "convex-test": "^0.0.38",
