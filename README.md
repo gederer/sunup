@@ -163,6 +163,111 @@ pnpm test
 - **Build System**: Turborepo 2.6.0
 - **Package Manager**: pnpm 10.20.0
 
+## 🔄 CI/CD Pipeline
+
+This project uses **GitHub Actions** for continuous integration and continuous deployment. Every pull request is automatically tested, and merges to `main` trigger production deployments to Vercel.
+
+### Workflow Overview
+
+The CI/CD pipeline (`.github/workflows/ci.yml`) consists of two jobs:
+
+#### 1. **CI Job: Lint, Type-Check, and Test**
+Runs on every pull request and push to `main`:
+- **Linting**: `pnpm lint` - Enforces code style standards with ESLint
+- **Type-Checking**: `pnpm type-check` - Validates TypeScript types across all packages
+- **Testing**: `pnpm test` - Runs 129+ unit tests with Vitest
+
+**Environment**: Ubuntu Latest, Node.js 18.x, pnpm 10.20.0
+
+#### 2. **CD Job: Deploy to Vercel**
+Runs only on push to `main` (after CI passes):
+- Builds the Next.js web app with Vercel CLI
+- Deploys to Vercel production environment
+- Reports deployment URL in GitHub commit status
+
+### Required GitHub Secrets
+
+Configure these secrets in your GitHub repository settings (`Settings > Secrets and variables > Actions`):
+
+| Secret | Description | How to Obtain |
+|--------|-------------|---------------|
+| `VERCEL_TOKEN` | Vercel API token for deployments | Create at [Vercel Account Tokens](https://vercel.com/account/tokens) |
+| `VERCEL_ORG_ID` | Your Vercel organization/team ID | Found in `.vercel/project.json` after running `vercel link` locally |
+| `VERCEL_PROJECT_ID` | Project ID for the web app | Found in `.vercel/project.json` after running `vercel link` locally |
+
+**Note**: Application environment variables (Convex URL, Clerk keys) are managed in the Vercel dashboard, not GitHub secrets.
+
+### Setting Up GitHub Secrets
+
+1. **Generate Vercel Token**:
+   ```bash
+   # Visit https://vercel.com/account/tokens
+   # Create a new token with full access
+   # Copy the token (you'll only see it once)
+   ```
+
+2. **Link Vercel Project** (run locally):
+   ```bash
+   cd apps/web
+   vercel link
+   # Follow prompts to link to your Vercel project
+   # This creates .vercel/project.json with ORG_ID and PROJECT_ID
+   ```
+
+3. **Add Secrets to GitHub**:
+   - Go to your GitHub repository
+   - Navigate to `Settings > Secrets and variables > Actions`
+   - Click `New repository secret` for each:
+     - Name: `VERCEL_TOKEN`, Value: Your Vercel API token
+     - Name: `VERCEL_ORG_ID`, Value: From `.vercel/project.json`
+     - Name: `VERCEL_PROJECT_ID`, Value: From `.vercel/project.json`
+
+### Branch Protection Rules
+
+To enforce code quality and prevent broken deployments, configure branch protection for `main`:
+
+1. Go to `Settings > Branches > Branch protection rules`
+2. Click `Add branch protection rule`
+3. Configure:
+   - **Branch name pattern**: `main`
+   - ☑️ **Require status checks to pass before merging**
+     - ☑️ **Require branches to be up to date before merging**
+     - **Status checks required**: `Lint, Type-Check, and Test`
+   - ☑️ **Require pull request reviews before merging** (recommended)
+     - **Required approvals**: 1
+   - ☑️ **Do not allow bypassing the above settings**
+
+### Deployment Process
+
+#### For Pull Requests:
+1. Create a feature branch and make your changes
+2. Push to GitHub and open a pull request
+3. CI automatically runs: lint → type-check → test
+4. If CI passes, PR can be merged (subject to branch protection rules)
+5. If CI fails, push fixes and CI will re-run automatically
+
+#### For Production Deployments:
+1. Merge approved PR to `main` branch
+2. CI runs again to ensure main branch is stable
+3. After CI passes, CD job automatically:
+   - Pulls Vercel environment configuration
+   - Builds the Next.js application
+   - Deploys to Vercel production
+   - Reports deployment URL in commit status
+
+#### Manual Deployment (if needed):
+```bash
+cd apps/web
+vercel --prod
+```
+
+### CI Status Badge
+
+Add this badge to your README to show CI status:
+```markdown
+![CI/CD](https://github.com/YOUR_USERNAME/YOUR_REPO/actions/workflows/ci.yml/badge.svg)
+```
+
 ## 📊 Dashboard & Admin
 
 - **Convex Dashboard**: [https://dashboard.convex.dev/deployment/affable-albatross-627](https://dashboard.convex.dev/deployment/affable-albatross-627)
