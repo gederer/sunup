@@ -12,7 +12,10 @@
  * - Error handling
  */
 
+/// <reference types="vite/client" />
+
 import { convexTest } from "convex-test";
+import type { MutationCtx, QueryCtx } from "../_generated/server";
 import { expect, test, describe, vi } from "vitest";
 import { api } from "../_generated/api";
 import schema from "../schema";
@@ -28,9 +31,9 @@ const modules = import.meta.glob("../**/!(*.*.*)*.*s");
 /**
  * Setup test environment with authenticated user and tenant
  */
-async function setupTestEnvironment(t: any) {
+async function setupTestEnvironment(t: ReturnType<typeof convexTest>) {
   // Create tenant
-  const tenantId = await t.run(async (ctx) => {
+  const tenantId = await t.run(async (ctx: MutationCtx) => {
     return await ctx.db.insert("tenants", {
       name: "Test Tenant",
       isActive: true,
@@ -38,7 +41,7 @@ async function setupTestEnvironment(t: any) {
   });
 
   // Create user with tenant
-  const userId = await t.run(async (ctx) => {
+  const userId = await t.run(async (ctx: MutationCtx) => {
     return await ctx.db.insert("users", {
       clerkId: "test_clerk_user",
       email: "test@example.com",
@@ -50,7 +53,7 @@ async function setupTestEnvironment(t: any) {
   });
 
   // Add System Administrator role
-  await t.run(async (ctx) => {
+  await t.run(async (ctx: MutationCtx) => {
     await ctx.db.insert("userRoles", {
       userId,
       tenantId,
@@ -66,7 +69,7 @@ async function setupTestEnvironment(t: any) {
 /**
  * Create test pipeline stages
  */
-async function createTestStages(t: any, tenantId: Id<"tenants">) {
+async function createTestStages(t: ReturnType<typeof convexTest>, tenantId: Id<"tenants">) {
   const stages = [
     { name: "Lead", order: 1 },
     { name: "Set", order: 2 },
@@ -74,7 +77,7 @@ async function createTestStages(t: any, tenantId: Id<"tenants">) {
   ];
 
   for (const stage of stages) {
-    await t.run(async (ctx) => {
+    await t.run(async (ctx: MutationCtx) => {
       await ctx.db.insert("pipelineStages", {
         name: stage.name,
         order: stage.order,
@@ -90,8 +93,8 @@ async function createTestStages(t: any, tenantId: Id<"tenants">) {
 /**
  * Create test person
  */
-async function createTestPerson(t: any, tenantId: Id<"tenants">) {
-  return await t.run(async (ctx) => {
+async function createTestPerson(t: ReturnType<typeof convexTest>, tenantId: Id<"tenants">) {
+  return await t.run(async (ctx: MutationCtx) => {
     return await ctx.db.insert("people", {
       firstName: "John",
       lastName: "Doe",
@@ -126,7 +129,7 @@ describe("Event Emission", () => {
     );
 
     // Verify event was created
-    const event = await t.run(async (ctx) => {
+    const event = await t.run(async (ctx: QueryCtx) => {
       return await ctx.db.get(eventId);
     });
 
@@ -160,7 +163,7 @@ describe("Event Emission", () => {
       }
     );
 
-    const event = await t.run(async (ctx) => {
+    const event = await t.run(async (ctx: QueryCtx) => {
       return await ctx.db.get(eventId);
     });
 
@@ -228,7 +231,7 @@ describe("Event Storage", () => {
     );
 
     // Query events by tenant
-    const events = await t.run(async (ctx) => {
+    const events = await t.run(async (ctx: QueryCtx) => {
       return await ctx.db
         .query("personPipelineEvents")
         .withIndex("by_tenant", (q) => q.eq("tenantId", tenantId))
@@ -250,14 +253,14 @@ describe("Event Storage", () => {
     const asUser1 = t.withIdentity({ subject: "test_clerk_user" });
 
     // Setup second tenant
-    const tenant2Id = await t.run(async (ctx) => {
+    const tenant2Id = await t.run(async (ctx: MutationCtx) => {
       return await ctx.db.insert("tenants", {
         name: "Tenant 2",
         isActive: true,
       });
     });
 
-    const person2Id = await t.run(async (ctx) => {
+    const person2Id = await t.run(async (ctx: MutationCtx) => {
       return await ctx.db.insert("people", {
         firstName: "Jane",
         lastName: "Smith",
@@ -279,7 +282,7 @@ describe("Event Storage", () => {
     );
 
     // Create second user for tenant 2
-    const user2Id = await t.run(async (ctx) => {
+    const user2Id = await t.run(async (ctx: MutationCtx) => {
       return await ctx.db.insert("users", {
         clerkId: "test_clerk_user_2",
         email: "user2@example.com",
@@ -290,7 +293,7 @@ describe("Event Storage", () => {
       });
     });
 
-    await t.run(async (ctx) => {
+    await t.run(async (ctx: MutationCtx) => {
       await ctx.db.insert("userRoles", {
         userId: user2Id,
         tenantId: tenant2Id,
@@ -311,7 +314,7 @@ describe("Event Storage", () => {
     );
 
     // Verify tenant 1 only sees their events
-    const tenant1Events = await t.run(async (ctx) => {
+    const tenant1Events = await t.run(async (ctx: QueryCtx) => {
       return await ctx.db
         .query("personPipelineEvents")
         .withIndex("by_tenant", (q) => q.eq("tenantId", tenant1Id))
@@ -323,7 +326,7 @@ describe("Event Storage", () => {
     expect(tenant1Events[0].tenantId).toBe(tenant1Id);
 
     // Verify tenant 2 only sees their events
-    const tenant2Events = await t.run(async (ctx) => {
+    const tenant2Events = await t.run(async (ctx: QueryCtx) => {
       return await ctx.db
         .query("personPipelineEvents")
         .withIndex("by_tenant", (q) => q.eq("tenantId", tenant2Id))
@@ -375,7 +378,7 @@ describe("Event Subscription Pattern", () => {
       }
     );
 
-    const event = await t.run(async (ctx) => {
+    const event = await t.run(async (ctx: QueryCtx) => {
       return await ctx.db.get(eventId);
     });
 
@@ -384,16 +387,16 @@ describe("Event Subscription Pattern", () => {
     const handler1Calls: any[] = [];
     const handler2Calls: any[] = [];
 
-    registry.register("pipeline.stage_changed", async (ctx, evt) => {
+    registry.register("pipeline.stage_changed", async (ctx: QueryCtx | MutationCtx, evt) => {
       handler1Calls.push(evt);
     });
 
-    registry.register("pipeline.stage_changed", async (ctx, evt) => {
+    registry.register("pipeline.stage_changed", async (ctx: QueryCtx | MutationCtx, evt) => {
       handler2Calls.push(evt);
     });
 
     // Process event
-    await t.run(async (ctx) => {
+    await t.run(async (ctx: MutationCtx) => {
       await registry.processEvent(ctx, event!);
     });
 
@@ -422,7 +425,7 @@ describe("Event Subscription Pattern", () => {
       }
     );
 
-    const event = await t.run(async (ctx) => {
+    const event = await t.run(async (ctx: QueryCtx) => {
       return await ctx.db.get(eventId);
     });
 
@@ -430,14 +433,14 @@ describe("Event Subscription Pattern", () => {
     const registry = new EventHandlerRegistry();
     const successfulHandler = vi.fn();
 
-    registry.register("pipeline.stage_changed", async () => {
+    registry.register("pipeline.stage_changed", async (ctx: QueryCtx | MutationCtx) => {
       throw new Error("Handler failure");
     });
 
     registry.register("pipeline.stage_changed", successfulHandler);
 
     // Process event - should not throw
-    await t.run(async (ctx) => {
+    await t.run(async (ctx: MutationCtx) => {
       await registry.processEvent(ctx, event!);
     });
 
@@ -464,7 +467,7 @@ describe("Event Subscription Pattern", () => {
       }
     );
 
-    const event = await t.run(async (ctx) => {
+    const event = await t.run(async (ctx: QueryCtx) => {
       return await ctx.db.get(eventId);
     });
 
@@ -472,7 +475,7 @@ describe("Event Subscription Pattern", () => {
     const consoleSpy = vi.spyOn(console, "log");
 
     // Call handler
-    await t.run(async (ctx) => {
+    await t.run(async (ctx: MutationCtx) => {
       await logPipelineChange(ctx, event!);
     });
 
@@ -513,7 +516,7 @@ describe("Pipeline Mutation Integration", () => {
     );
 
     // Verify event was created
-    const events = await t.run(async (ctx) => {
+    const events = await t.run(async (ctx: QueryCtx) => {
       return await ctx.db
         .query("personPipelineEvents")
         .withIndex("by_person_and_timestamp", (q) =>
@@ -552,7 +555,7 @@ describe("Pipeline Mutation Integration", () => {
     expect(result.toStage).toBe("Set");
 
     // Verify person was moved despite any potential event issues
-    const person = await t.run(async (ctx) => {
+    const person = await t.run(async (ctx: QueryCtx) => {
       return await ctx.db.get(personId);
     });
 

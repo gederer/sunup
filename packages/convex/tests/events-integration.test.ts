@@ -3,22 +3,25 @@
  * Story 1.9 - Simple integration test to verify event system works
  */
 
+/// <reference types="vite/client" />
+
 import { convexTest } from "convex-test";
+import type { MutationCtx } from "../_generated/server";
 import { expect, test, describe } from "vitest";
 import { api } from "../_generated/api";
 import schema from "../schema";
 
 const modules = import.meta.glob("../**/!(*.*.*)*.*s");
 
-async function setupTest(t: any) {
-  const tenantId = await t.run(async (ctx) => {
+async function setupTest(t: ReturnType<typeof convexTest>) {
+  const tenantId = await t.run(async (ctx: MutationCtx) => {
     return await ctx.db.insert("tenants", {
       name: "Test Tenant",
       isActive: true,
     });
   });
 
-  const userId = await t.run(async (ctx) => {
+  const userId = await t.run(async (ctx: MutationCtx) => {
     return await ctx.db.insert("users", {
       clerkId: "test_clerk_user",
       email: "test@example.com",
@@ -29,7 +32,7 @@ async function setupTest(t: any) {
     });
   });
 
-  await t.run(async (ctx) => {
+  await t.run(async (ctx: MutationCtx) => {
     await ctx.db.insert("userRoles", {
       userId,
       tenantId,
@@ -40,7 +43,7 @@ async function setupTest(t: any) {
   });
 
   // Create pipeline stages
-  await t.run(async (ctx) => {
+  await t.run(async (ctx: MutationCtx) => {
     await ctx.db.insert("pipelineStages", {
       name: "Lead",
       order: 1,

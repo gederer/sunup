@@ -11,7 +11,10 @@
  * - Statistics and search functionality
  */
 
+/// <reference types="vite/client" />
+
 import { convexTest } from "convex-test";
+import type { MutationCtx } from "../_generated/server";
 import { expect, test, describe } from "vitest";
 import { api } from "../_generated/api";
 import schema from "../schema";
@@ -27,9 +30,9 @@ const modules = import.meta.glob("../**/!(*.*.*)*.*s");
 /**
  * Setup test environment with authenticated user and tenant
  */
-async function setupTestEnvironment(t: any) {
+async function setupTestEnvironment(t: ReturnType<typeof convexTest>) {
   // First create tenant
-  const tenantId = await t.run(async (ctx) => {
+  const tenantId = await t.run(async (ctx: MutationCtx) => {
     return await ctx.db.insert("tenants", {
       name: "Test Tenant",
       isActive: true,
@@ -37,7 +40,7 @@ async function setupTestEnvironment(t: any) {
   });
 
   // Then create user with tenant
-  const userId = await t.run(async (ctx) => {
+  const userId = await t.run(async (ctx: MutationCtx) => {
     return await ctx.db.insert("users", {
       clerkId: "test_clerk_user",
       email: "test@example.com",
@@ -48,7 +51,7 @@ async function setupTestEnvironment(t: any) {
     });
   });
 
-  await t.run(async (ctx) => {
+  await t.run(async (ctx: MutationCtx) => {
     await ctx.db.insert("userRoles", {
       userId,
       tenantId,
@@ -64,7 +67,7 @@ async function setupTestEnvironment(t: any) {
 /**
  * Create default pipeline stages for testing
  */
-async function createDefaultStages(t: any, tenantId: Id<"tenants">) {
+async function createDefaultStages(t: ReturnType<typeof convexTest>, tenantId: Id<"tenants">) {
   const stageData = [
     { name: "Lead", order: 1, category: "sales" as const },
     { name: "Set", order: 2, category: "sales" as const },
@@ -76,7 +79,7 @@ async function createDefaultStages(t: any, tenantId: Id<"tenants">) {
 
   const stageIds: Id<"pipelineStages">[] = [];
   for (const stage of stageData) {
-    const id = await t.run(async (ctx) => {
+    const id = await t.run(async (ctx: MutationCtx) => {
       return await ctx.db.insert("pipelineStages", {
         name: stage.name,
         order: stage.order,

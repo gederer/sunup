@@ -10,7 +10,10 @@
  * - Integration with persons functionality
  */
 
+/// <reference types="vite/client" />
+
 import { convexTest } from "convex-test";
+import type { MutationCtx } from "../_generated/server";
 import { expect, test, describe } from "vitest";
 import { api } from "../_generated/api";
 import schema from "../schema";
@@ -26,9 +29,9 @@ const modules = import.meta.glob("../**/!(*.*.*)*.*s");
 /**
  * Setup test environment with authenticated user and tenant
  */
-async function setupTestEnvironment(t: any) {
+async function setupTestEnvironment(t: ReturnType<typeof convexTest>) {
   // First create tenant
-  const tenantId = await t.run(async (ctx) => {
+  const tenantId = await t.run(async (ctx: MutationCtx) => {
     return await ctx.db.insert("tenants", {
       name: "Test Tenant",
       isActive: true,
@@ -36,7 +39,7 @@ async function setupTestEnvironment(t: any) {
   });
 
   // Then create user with tenant
-  const userId = await t.run(async (ctx) => {
+  const userId = await t.run(async (ctx: MutationCtx) => {
     return await ctx.db.insert("users", {
       clerkId: "test_clerk_user",
       email: "test@example.com",
@@ -47,7 +50,7 @@ async function setupTestEnvironment(t: any) {
     });
   });
 
-  await t.run(async (ctx) => {
+  await t.run(async (ctx: MutationCtx) => {
     await ctx.db.insert("userRoles", {
       userId,
       tenantId,
@@ -63,15 +66,15 @@ async function setupTestEnvironment(t: any) {
 /**
  * Setup second tenant for multi-tenant testing
  */
-async function setupSecondTenant(t: any) {
-  const tenantId = await t.run(async (ctx) => {
+async function setupSecondTenant(t: ReturnType<typeof convexTest>) {
+  const tenantId = await t.run(async (ctx: MutationCtx) => {
     return await ctx.db.insert("tenants", {
       name: "Second Tenant",
       isActive: true,
     });
   });
 
-  const userId = await t.run(async (ctx) => {
+  const userId = await t.run(async (ctx: MutationCtx) => {
     return await ctx.db.insert("users", {
       clerkId: "second_clerk_user",
       email: "second@example.com",
@@ -82,7 +85,7 @@ async function setupSecondTenant(t: any) {
     });
   });
 
-  await t.run(async (ctx) => {
+  await t.run(async (ctx: MutationCtx) => {
     await ctx.db.insert("userRoles", {
       userId,
       tenantId,

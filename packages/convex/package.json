@@ -33,6 +33,7 @@
     "convex-test": "^0.0.38",
     "jsdom": "^27.2.0",
     "typescript": "^5",
+    "vite": "^7.2.2",
     "vite-tsconfig-paths": "^5.1.4"
   }
 }
