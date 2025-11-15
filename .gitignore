@@ -47,3 +47,15 @@ next-env.d.ts
 
 # Next.js
 .next
+
+# Package build outputs
+packages/*/dist
+packages/*/node_modules
+
+# Vitest cache
+.vite
+**/.vite
+
+# ESLint configs (auto-generated)
+packages/*/eslint.config.mjs
+apps/*/eslint.config.mjs

@@ -1,0 +1,15 @@
+# Vercel
+.vercel
+
+# Build artifacts
+node_modules
+.next
+.turbo
+*.tsbuildinfo
+
+# Testing
+coverage
+.vite
+
+# Environment
+.env*.local
