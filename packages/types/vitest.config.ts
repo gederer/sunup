@@ -1,12 +1,12 @@
-import { defineConfig, mergeConfig } from 'vitest/config'
-import baseConfig from '@sunup/test-config/node'
+import { defineConfig } from 'vitest/config'
 
-export default mergeConfig(
-  baseConfig,
-  defineConfig({
-    test: {
-      include: ['**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
-      exclude: ['**/node_modules/**', '**/dist/**']
-    }
-  })
-)
+export default defineConfig({
+  test: {
+    globals: true,
+    environment: 'node',
+    testTimeout: 5000,
+    passWithNoTests: true,
+    include: ['**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
+    exclude: ['**/node_modules/**', '**/dist/**']
+  }
+})
