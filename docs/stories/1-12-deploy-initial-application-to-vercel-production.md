@@ -255,4 +255,83 @@ This story cannot be fully automated. The following require user interaction:
 
 ### Completion Notes List
 
+**Story Completed**: 2025-11-15
+
+**Production Deployment Summary:**
+- **Production URL**: https://sunup-3ngb54ca7-gederers-projects.vercel.app
+- **Convex Production**: https://shiny-rat-194.convex.cloud
+- **Deployment Method**: GitHub Actions CD pipeline (automatic on push to main)
+- **Authentication**: Clerk development instance (production instance deferred)
+- **All Acceptance Criteria**: ✅ Met
+
+**Technical Challenges Resolved:**
+
+1. **ESM Module Compatibility** (Multiple iterations):
+   - Issue: Vitest 4.0.7 + Vite 7.2.2 require ESM module system
+   - Root Cause: Packages missing `"type": "module"` in package.json
+   - Solution: Added `"type": "module"` to all test packages (ui, convex, web, types)
+   - Additional Fix: Inlined vitest configs to avoid .ts file imports
+   - Files Modified:
+     - `packages/ui/package.json` + `packages/ui/vitest.config.ts`
+     - `packages/convex/package.json` + `packages/convex/vitest.config.ts`
+     - `apps/web/package.json` + `apps/web/vitest.config.ts`
+     - `packages/types/package.json` + `packages/types/vitest.config.ts`
+
+2. **Node.js Version Mismatch**:
+   - Issue: Next.js 16.0.0 requires Node.js >= 20.9.0
+   - Root Cause: GitHub Actions using Node.js 18.x
+   - Solution: Updated `.github/workflows/ci.yml` to use Node.js 20.x for both CI and CD jobs
+   - Result: Successful build and deployment
+
+**Deployment Configuration:**
+- Vercel environment variables configured via dashboard:
+  - `NEXT_PUBLIC_CONVEX_URL`: https://shiny-rat-194.convex.cloud
+  - `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`: pk_test_... (dev instance)
+  - `CLERK_SECRET_KEY`: sk_test_... (dev instance)
+  - `CLERK_WEBHOOK_SECRET`: whsec_...
+- Convex production environment variable:
+  - `CLERK_JWT_ISSUER_DOMAIN`: https://neutral-mammoth-44.clerk.accounts.dev
+
+**CI/CD Pipeline Status:**
+- ✅ All 129 tests passing in CI
+- ✅ Lint and type-check passing across all packages
+- ✅ Automatic deployment to Vercel on merge to main
+- ✅ GitHub Actions workflow operational
+
+**Smoke Tests Performed:**
+- ✅ Sign-in flow working
+- ✅ Application accessible at production URL
+- ✅ Convex backend connected and operational
+- ✅ Multi-tenant authentication functional
+
+**Documentation Updated:**
+- ✅ README.md: Added production deployment section with URLs
+- ✅ README.md: Updated Node.js prerequisite to >= 20.9.0
+- ✅ README.md: Updated CI/CD environment documentation
+
+**Deferred Items:**
+- Clerk production instance setup (currently using development instance)
+- Custom domain configuration (using Vercel subdomain)
+- These can be addressed in future stories as needed
+
+**Total Commits**: 7 commits across deployment configuration and fixes
+- Initial deployment setup and branch creation
+- ESM compatibility fixes (4 commits for different packages)
+- Node.js version upgrade
+- Documentation updates
+
 ### File List
+
+**Modified Files:**
+- `README.md` - Added production deployment section and updated prerequisites
+- `.github/workflows/ci.yml` - Updated Node.js version from 18 to 20
+- `packages/ui/package.json` - Added "type": "module"
+- `packages/ui/vitest.config.ts` - Inlined minimal config
+- `packages/convex/package.json` - Added "type": "module"
+- `packages/convex/vitest.config.ts` - Inlined edge config
+- `apps/web/package.json` - Added "type": "module"
+- `apps/web/vitest.config.ts` - Inlined react config
+- `packages/types/package.json` - Added "type": "module"
+- `packages/types/vitest.config.ts` - Inlined node config
+- `docs/sprint-status.yaml` - Updated story status to done
+- `docs/stories/1-12-deploy-initial-application-to-vercel-production.md` - This file (completion notes)

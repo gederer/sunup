@@ -22,11 +22,24 @@ sunup/
 └── pnpm-workspace.yaml   # pnpm workspace configuration
 ```
 
+## 🌐 Production Deployment
+
+**Production URL**: [https://sunup-3ngb54ca7-gederers-projects.vercel.app](https://sunup-3ngb54ca7-gederers-projects.vercel.app)
+
+**Backend**: Convex Production - [https://shiny-rat-194.convex.cloud](https://shiny-rat-194.convex.cloud)
+
+The application is automatically deployed to Vercel on every push to the `main` branch via GitHub Actions. The deployment includes:
+- Next.js 16 web application (SSR + App Router)
+- Convex production backend with real-time data sync
+- Clerk authentication (development instance)
+- Multi-tenant row-level security
+- 129+ passing tests (lint, type-check, unit tests)
+
 ## 🚀 Getting Started
 
 ### Prerequisites
 
-- **Node.js** >= 18.0.0
+- **Node.js** >= 20.9.0 (required for Next.js 16)
 - **pnpm** >= 9.0.0 (install with `npm install -g pnpm`)
 - **Convex** account (sign up at [convex.dev](https://convex.dev))
 - **Clerk** account for authentication (sign up at [clerk.com](https://clerk.com))
@@ -177,7 +190,7 @@ Runs on every pull request and push to `main`:
 - **Type-Checking**: `pnpm type-check` - Validates TypeScript types across all packages
 - **Testing**: `pnpm test` - Runs 129+ unit tests with Vitest
 
-**Environment**: Ubuntu Latest, Node.js 18.x, pnpm 10.20.0
+**Environment**: Ubuntu Latest, Node.js 20.x, pnpm 10.20.0
 
 #### 2. **CD Job: Deploy to Vercel**
 Runs only on push to `main` (after CI passes):
